@@ -1,3 +1,5 @@
+<a href='http://45.55.61.213:8080/job/1.0%20-%20Build%20-%20recipe-web/'><img src='http://45.55.61.213:8080/job/1.0%20-%20Build%20-%20recipe-web/badge/icon'></a>
+
 # angular-seed — the seed for AngularJS apps
 
 This project is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
