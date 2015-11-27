@@ -2,6 +2,7 @@ FROM centos:centos6
 RUN curl --silent --location https://rpm.nodesource.com/setup | bash -
 RUN yum -y install nodejs
 RUN yum -y install tar
+RUN yum -y install bzip2
 COPY . /src
 COPY ./run-on-server.sh /
 EXPOSE 8000
