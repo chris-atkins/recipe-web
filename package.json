@@ -28,6 +28,7 @@
     "pretest": "npm install",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js  --single-run",
+    "pretest-headless": "npm install",
     "test-headless": "karma start karma-headless.conf.js --single-run",
 
     "preupdate-webdriver": "npm install",
