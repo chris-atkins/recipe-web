@@ -8,7 +8,7 @@ exports.config = {
   ],
 
   capabilities: {
-    'browserName': 'chrome'
+    'browserName': process.env.SELENIUM_BROWSER
   },
 
   baseUrl: 'http://159.203.127.94:8000/app/',
