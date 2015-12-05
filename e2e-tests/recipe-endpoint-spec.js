@@ -1,17 +1,18 @@
 'use strict';
 
 var http = require('http');
+var config = browser.params;
 
 describe('the /recipe endpoint', function() {
 	
-	xit('will save with a post and return the saved object with id populated', function(done) {
-		
+	it('will save with a post and return the saved object with id populated', function(done) {
+				
 		var newRecipe = JSON.stringify({'recipeName':'hi', 'recipeContent':'it is me'});
 		
 		var options = {
-				hostname: '127.0.0.1', 
-				port: 8080,
-				path: '/recipee7/api/recipe',
+				hostname: config.apiHostname, 
+				port: config.apiPort,
+				path: config.apiBasePath + '/recipe',
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

@@ -13,6 +13,12 @@ exports.config = {
 
   baseUrl: 'http://159.203.127.94:8000/app/',
 
+  params: {
+	  apiHostname: '45.55.142.115',
+	  apiBasePath: '/recipe/api',
+	  apiPort: 8080
+  },
+
   framework: 'jasmine',
 
   jasmineNodeOpts: {
