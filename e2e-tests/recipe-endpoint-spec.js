@@ -4,7 +4,7 @@ var http = require('http');
 
 describe('the /recipe endpoint', function() {
 	
-	it('will save with a post and return the saved object with id populated', function(done) {
+	xit('will save with a post and return the saved object with id populated', function(done) {
 		
 		var newRecipe = JSON.stringify({'recipeName':'hi', 'recipeContent':'it is me'});
 		
