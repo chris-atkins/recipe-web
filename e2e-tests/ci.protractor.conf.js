@@ -17,7 +17,7 @@ exports.config = {
 	  apiHostname: '45.55.142.115',
 	  apiBasePath: '/recipe/api',
 	  apiPort: 8080,
-	  apiBaseUrl: 'http://45.55.142.11:8080/recipe/api'
+	  apiBaseUrl: 'http://45.55.142.115:8080/recipe/api'
   },
 
   framework: 'jasmine',
