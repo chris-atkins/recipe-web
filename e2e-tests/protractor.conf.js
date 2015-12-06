@@ -13,8 +13,9 @@ exports.config = {
   
   params: {
 	  apiHostname: '127.0.0.1',
+	  apiPort: 8080,
 	  apiBasePath: '/recipee7/api',
-	  apiPort: 8080
+	  apiBaseUrl: 'http://127.0.0.1:8080/recipee7/api'
   },
   
   framework: 'jasmine',
