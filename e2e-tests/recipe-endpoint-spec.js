@@ -14,16 +14,23 @@ describe('the /recipe endpoint', function() {
 				'Content-Length' : recipeToPost.length
 			},
 			json : true,
-			body : recipeToPost
+			body : recipeToPost,
+			simple: false //https://github.com/request/request-promise
 		};
 		return rs.post(postOptions)
 	}
 
-	function performRecipeGET(newRecipeId) {
+	function performRecipeGET(newRecipeId, typeOfResponse) {
 		var getOptions = {
-			uri : config.apiBaseUrl + '/recipe/' + newRecipeId,
-			json : true
+				uri : config.apiBaseUrl + '/recipe/' + newRecipeId,
+				json : true,
+				simple: false //https://github.com/request/request-promise
 		}
+		
+		if (typeOfResponse && typeOfResponse === 'fullResponse') {
+			getOptions.resolveWithFullResponse = true;
+		}
+		
 		return rs.get(getOptions);
 	}
 	
@@ -48,5 +55,13 @@ describe('the /recipe endpoint', function() {
 			expect(recipe.recipeName).toBe('hi again');
 			expect(recipe.recipeContent).toBe('it is more of me')
 		});
+	});
+	
+	it('will return 404 Not Found when performing a GET with an unknown id', function() {
+		var nonExistentRecipeId = -1;
+		
+		performRecipeGET(nonExistentRecipeId, 'fullResponse').then(function(response) {
+			expect(response.statusCode).toBe(404);
+		}); 
 	});
 });
