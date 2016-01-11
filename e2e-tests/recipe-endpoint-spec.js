@@ -8,6 +8,14 @@ describe('the endpoint', function() {
 
 	var listOfRecipeIdsToCleanUp = [];
 	
+	afterAll(function(done) {
+		var p = Promise.resolve({});		
+		for (var i = 0; i < listOfRecipeIdsToCleanUp.length; i++) {
+			p = p.then(performRecipeDELETE(listOfRecipeIdsToCleanUp[i]));
+		}
+		p = p.then(performRecipeListGET).then(function(response){done();});
+	});
+	
 	function performRecipeListGET() {
 		var getOptions = {
 				uri : config.apiBaseUrl + '/recipe',
@@ -67,35 +75,38 @@ describe('the endpoint', function() {
 	
 	describe('/recipe/{id}', function(){
 	
-		it('will save with a post and return the saved object with id populated', function() {
+		it('will save with a post and return the saved object with id populated', function(done) {
 			var newRecipe = JSON.stringify({'recipeName' : 'hi', 'recipeContent' : 'it is me'});
 	
 			performRecipePOST(newRecipe).then(function(recipe) {
 				expect(recipe.recipeName).toBe('hi');
 				expect(recipe.recipeContent).toBe('it is me');
 				expect(recipe.recipeId).not.toBe(null);
+				done();
 			});
 		});
 	
-		it('will GET a recipe by id after it has been saved', function() {
+		it('will GET a recipe by id after it has been saved', function(done) {
 			var newRecipe = JSON.stringify({'recipeName' : 'hi again', 'recipeContent' : 'it is more of me'});
 	
 			performRecipePOST(newRecipe).then(function(response) { return response.recipeId;})
 			.then(performRecipeGET).then(function(recipe) {
 				expect(recipe.recipeName).toBe('hi again');
 				expect(recipe.recipeContent).toBe('it is more of me')
+				done();
 			});
 		});
 		
-		it('will return 404 Not Found when performing a GET with an unknown id', function() {
+		it('will return 404 Not Found when performing a GET with an unknown id', function(done) {
 			var nonExistentRecipeId = -1;
 			
 			performRecipeGET(nonExistentRecipeId, 'fullResponse').then(function(response) {
 				expect(response.statusCode).toBe(404);
+				done();
 			}); 
 		});
 		
-		it('will DELETE an existing recipe', function() {
+		it('will DELETE an existing recipe', function(done) {
 			var newRecipe = JSON.stringify({'recipeName': 'the best name', 'recipeContent': 'some pretty good content'});
 			
 			performRecipePOST(newRecipe).then(function(response) {return response.recipeId;})
@@ -106,10 +117,11 @@ describe('the endpoint', function() {
 			.then(performRecipeDELETEandReturnId) 
 			.then(performRecipeGETandReturnFullResponse).then(function(response) {
 				expect(response.statusCode).toBe(404);
+				done();
 			});
 		});
 		
-		it('DELETE returns 204', function() {
+		it('DELETE returns 204', function(done) {
 			var newRecipe = JSON.stringify({'recipeName': 'THE name', 'recipeContent': 'reasonably ok content'});
 			
 			performRecipePOST(newRecipe).then(function(response) {return response.recipeId;})
@@ -117,6 +129,7 @@ describe('the endpoint', function() {
 			.then(performRecipeDELETE)
 			.then(function(response) {
 				expect(response.statusCode).toBe(204);
+				done();
 			});
 		});
 	});
@@ -134,19 +147,17 @@ describe('the endpoint', function() {
 		}
 		
 		it('GET returns all recipes that have been saved', function(done) {
-			var firstRecipeObject = {'recipeName' : 'first', 'recipeContent': 'firstContent'};
-			var secondRecipeObject = {'recipeName' : 'second', 'recipeContent': 'secondContent'};
-			var firstRecipe = JSON.stringify(firstRecipeObject);
-			var secondRecipe = JSON.stringify(secondRecipeObject);
+			var firstRecipe = {'recipeName' : 'first', 'recipeContent': 'firstContent'};
+			var secondRecipe = {'recipeName' : 'second', 'recipeContent': 'secondContent'};
 			
-			performRecipePOST(firstRecipe)
+			performRecipePOST(JSON.stringify(firstRecipe))
 			.then(function(){})
-			.then(performRecipePOST(secondRecipe))
+			.then(performRecipePOST(JSON.stringify(secondRecipe)))
 			.then(performRecipeListGET)
 			.then(function(response){
 				expect(response.length).toBeGreaterThan(1);
-				expect(responseContainsRecipe(response, firstRecipeObject)).toBe(true);
-				expect(responseContainsRecipe(response, secondRecipeObject)).toBe(true);
+				expect(responseContainsRecipe(response, firstRecipe)).toBe(true);
+				expect(responseContainsRecipe(response, secondRecipe)).toBe(true);
 				done();
 			});
 		});
