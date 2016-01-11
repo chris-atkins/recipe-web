@@ -20,7 +20,7 @@ exports.config = {
 	  apiBaseUrl: 'http://45.55.142.115:8080/recipe/api'
   },
 
-  framework: 'jasmine',
+  framework: 'jasmine2',
 
   jasmineNodeOpts: {
     defaultTimeoutInterval: 2000

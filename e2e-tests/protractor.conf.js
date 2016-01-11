@@ -18,7 +18,7 @@ exports.config = {
 	  apiBaseUrl: 'http://127.0.0.1:8080/recipee7/api'
   },
   
-  framework: 'jasmine',
+  framework: 'jasmine2',
 
   jasmineNodeOpts: {
     defaultTimeoutInterval: 2000
