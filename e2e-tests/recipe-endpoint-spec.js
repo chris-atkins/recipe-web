@@ -215,6 +215,8 @@ describe('the endpoint', function() {
 				expect(response.length).toBeGreaterThan(1);
 				expect(responseContainsRecipe(response, firstRecipe)).toBe(true);
 				expect(responseContainsRecipe(response, thirdRecipe)).toBe(true);
+				
+				expect(responseContainsRecipe(response, secondRecipe)).toBe(false);
 				done();
 			});
 		});
