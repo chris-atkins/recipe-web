@@ -9,12 +9,21 @@ describe('the endpoint', function() {
 	var listOfRecipeIdsToCleanUp = [];
 	
 	afterAll(function(done) {
-		var p = Promise.resolve({});		
-		for (var i = 0; i < listOfRecipeIdsToCleanUp.length; i++) {
-			p = p.then(performRecipeDELETE(listOfRecipeIdsToCleanUp[i]));
-		}
-		p = p.then(performRecipeListGET).then(function(response){done();});
+		cleanUpTestRecipesThatHaveBeenPosted()
+		.then(function() {done();})
 	});
+	
+	function cleanUpTestRecipesThatHaveBeenPosted() {
+		var p = performRecipeListGET();
+		for (var i = 0; i < listOfRecipeIdsToCleanUp.length; i++) {
+			p = p.then(performRecipeDELETEFunction(listOfRecipeIdsToCleanUp[i]));
+		}
+		p = p.then(function(response){
+			listOfRecipeIdsToCleanUp = [];
+		});
+		
+		return p;
+	}
 	
 	function performRecipeListGET() {
 		var getOptions = {
@@ -23,6 +32,21 @@ describe('the endpoint', function() {
 				simple: false //https://github.com/request/request-promise
 		}
 		return rs.get(getOptions);
+	}
+	
+	function performRecipeListGETwithSearchString(searchString) {
+		var getOptions = {
+				uri : config.apiBaseUrl + '/recipe?searchString=' + searchString,
+				json : true,
+				simple: false //https://github.com/request/request-promise
+		}
+		return rs.get(getOptions);
+	}
+	
+	function performRecipeListGETwithSearchStringFunction(searchString) {
+		return function() {
+			return performRecipeListGETwithSearchString(searchString);
+		}
 	}
 	
 	function performRecipePOST(recipeToPost) {
@@ -40,6 +64,12 @@ describe('the endpoint', function() {
 			listOfRecipeIdsToCleanUp.push(response.recipeId);
 			return response;
 		});
+	}
+	
+	function performRecipePOSTFunction(recipeToPost) {
+		return function() {
+			return performRecipePOST(recipeToPost);
+		};
 	}
 
 	function performRecipeGET(newRecipeId, typeOfResponse) {
@@ -69,8 +99,16 @@ describe('the endpoint', function() {
 		return rs.del(deleteOptions);
 	}
 	
+	
+	function performRecipeDELETEFunction(recipeId) {
+		return function() {
+			return performRecipeDELETE(recipeId);
+		};
+	}
+	
+	
 	function performRecipeDELETEandReturnId(recipeId) {
-		performRecipeDELETE(recipeId).then(function(){return recipeId;});
+		return performRecipeDELETE(recipeId).then(function(){return recipeId;});
 	}
 	
 	describe('/recipe/{id}', function(){
@@ -150,14 +188,33 @@ describe('the endpoint', function() {
 			var firstRecipe = {'recipeName' : 'first', 'recipeContent': 'firstContent'};
 			var secondRecipe = {'recipeName' : 'second', 'recipeContent': 'secondContent'};
 			
-			performRecipePOST(JSON.stringify(firstRecipe))
-			.then(function(){})
-			.then(performRecipePOST(JSON.stringify(secondRecipe)))
+			performRecipePOST(JSON.stringify(firstRecipe)).then(function(){})
+			.then(performRecipePOSTFunction(JSON.stringify(secondRecipe)))
 			.then(performRecipeListGET)
 			.then(function(response){
 				expect(response.length).toBeGreaterThan(1);
 				expect(responseContainsRecipe(response, firstRecipe)).toBe(true);
 				expect(responseContainsRecipe(response, secondRecipe)).toBe(true);
+				done();
+			});
+		});
+		
+		it('GET with a search string returns only matching recipes', function(done) {
+			var firstRecipe = {'recipeName' : 'Search Firstme', 'recipeContent': 'this one should be included'};
+			var secondRecipe = {'recipeName' : 'Search second', 'recipeContent': 'I should not be in the response'};
+			var thirdRecipe = {'recipeName' : 'Search third', 'recipeContent': 'I should definitely be find'};
+			var searchString = 'fiNd%20ME';
+			
+			cleanUpTestRecipesThatHaveBeenPosted()
+			.then(performRecipePOSTFunction(JSON.stringify(firstRecipe)))
+			.then(performRecipePOSTFunction(JSON.stringify(secondRecipe)))
+			.then(performRecipePOSTFunction(JSON.stringify(thirdRecipe)))
+			
+			.then(performRecipeListGETwithSearchStringFunction(searchString))
+			.then(function(response) {
+				expect(response.length).toBeGreaterThan(1);
+				expect(responseContainsRecipe(response, firstRecipe)).toBe(true);
+				expect(responseContainsRecipe(response, thirdRecipe)).toBe(true);
 				done();
 			});
 		});
