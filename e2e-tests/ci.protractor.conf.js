@@ -1,7 +1,7 @@
 exports.config = {
   allScriptsTimeout: 11000,
 
-  seleniumAddress: 'http://159.203.127.94:4444/wd/hub',
+  seleniumAddress: 'http://' + process.env.WEB_IP + ':4444/wd/hub',
   
   specs: [
     '*.js'
@@ -10,14 +10,14 @@ exports.config = {
   capabilities: {
     'browserName': process.env.SELENIUM_BROWSER
   },
-
-  baseUrl: 'http://159.203.127.94:8000/app/',
+  
+  baseUrl: 'http://' + process.env.WEB_IP + ':8000/app/',
 
   params: {
-	  apiHostname: '45.55.142.115',
+	  apiHostname: process.env.SERVICE_IP,
 	  apiBasePath: '/recipe/api',
 	  apiPort: 8080,
-	  apiBaseUrl: 'http://45.55.142.115:8080/recipe/api'
+	  apiBaseUrl: 'http://' + process.env.SERVICE_IP + ':8080/recipe/api'
   },
 
   framework: 'jasmine2',
