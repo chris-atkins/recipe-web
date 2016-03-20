@@ -1,4 +1,4 @@
-<a href='http://45.55.61.213:8080/job/1.0-Build.recipe-web/'><img src='http://45.55.61.213:8080/job/1.0-Build.recipe-web/badge/icon'></a>
+<a href='http://45.55.61.213:8080/job/R1.0-Recipe.Build.Web/'><img src='http://45.55.61.213:8080/job/R1.0-Recipe.Build.Web/badge/icon'></a>
 
 # angular-seed — the seed for AngularJS apps
 
