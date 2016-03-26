@@ -38,5 +38,13 @@ describe('the home page', function() {
 		  expect(browser.getLocationAbsUrl()).toMatch('/browse-all-recipes');
 	  });
 	  
+	  it('has a Search Recipes button that navigates to the search screen', function() {
+		  var searchButton = element(by.id('search-button'));
+		  expect(searchButton.getText()).toBe('Search Recipes');
+		  searchButton.click();
+		  expect(browser.getLocationAbsUrl()).toMatch('/search-recipes');
+	  });
+	  
+	  
   });
 });
