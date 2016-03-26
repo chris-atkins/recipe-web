@@ -8,19 +8,35 @@ describe('the home page', function() {
     expect(browser.getLocationAbsUrl()).toMatch('/home');
   });
   
+  describe('content', function() {
+
+	  beforeAll(function() {
+		  browser.get('/app/#/home');
+	  });
+	  
+	  it('has a title', function() {
+		  var pageTitle = element(by.id('page-title'))
+		  expect(pageTitle.getText()).toBe('Recipe Connection');
+	  });
+	  
+	  it('has a greeting message', function() {
+		  var greetingMessage = element(by.id('greeting-message'));
+		  expect(greetingMessage.getText()).toBe('What would you like to do?');
+	  });
+  });
+  
   describe('has navigation buttons:', function() {
+	  
 	  beforeEach(function() {
 		  browser.get('/app/#/home');
-	  })
+	  });
 	  
-	  it('a browse all button that navigates to the browse all screen', function() {
+	  it('has a browse all button that navigates to the browse all screen', function() {
 		  var browseAllButton = element(by.id('browse-all-button'));
 		  expect(browseAllButton.getText()).toBe('Browse All Recipes');
 		  browseAllButton.click();
 		  expect(browser.getLocationAbsUrl()).toMatch('/browse-all-recipes');
 	  });
 	  
-	  
   });
-  
 });
