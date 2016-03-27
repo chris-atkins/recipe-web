@@ -9,6 +9,6 @@ angular.module('recipe.saveRecipe', ['ngRoute'])
 	});
 }])
 
-.controller('SaveRecipeCtrl', [function() {
+.controller('SaveRecipeCtrl', function() {
 	
-}]);
+});

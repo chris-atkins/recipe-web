@@ -12,5 +12,5 @@ angular.module('recipe', [
   'myApp.version'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/home'});
+	$routeProvider.otherwise({redirectTo: '/home'});
 }]);

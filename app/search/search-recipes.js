@@ -9,6 +9,6 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 	});
 }])
 
-.controller('SearchRecipesCtrl', [function() {
+.controller('SearchRecipesCtrl', function() {
 	
-}]);
+});

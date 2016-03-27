@@ -1,2 +1,15 @@
-Browsing... please hold...
+<div ng-controller="BrowseAllRecipesCtrl">
+	<h2>
+		<span id="page-title">Browse All Recipes</span>
+	</h2>
 
+	<div id="recipe-list">
+		<div class="recipe" ng-repeat="recipe in getAllRecipes()">
+			<span class="recipe-name">{{recipe.recipeName}}</span>
+		</div>
+	</div>
+
+	<div>
+		<a id="home-button" href="#/home">Home</a>
+	</div>
+</div>
