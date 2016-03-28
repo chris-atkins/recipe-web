@@ -11,7 +11,7 @@ describe('the home page', function() {
   describe('content', function() {
 
 	  beforeAll(function() {
-		  browser.get('/app/#/home');
+		  browser.get('/#/home');
 	  });
 	  
 	  it('has a title', function() {
@@ -28,7 +28,7 @@ describe('the home page', function() {
   describe('has navigation buttons:', function() {
 	  
 	  beforeEach(function() {
-		  browser.get('/app/#/home');
+		  browser.get('/#/home');
 	  });
 	  
 	  it('has a Browse All button that navigates to the browse all screen', function() {
@@ -51,7 +51,5 @@ describe('the home page', function() {
 		  saveButton.click();
 		  expect(browser.getLocationAbsUrl()).toMatch('/save-recipe');
 	  });
-	  
-	  
   });
 });
