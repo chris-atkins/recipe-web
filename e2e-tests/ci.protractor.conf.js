@@ -11,13 +11,13 @@ exports.config = {
     'browserName': process.env.SELENIUM_BROWSER
   },
   
-  baseUrl: 'http://' + process.env.WEB_IP + ':8000/app/',
+  baseUrl: 'http://' + process.env.WEB_IP + ':8000/',
 
   params: {
 	  apiHostname: process.env.SERVICE_IP,
-	  apiBasePath: '/recipe/api',
+	  apiBasePath: '/api',
 	  apiPort: 8080,
-	  apiBaseUrl: 'http://' + process.env.SERVICE_IP + ':8080/recipe/api'
+	  apiBaseUrl: 'http://' + process.env.SERVICE_IP + ':8080/api'
   },
 
   framework: 'jasmine2',

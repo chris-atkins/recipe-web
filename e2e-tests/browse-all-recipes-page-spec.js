@@ -27,7 +27,7 @@ describe('the home page', function() {
   describe('content', function() {
 
 	  beforeAll(function() {
-		    browser.get('/app/#/browse-all-recipes');
+		  browser.get('/#/browse-all-recipes');
 	  });
 	  
 	  it('has a title', function() {
@@ -38,7 +38,7 @@ describe('the home page', function() {
 	  it('has a list of all recipes', function() {
 		  var recipeListHolder = element(by.id('recipe-list'));
 		  var recipeList = recipeListHolder.all(by.className('recipe'));
-		  expect(recipeList.count()).toBe(3);
+		  expect(recipeList.count()).toBeGreaterThan(2);  //at least 3, since we added 3 in beforeAll
 		  
 		  assertRecipeIsInList(recipe1, recipeList);
 		  assertRecipeIsInList(recipe2, recipeList);
@@ -58,7 +58,7 @@ describe('the home page', function() {
   describe('has navigation:', function() {
 	  
 	  beforeEach(function() {
-		    browser.get('/app/#/browse-all-recipes');
+		    browser.get('/#/browse-all-recipes');
 	  });
 	  
 	  it('has a Home button that navigates to the home page', function() {
