@@ -6,5 +6,6 @@ RUN yum -y install tar
 RUN yum -y install bzip2
 COPY . /src
 COPY ./run-on-server.sh /
+RUN cd src && npm install
 EXPOSE 8000
 CMD ["sh", "run-on-server.sh"]
