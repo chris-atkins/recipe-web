@@ -45,6 +45,14 @@ describe('the home page', function() {
 		  assertRecipeIsInList(recipe3, recipeList);
 	  });
 	  
+	  it('has a link for each recipe', function() {
+		  var recipeListHolder = element(by.id('recipe-list'));
+		  var recipeList = recipeListHolder.all(by.className('recipe'));
+		  var recipeLinks = recipeListHolder.all(by.css('a.view-recipe-link'));
+		  
+		  expect(recipeList.count()).toBe(recipeLinks.count());
+	  });
+	  
 	  function assertRecipeIsInList(recipe, list) {
 		var foundRecipes = list.filter(function(item, index) {
 			return item.element(by.className('recipe-name')).getText().then(function(text) {
@@ -68,9 +76,26 @@ describe('the home page', function() {
 		  expect(browser.getLocationAbsUrl()).toMatch('/home');
 	  });
 	  
-	  it('recipes contain links that take you to the page for that recipe', function() {
+	  it('recipes contain links that take you to the page for that recipe', function(done) {
+		  var recipeLink = findFirstInsertedRecipeLink();
 		  
+		  recipeLink.getAttribute('id').then(function(recipeId) {
+			  
+			  recipeLink.click();	
+			  
+			  expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId);
+		  }).then(done, done.fail);
 	  });
 	  
+	  function findFirstInsertedRecipeLink() {
+		  var allRecipes = element.all(by.className('recipe'));
+		  var firstRecipeAsArray = allRecipes.filter(function(item) {
+			  return item.element(by.className('recipe-name')).getText().then(function(recipeText) {
+				  return recipeText === 'First Recipe Name';
+			  });
+		  });
+		  expect(firstRecipeAsArray.count()).toBe(1);
+		  return firstRecipeAsArray.first().element(by.className('view-recipe-link'));
+	  }
   });
 });
