@@ -9,6 +9,15 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 	});
 }])
 
-.controller('ViewRecipeCtrl', function($scope) {
+.controller('ViewRecipeCtrl', function($scope, $http, $routeParams) {
 	
+	$scope.recipe = {};
+	
+	$http.get('api/recipe/' + $routeParams.recipeId)
+		.success(function(recipe) {
+			$scope.recipe = recipe;
+		})
+		.error(function(error) {
+			console.log('error retrieving recipe: ', error);
+		});
 });

@@ -1,7 +1,7 @@
 'use strict';
 var dataUtils = require('./data-utils');
 
-describe('the home page', function() {
+describe('the browse all recipes page', function() {
 
   var recipe1 = {
 		  recipeName: 'First Recipe Name',

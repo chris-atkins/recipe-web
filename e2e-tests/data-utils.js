@@ -84,6 +84,7 @@ function performRecipeDELETEFunction(recipeId) {
 }
 
 module.exports = {
+	addRecipe: postRecipe,
 	addRecipes: addRecipes,
 	cleanupData: cleanupData
 }
