@@ -25,13 +25,32 @@ function performRecipeListGET() {
 	return rs.get(getOptions);
 }
 
+function performRecipeGET(recipeId) {
+	var getOptions = {
+			uri : serviceRoot + '/recipe/' + recipeId,
+			json : true,
+			simple: false
+	}
+	return rs.get(getOptions);
+}
+
 app.get('/api/recipe', function(request, response, next) {
 	performRecipeListGET().then(function(data) {
 			response.json(data);
 		})
 		.caught(function(error) {
-			console.log('Error getting recipes:', error);
+			console.log('Error getting recipes: ', error);
 		});
+});
+
+app.get('/api/recipe/:recipeId', function(request, response, next) {
+	var recipeId = request.params.recipeId;
+	performRecipeGET(recipeId).then(function(data) {
+		response.json(data);
+	})
+	.caught(function(error) {
+		console.log('Error getting recipe with id ' + recipeId + ': ', error);
+	});
 });
 
 http.createServer(app).listen(app.get('port'), function(){
