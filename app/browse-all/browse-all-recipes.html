@@ -6,6 +6,7 @@
 	<div id="recipe-list">
 		<div class="recipe" ng-repeat="recipe in getAllRecipes()">
 			<span class="recipe-name">{{recipe.recipeName}}</span>
+			<a id="{{recipe.recipeId}}" class="view-recipe-link" href="#/view-recipe/{{recipe.recipeId}}">View</a>
 		</div>
 	</div>
 

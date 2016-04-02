@@ -7,6 +7,7 @@ angular.module('recipe', [
   'recipe.searchRecipes',
   'recipe.saveRecipe',
   'recipe.browseAllRecipes',
+  'recipe.viewRecipe',
   'myApp.view1',
   'myApp.view2',
   'myApp.version'
