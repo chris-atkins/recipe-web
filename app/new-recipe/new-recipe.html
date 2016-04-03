@@ -1,13 +1,19 @@
-<h2>
-	<span id="new-recipe-page-title">Save a New Recipe</span>
-</h2>
-<div>
-	<input id="recipe-name-input" placeholder="Recipe Name" type="text" ng-model="newRecipeName"/>
+<div class="container well">
+	<h2>
+		<span id="new-recipe-page-title">Save a New Recipe</span>
+	</h2>
 </div>
-<div>
-	<textarea id="recipe-content-input" placeholder="Recipe Content" type="text" ng-model="newRecipeContent"></textarea>
+
+<div class="container">
+	<div class="form-group">
+		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="newRecipeName"/>
+	</div>
+	<div class="form-group">
+		<textarea id="recipe-content-input" class="form-control" rows="10" placeholder="Recipe Content" type="text" ng-model="newRecipeContent"></textarea>
+	</div>
 </div>
-<div>
-	<a id="home-button" href="#/home">Home</a>
-	<a id="save-button" href="#/home" ng-click="saveRecipe()">Save Recipe</a>
+
+<div class="container">
+	<a id="home-button" class="btn btn-default" href="#/home" role="button">Home</a>
+	<a id="save-button" class="btn btn-default" href="#/home" role="button" ng-click="saveRecipe()">Save Recipe</a>
 </div>

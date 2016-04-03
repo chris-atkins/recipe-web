@@ -1,16 +1,26 @@
-<div ng-controller="BrowseAllRecipesCtrl">
+<div class="container well">
 	<h2>
 		<span id="page-title">Browse All Recipes</span>
 	</h2>
+</div>
 
-	<div id="recipe-list">
-		<div class="recipe" ng-repeat="recipe in recipeList">
-			<span class="recipe-name">{{recipe.recipeName}}</span>
-			<a id="{{recipe.recipeId}}" class="view-recipe-link" href="#/view-recipe/{{recipe.recipeId}}">View</a>
-		</div>
-	</div>
+<div id="recipe-list" class="container">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Recipe Name</th>
+				<th>Recipe Link</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="recipe" ng-repeat="recipe in recipeList">
+				<td><span class="recipe-name">{{recipe.recipeName}}</span></td>
+				<td><a id="{{recipe.recipeId}}" class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
 
-	<div>
-		<a id="home-button" href="#/home">Home</a>
-	</div>
+<div class="container">
+	<a id="home-button" class="btn btn-default" href="#/home" role="button">Home</a>
 </div>
