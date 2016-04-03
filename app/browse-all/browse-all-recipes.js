@@ -11,17 +11,13 @@ angular.module('recipe.browseAllRecipes', ['ngRoute'])
 
 .controller('BrowseAllRecipesCtrl', function($scope, $http) {
 	
-	var recipeList = [];
+	$scope.recipeList = [];
 
 	$http.get('/api/recipe')
 		.success(function(data) {
-			recipeList = data;
+			$scope.recipeList = data;
 		})
 		.error(function(error) {
 			console.log('Error getting recipes:', error);
 		});
-	
-	$scope.getAllRecipes = function() {
-		return recipeList;
-	}
 });
