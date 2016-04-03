@@ -9,13 +9,14 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 	});
 }])
 
-.controller('ViewRecipeCtrl', function($scope, $http, $routeParams) {
+.controller('ViewRecipeCtrl', function($scope, $http, $routeParams, $sce) {
 	
 	$scope.recipe = {};
 	
 	$http.get('api/recipe/' + $routeParams.recipeId)
 		.success(function(recipe) {
 			$scope.recipe = recipe;
+			$scope.recipe.recipeContent = $sce.trustAsHtml($scope.recipe.recipeContent);
 		})
 		.error(function(error) {
 			console.log('error retrieving recipe: ', error);
