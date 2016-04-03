@@ -34,6 +34,20 @@ function performRecipeGET(recipeId) {
 	return rs.get(getOptions);
 }
 
+function performRecipePOST(recipe) {
+	var postOptions = {
+		uri : serviceRoot + '/recipe',
+		headers : {
+			'Content-Type' : 'application/json',
+			'Content-Length' : recipe.length
+		},
+		json : true,
+		body : recipe,
+		simple: false
+	};
+	return rs.post(postOptions);
+}
+
 app.get('/api/recipe', function(request, response, next) {
 	performRecipeListGET().then(function(data) {
 			response.json(data);
@@ -46,10 +60,20 @@ app.get('/api/recipe', function(request, response, next) {
 app.get('/api/recipe/:recipeId', function(request, response, next) {
 	var recipeId = request.params.recipeId;
 	performRecipeGET(recipeId).then(function(data) {
+			response.json(data);
+		})
+		.caught(function(error) {
+			console.log('Error getting recipe with id ' + recipeId + ': ', error);
+		});
+});
+
+app.post('/api/recipe', function(request, response, next) {
+	var recipe = request.body;
+	performRecipePOST(recipe).then(function(data) {
 		response.json(data);
 	})
 	.caught(function(error) {
-		console.log('Error getting recipe with id ' + recipeId + ': ', error);
+		console.log('Error posting a new recipe:', recipe, 'Error:', error);
 	});
 });
 

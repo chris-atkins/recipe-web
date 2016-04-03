@@ -114,7 +114,7 @@ describe('the endpoint', function() {
 	describe('/recipe/{id}', function(){
 	
 		it('will save with a post and return the saved object with id populated', function(done) {
-			var newRecipe = JSON.stringify({'recipeName' : 'hi', 'recipeContent' : 'it is me'});
+			var newRecipe = {'recipeName' : 'hi', 'recipeContent' : 'it is me'};
 	
 			performRecipePOST(newRecipe).then(function(recipe) {
 				expect(recipe.recipeName).toBe('hi');
@@ -125,7 +125,7 @@ describe('the endpoint', function() {
 		});
 	
 		it('will GET a recipe by id after it has been saved', function(done) {
-			var newRecipe = JSON.stringify({'recipeName' : 'hi again', 'recipeContent' : 'it is more of me'});
+			var newRecipe = {'recipeName' : 'hi again', 'recipeContent' : 'it is more of me'};
 	
 			performRecipePOST(newRecipe).then(function(response) { return response.recipeId;})
 			.then(performRecipeGET).then(function(recipe) {
@@ -145,7 +145,7 @@ describe('the endpoint', function() {
 		});
 		
 		it('will DELETE an existing recipe', function(done) {
-			var newRecipe = JSON.stringify({'recipeName': 'the best name', 'recipeContent': 'some pretty good content'});
+			var newRecipe = {'recipeName': 'the best name', 'recipeContent': 'some pretty good content'};
 			
 			performRecipePOST(newRecipe).then(function(response) {return response.recipeId;})
 			.then(performRecipeGET).then(function(recipe){
@@ -160,7 +160,7 @@ describe('the endpoint', function() {
 		});
 		
 		it('DELETE returns 204', function(done) {
-			var newRecipe = JSON.stringify({'recipeName': 'THE name', 'recipeContent': 'reasonably ok content'});
+			var newRecipe = {'recipeName': 'THE name', 'recipeContent': 'reasonably ok content'};
 			
 			performRecipePOST(newRecipe).then(function(response) {return response.recipeId;})
 			.then(performRecipeGET).then(function(recipe) {return recipe.recipeId;})
@@ -188,8 +188,8 @@ describe('the endpoint', function() {
 			var firstRecipe = {'recipeName' : 'first', 'recipeContent': 'firstContent'};
 			var secondRecipe = {'recipeName' : 'second', 'recipeContent': 'secondContent'};
 			
-			performRecipePOST(JSON.stringify(firstRecipe)).then(function(){})
-			.then(performRecipePOSTFunction(JSON.stringify(secondRecipe)))
+			performRecipePOST(firstRecipe).then(function(){})
+			.then(performRecipePOSTFunction(secondRecipe))
 			.then(performRecipeListGET)
 			.then(function(response){
 				expect(response.length).toBeGreaterThan(1);
@@ -206,9 +206,9 @@ describe('the endpoint', function() {
 			var searchString = 'fiNd%20ME';
 			
 			cleanUpTestRecipesThatHaveBeenPosted()
-			.then(performRecipePOSTFunction(JSON.stringify(firstRecipe)))
-			.then(performRecipePOSTFunction(JSON.stringify(secondRecipe)))
-			.then(performRecipePOSTFunction(JSON.stringify(thirdRecipe)))
+			.then(performRecipePOSTFunction(firstRecipe))
+			.then(performRecipePOSTFunction(secondRecipe))
+			.then(performRecipePOSTFunction(thirdRecipe))
 			
 			.then(performRecipeListGETwithSearchStringFunction(searchString))
 			.then(function(response) {

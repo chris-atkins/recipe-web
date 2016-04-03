@@ -49,7 +49,7 @@ describe('the home page', function() {
 		  var saveButton = element(by.id('save-button'));
 		  expect(saveButton.getText()).toBe('Save New Recipe');
 		  saveButton.click();
-		  expect(browser.getLocationAbsUrl()).toMatch('/save-recipe');
+		  expect(browser.getLocationAbsUrl()).toMatch('/new-recipe');
 	  });
   });
 });

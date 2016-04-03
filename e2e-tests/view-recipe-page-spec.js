@@ -1,5 +1,5 @@
 'use strict';
-var dataUtils = require('./data-utils')
+var dataUtils = require('./data-utils');
 
 describe('the vew recipe page', function() {
 	

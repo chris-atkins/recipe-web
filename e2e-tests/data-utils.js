@@ -2,6 +2,7 @@
 
 var http = require('http');
 var rs = require('request-promise');
+var _ = require('underscore');
 var config = browser.params;
 
 var listOfRecipeIdsToCleanUp = [];
@@ -18,8 +19,7 @@ var addRecipes = function(recipeArray) {
 	return p;
 }
 
-function postRecipe(recipeJS) {
-	var recipe = JSON.stringify(recipeJS);
+function postRecipe(recipe) {
 	var postOptions = {
 		uri : config.apiBaseUrl + '/recipe',
 		headers : {
@@ -48,15 +48,28 @@ var cleanupData = function(done) {
 }
 
 function cleanUpTestRecipesThatHaveBeenPosted() {
-	var p = performRecipeListGET();
-	for (var i = 0; i < listOfRecipeIdsToCleanUp.length; i++) {
-		p = p.then(performRecipeDELETEFunction(listOfRecipeIdsToCleanUp[i]));
-	}
+	var p = cleanUpTestRecipes(listOfRecipeIdsToCleanUp);
 	p = p.then(function(response){
 		listOfRecipeIdsToCleanUp = [];
 	});
-	
 	return p;
+}
+
+function cleanUpTestRecipes(recipeIds) {
+	var p = performRecipeListGET();
+	for (var i = 0; i < recipeIds.length; i++) {
+		p = p.then(performRecipeDELETEFunction(recipeIds[i]));
+	}
+	return p;
+}
+
+var removeAllRecipeData = function(done) {
+	performRecipeListGET().then(function(recipeList) {
+		var recipeIds = _.map(recipeList, function(recipe) {
+			return recipe.recipeId;
+		});
+		cleanUpTestRecipes(recipeIds).then(function(){done();});
+	});
 }
 
 function performRecipeListGET() {
@@ -86,5 +99,6 @@ function performRecipeDELETEFunction(recipeId) {
 module.exports = {
 	addRecipe: postRecipe,
 	addRecipes: addRecipes,
-	cleanupData: cleanupData
+	cleanupData: cleanupData, 
+	removeAllRecipeData: removeAllRecipeData
 }

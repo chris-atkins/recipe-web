@@ -5,7 +5,7 @@ angular.module('recipe', [
   'ngRoute',
   'recipe.home',
   'recipe.searchRecipes',
-  'recipe.saveRecipe',
+  'recipe.newRecipe',
   'recipe.browseAllRecipes',
   'recipe.viewRecipe',
   'myApp.view1',
