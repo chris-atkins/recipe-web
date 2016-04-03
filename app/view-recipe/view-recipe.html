@@ -1,11 +1,13 @@
-<h2>
-	<span id="recipe-name">{{recipe.recipeName}}</span>
-</h2>
+<div class="container well">
+	<h2><span id="recipe-name">{{recipe.recipeName}}</span></h2>
+</div>
 
-<p>
-	<span id="recipe-content" ng-bind-html="recipe.recipeContent"></span>
-</p>
+<div class="container">
+	<p>
+		<span id="recipe-content" ng-bind-html="recipe.recipeContent"></span>
+	</p>
+</div>
 
-<div>
-	<a id="home-button" href="#/home">Home</a>
+<div class="container">
+	<a id="home-button" class="btn btn-default" href="#/home" role="button">Home</a>
 </div>
