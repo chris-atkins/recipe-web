@@ -35,6 +35,30 @@ describe('the vew recipe page', function() {
 		});		
 	});
 	
+	describe('handles multi-line content', function() {
+		var multilineRecipeId;
+		var multilineContent = 'First Line\nSecond Line'
+		
+		beforeAll(function(done) {
+			var recipeToAdd = {recipeName: recipeName, recipeContent: multilineContent};
+			dataUtils.addRecipe(recipeToAdd).then(function(recipe) {
+				multilineRecipeId = recipe.recipeId;
+			}).then(done);
+		});
+		
+		afterAll(function(done) {
+			dataUtils.cleanupData(done);
+		});
+		
+		it('shows the content on separate lines', function() {
+			browser.get('/#/view-recipe/' + multilineRecipeId);
+			var recipeContentElement = element(by.id('recipe-content'));
+			
+			expect(recipeContentElement.getInnerHtml()).toBe('First Line<br>Second Line');
+			expect(recipeContentElement.getText()).toBe('First Line\nSecond Line');
+		});
+	});
+	
 	describe('navigation', function() {
 		
 		beforeEach(function() {
