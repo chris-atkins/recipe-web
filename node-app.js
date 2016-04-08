@@ -16,9 +16,13 @@ app.use(bodyParser.urlencoded({extended: 'true'}));
 app.use(bodyParser.json());
 
 
-function performRecipeListGET() {
+function performRecipeListGET(searchString) {
+	var uri = serviceRoot + '/recipe';
+	if (searchString) {
+		uri += '?searchString=' + searchString;
+	}
 	var getOptions = {
-		uri : serviceRoot + '/recipe',
+		uri : uri,
 		json : true,
 		simple: false
 	}
@@ -49,7 +53,7 @@ function performRecipePOST(recipe) {
 }
 
 app.get('/api/recipe', function(request, response, next) {
-	performRecipeListGET().then(function(data) {
+	performRecipeListGET(request.query.searchString).then(function(data) {
 		response.json(data);
 	})
 	.caught(function(error) {
