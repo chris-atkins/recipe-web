@@ -7,3 +7,4 @@ tmp
 .idea
 /bin/
 .tern-project
+npm-debug.log
