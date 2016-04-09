@@ -12,9 +12,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr class="recipe" ng-repeat="recipe in recipeList">
+			<tr id="{{recipe.recipeId}}" class="recipe" ng-repeat="recipe in recipeList">
 				<td><span class="recipe-name">{{recipe.recipeName}}</span></td>
-				<td><a id="{{recipe.recipeId}}" class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>
+				<td><a class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>
 			</tr>
 		</tbody>
 	</table>
