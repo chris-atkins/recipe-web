@@ -1,5 +1,6 @@
 'use strict';
 var dataUtils = require('./data-utils');
+var pageUtils = require('./page-utils');
 
 describe('the browse all recipes page', function() {
 
@@ -65,6 +66,8 @@ describe('the browse all recipes page', function() {
   
   describe('has navigation:', function() {
 	  
+	  var allRecipes = element.all(by.className('recipe'));
+	  
 	  beforeEach(function() {
 		    browser.get('/#/browse-all-recipes');
 	  });
@@ -77,25 +80,15 @@ describe('the browse all recipes page', function() {
 	  });
 	  
 	  it('recipes contain links that take you to the page for that recipe', function(done) {
-		  var recipeLink = findFirstInsertedRecipeLink();
+		  var recipe = pageUtils.findRecipeWithName('First Recipe Name', allRecipes);
+		  var recipeLink = recipe.element(by.className('view-recipe-link'));
 		  
-		  recipeLink.getAttribute('id').then(function(recipeId) {
+		  recipe.getAttribute('id').then(function(recipeId) {
 			  
 			  recipeLink.click();	
 			  
 			  expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId);
 		  }).then(done, done.fail);
 	  });
-	  
-	  function findFirstInsertedRecipeLink() {
-		  var allRecipes = element.all(by.className('recipe'));
-		  var firstRecipeAsArray = allRecipes.filter(function(item) {
-			  return item.element(by.className('recipe-name')).getText().then(function(recipeText) {
-				  return recipeText === 'First Recipe Name';
-			  });
-		  });
-		  expect(firstRecipeAsArray.count()).toBe(1);
-		  return firstRecipeAsArray.first().element(by.className('view-recipe-link'));
-	  }
   });
 });

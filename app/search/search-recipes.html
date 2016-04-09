@@ -6,9 +6,15 @@
 
 <div class="container">
 	<div class="input-group form-group">
-		<input id="search-input" class="form-control" placeholder="Search for..." type="text" ng-model="searchString"/>
+		<input id="search-input" class="form-control" placeholder="Search for..." autofocus type="text" ng-model="searchString"/>
 		<span class="input-group-btn"><button id="search-button" class="btn btn-default" ng-click="searchRecipes()">Search Recipes</button></span>
 	</div>
+</div>
+
+<div id="no-search-results-message" class="container" ng-show="recipeList.length == 0 && searchHasOccurred">
+	<p class="lead">
+		<span id="greeting-message">No recipes were found that match the search.</span>
+	</p>
 </div>
 
 <div id="recipe-list" class="container">
@@ -19,9 +25,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr class="recipe" ng-repeat="recipe in recipeList">
+			<tr id="{{recipe.recipeId}}" class="recipe" ng-repeat="recipe in recipeList">
 				<td><span class="recipe-name">{{recipe.recipeName}}</span></td>
-				<td><a id="{{recipe.recipeId}}" class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>
+				<td><a class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>
 			</tr>
 		</tbody>
 	</table>

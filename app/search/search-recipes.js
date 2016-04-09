@@ -13,11 +13,13 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 	
 	$scope.recipeList = [];
 	$scope.searchString = '';
+	$scope.searchHasOccurred = false;
 	
 	$scope.searchRecipes = function() {
 		$http.get('/api/recipe?searchString=' + $scope.searchString)
 			.success(function(data) {
 				$scope.recipeList = data;
+				$scope.searchHasOccurred = true;
 			})
 			.error(function(error) {
 				console.log('Error getting recipes:', error);
