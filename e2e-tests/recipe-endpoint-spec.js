@@ -200,11 +200,11 @@ describe('the endpoint', function() {
 		});
 		
 		it('GET with a search string returns only matching recipes', function(done) {
-			var firstRecipe = {'recipeName' : 'Search Firstme', 'recipeContent': 'this one should be included'};
+			var firstRecipe = {'recipeName' : 'Search First ThisOne', 'recipeContent': 'this one should be included'};
 			var secondRecipe = {'recipeName' : 'Search second', 'recipeContent': 'I should not be in the response'};
 			var thirdRecipe = {'recipeName' : 'Search third', 'recipeContent': 'I should definitely be find'};
-			var searchString = 'fiNd%20ME';
-			
+			var searchString = 'fiNd%20thisONE';
+				
 			cleanUpTestRecipesThatHaveBeenPosted()
 			.then(performRecipePOSTFunction(firstRecipe))
 			.then(performRecipePOSTFunction(secondRecipe))
