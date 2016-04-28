@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 var rs = require('request-promise');
 
 var serviceIp = process.env.SERVICE_IP || '127.0.0.1'
-var serviceRoot = 'http://' + serviceIp + ':8080/api'
+var serviceRoot = 'http://' + serviceIp + ':5555/api'
 
 var app = express();
 
