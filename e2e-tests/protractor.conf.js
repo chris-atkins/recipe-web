@@ -13,9 +13,9 @@ exports.config = {
   
   params: {
 	  apiHostname: '127.0.0.1',
-	  apiPort: 8080,
+	  apiPort: 5555,
 	  apiBasePath: '/api',
-	  apiBaseUrl: 'http://127.0.0.1:8080/api'
+	  apiBaseUrl: 'http://127.0.0.1:5555/api'
   },
   
   framework: 'jasmine2',
