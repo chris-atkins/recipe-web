@@ -16,8 +16,8 @@ exports.config = {
   params: {
 	  apiHostname: process.env.SERVICE_IP,
 	  apiBasePath: '/api',
-	  apiPort: 8080,
-	  apiBaseUrl: 'http://' + process.env.SERVICE_IP + ':8080/api'
+	  apiPort: 5555,
+	  apiBaseUrl: 'http://' + process.env.SERVICE_IP + ':5555/api'
   },
 
   framework: 'jasmine2',
