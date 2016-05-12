@@ -2,19 +2,39 @@ var express = require('express');
 
 var http = require('http');
 var path = require('path');
-var bodyParser = require('body-parser')
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 var rs = require('request-promise');
 
-var serviceIp = process.env.SERVICE_IP || '127.0.0.1'
-var serviceRoot = 'http://' + serviceIp + ':5555/api'
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth20').Strategy;	
+
+var serviceIp = process.env.SERVICE_IP || '127.0.0.1';
+var webIp = process.env.WEB_IP || 'localhost';
+var serviceRoot = 'http://' + serviceIp + ':5555/api';
+var port = process.env.PORT || '8000';
 
 var app = express();
 
-app.set('port', process.env.PORT || 8000);
+app.set('port', port);
 app.use(express.static(path.join(__dirname, 'app')));
 app.use(bodyParser.urlencoded({extended: 'true'}));
 app.use(bodyParser.json());
 
+
+passport.use(new GoogleStrategy({
+		clientID: '235519740641-q8iql0lbhh9fj35f5co7oeadda05m5k2.apps.googleusercontent.com',//GOOGLE_CLIENT_ID,
+		clientSecret: '3z7gHkX2RENyTlfWU2cq5q9u',//GOOGLE_CLIENT_SECRET,
+		callbackURL: 'http://' + webIp + ':' + port + '/auth/google/callback'
+	},
+	function(accessToken, refreshToken, profile, cb) {
+//    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+//      return cb(err, user);
+//    });
+		console.log("INSIDE GOOGLE STRATEGY FUNCTION:", profile);
+	}
+));
+app.use(passport.initialize());
 
 function performRecipeListGET(searchString) {
 	var uri = serviceRoot + '/recipe';
@@ -80,6 +100,16 @@ app.post('/api/recipe', function(request, response, next) {
 		console.log('Error posting a new recipe:', recipe, 'Error:', error);
 	});
 });
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
+
+app.get('/auth/google/callback', 
+	passport.authenticate('google', { failureRedirect: '/login' }),
+	function(req, res) {
+		// Successful authentication, redirect home.
+		res.redirect('/');
+	}
+);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
