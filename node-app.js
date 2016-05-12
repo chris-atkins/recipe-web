@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 passport.use(new GoogleStrategy({
 		clientID: '235519740641-q8iql0lbhh9fj35f5co7oeadda05m5k2.apps.googleusercontent.com',//GOOGLE_CLIENT_ID,
 		clientSecret: '3z7gHkX2RENyTlfWU2cq5q9u',//GOOGLE_CLIENT_SECRET,
-		callbackURL: 'http://' + webIp + ':' + port + '/auth/google/callback'
+		callbackURL: 'http://' + webIp + '/auth/google/callback'
 	},
 	function(accessToken, refreshToken, profile, cb) {
 //    User.findOrCreate({ googleId: profile.id }, function (err, user) {
