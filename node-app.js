@@ -23,16 +23,18 @@ app.use(bodyParser.json());
 
 
 passport.use(new GoogleStrategy({
-		clientID: '235519740641-q8iql0lbhh9fj35f5co7oeadda05m5k2.apps.googleusercontent.com',//GOOGLE_CLIENT_ID,
-		clientSecret: '3z7gHkX2RENyTlfWU2cq5q9u',//GOOGLE_CLIENT_SECRET,
+	//see https://console.developers.google.com to get the clientID and clientSecret
+		clientID: '',//GOOGLE_CLIENT_ID,
+		clientSecret: '',//GOOGLE_CLIENT_SECRET,
 		callbackURL: 'http://' + webIp + '/auth/google/callback'
+		//add this to the html:  <a href="/auth/google" class="btn btn-info"><span class="fa fa-google-plus"></span> Google</a>
 	},
 	function(accessToken, refreshToken, profile, cb) {
 //    User.findOrCreate({ googleId: profile.id }, function (err, user) {
 //      return cb(err, user);
 //    });
 		console.log("INSIDE GOOGLE STRATEGY FUNCTION:", profile);
-		return cb(err, profile);
+		return cb(null, profile); //?? not sure about this
 	}
 ));
 app.use(passport.initialize());
