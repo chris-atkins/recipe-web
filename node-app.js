@@ -32,6 +32,7 @@ passport.use(new GoogleStrategy({
 //      return cb(err, user);
 //    });
 		console.log("INSIDE GOOGLE STRATEGY FUNCTION:", profile);
+		return cb(err, profile);
 	}
 ));
 app.use(passport.initialize());
