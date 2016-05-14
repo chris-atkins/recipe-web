@@ -6,9 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var rs = require('request-promise');
 
-var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth20').Strategy;	
-
 var serviceIp = process.env.SERVICE_IP || '127.0.0.1';
 var webIp = process.env.WEB_IP || 'localhost';
 var serviceRoot = 'http://' + serviceIp + ':5555/api';
@@ -20,24 +17,6 @@ app.set('port', port);
 app.use(express.static(path.join(__dirname, 'app')));
 app.use(bodyParser.urlencoded({extended: 'true'}));
 app.use(bodyParser.json());
-
-
-passport.use(new GoogleStrategy({
-	//see https://console.developers.google.com to get the clientID and clientSecret
-		clientID: '',//GOOGLE_CLIENT_ID,
-		clientSecret: '',//GOOGLE_CLIENT_SECRET,
-		callbackURL: 'http://' + webIp + '/auth/google/callback'
-		//add this to the html:  <a href="/auth/google" class="btn btn-info"><span class="fa fa-google-plus"></span> Google</a>
-	},
-	function(accessToken, refreshToken, profile, cb) {
-//    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-//      return cb(err, user);
-//    });
-		console.log("INSIDE GOOGLE STRATEGY FUNCTION:", profile);
-		return cb(null, profile); //?? not sure about this
-	}
-));
-app.use(passport.initialize());
 
 function performRecipeListGET(searchString) {
 	var uri = serviceRoot + '/recipe';
@@ -103,16 +82,6 @@ app.post('/api/recipe', function(request, response, next) {
 		console.log('Error posting a new recipe:', recipe, 'Error:', error);
 	});
 });
-
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
-
-app.get('/auth/google/callback', 
-	passport.authenticate('google', { failureRedirect: '/login' }),
-	function(req, res) {
-		// Successful authentication, redirect home.
-		res.redirect('/');
-	}
-);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
