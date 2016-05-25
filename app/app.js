@@ -3,6 +3,7 @@
 // Declare app level module which depends on views, and components
 angular.module('recipe', [
   'ngRoute',
+  'recipe.user',
   'recipe.home',
   'recipe.searchRecipes',
   'recipe.newRecipe',
