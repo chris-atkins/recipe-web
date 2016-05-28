@@ -12,10 +12,6 @@ describe('Login functionality from the home page', function() {
 		browser.get('');
 	});
 	
-	it('has a user section on the page', function() {
-		expect(userSection.isPresent()).toBe(true);
-	});
-	
 	describe('with NO existing user associated with the current client machine', function() {
 		
 		it('the user section has a link to "Log In"', function() {
@@ -79,6 +75,13 @@ describe('Login functionality from the home page', function() {
 		});
 	
 		it('has fields for a new user to sign up', function() {
+			
+		});
+	});
+	
+	describe('when a user is logged in', function() {
+		
+		it('they stay logged in when navigating between pages', function() {
 			
 		});
 	});

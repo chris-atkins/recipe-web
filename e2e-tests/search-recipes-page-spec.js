@@ -26,6 +26,11 @@ describe('the search recipes page', function() {
 			browser.get('/#/search-recipes');
 		});
 		
+		it('has a user section', function() {
+			var userSection = element(by.className('user-section'));
+			expect(userSection.isPresent()).toBe(true);
+		});
+		
 		it('has a title', function() {
 			var homeButton = element(by.id('search-recipes-page-title'));
 			expect(homeButton.getText()).toBe('Search Recipes');

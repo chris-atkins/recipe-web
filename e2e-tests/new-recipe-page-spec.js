@@ -10,6 +10,11 @@ describe('the new recipe page', function() {
 			browser.get('/#/new-recipe');
 		});
 		
+		it('has a user section', function() {
+			var userSection = element(by.className('user-section'));
+			expect(userSection.isPresent()).toBe(true);
+		});
+		
 		it('has a title', function() {
 			var pageTitle = element(by.id('new-recipe-page-title'));
 			expect(pageTitle.getText()).toBe('Save a New Recipe');

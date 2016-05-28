@@ -30,6 +30,11 @@ describe('the browse all recipes page', function() {
 	  beforeAll(function() {
 		  browser.get('/#/browse-all-recipes');
 	  });
+		
+		it('has a user section', function() {
+			var userSection = element(by.className('user-section'));
+			expect(userSection.isPresent()).toBe(true);
+		});
 	  
 	  it('has a title', function() {
 		  var pageTitle = element(by.id('page-title'))

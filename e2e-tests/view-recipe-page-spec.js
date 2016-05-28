@@ -24,6 +24,11 @@ describe('the vew recipe page', function() {
 			browser.get('/#/view-recipe/' + recipeId);
 		});
 		
+		it('shows a user section', function() {
+			var userSection = element(by.className('user-section'));
+			expect(userSection.isPresent()).toBe(true);
+		});
+		
 		it('shows the recipe name', function() {
 			var recipeNameElement = element(by.id('recipe-name'));
 			expect(recipeNameElement.getText()).toBe(recipeName);
