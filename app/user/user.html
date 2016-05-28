@@ -1,8 +1,25 @@
-<div class="user-section" ng-controller="UserCtrl">
-	<a class="login-link" ng-click="showLogin()">Log In</a>
-	<div class="login-fields" ng-show="loginVisible">
-		<div class="user-login-message">We don't recognize a user from here. Please register or sign in.</div>
-		<input class="sign-up-user-name"></input>
-		<input class="sign-up-user-email"></input>
+<nav class="user-section navbar-default hidden-print" ng-controller="UserCtrl">
+	<div class="container-fluid">
+
+		<ul class="nav navbar-nav navbar-right navbar-link">
+			<li>
+				<a class="login-link" ng-click="toggleLogin()">Log In</a>
+			</li>
+		</ul>
+
+		<ul class="login-fields nav navbar-form navbar-right" ng-show="loginVisible">
+
+			<li class="user-login-message">We don't recognize a user from here. Please register or sign in.</li>
+
+			<li class="form-group">
+				<label for="sign-up-user-name">Name</label>
+				<input id="sign-up-user-name" class="form-control input-sm" placeholder="Jane"></input>
+			</li>
+
+			<li class="form-group">
+				<label for="sign-up-user-email">Email</label>
+				<input id="sign-up-user-email" class="form-control input-sm" placeholder="jane.doe@example.com"></input>
+			</li>
+		</ul>
 	</div>
-</div>
+</nav>

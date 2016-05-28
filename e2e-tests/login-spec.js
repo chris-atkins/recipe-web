@@ -5,8 +5,8 @@ describe('Login functionality from the home page', function() {
 	var userSection = element(by.className('user-section'));
 	var loginLink = userSection.element(by.className('login-link'));
 	var userLoginMessage = userSection.element(by.className('user-login-message'));
-	var signupNameField = element(by.className('sign-up-user-name'));
-	var signupEmailField = element(by.className('sign-up-user-email'));
+	var signupNameField = element(by.id('sign-up-user-name'));
+	var signupEmailField = element(by.id('sign-up-user-email'));
 	
 	beforeAll(function() {
 		browser.get('');
@@ -46,6 +46,13 @@ describe('Login functionality from the home page', function() {
 					expect(userLoginMessage.isPresent()).toBe(true);
 					expect(userLoginMessage.getText()).toBe("We don't recognize a user from here. Please register or sign in.");
 				});
+			});
+			
+			it('dismisses the login fields when the login link is selected again', function() {
+				loginLink.click();
+				expect(signupNameField.isDisplayed()).toBe(false);
+				expect(signupEmailField.isDisplayed()).toBe(false);
+				expect(userLoginMessage.isDisplayed()).toBe(false);
 			});
 		});
 	});

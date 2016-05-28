@@ -6,7 +6,7 @@ angular.module('recipe.user', [])
 	
 	$scope.loginVisible = false;
 	
-	$scope.showLogin = function() {
-		$scope.loginVisible = true;
+	$scope.toggleLogin = function() {
+		$scope.loginVisible = !$scope.loginVisible;
 	}
 });
