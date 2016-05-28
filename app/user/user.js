@@ -3,5 +3,10 @@
 angular.module('recipe.user', [])
 
 .controller('UserCtrl', function($scope, $http) {
-	console.log('hi');
+	
+	$scope.loginVisible = false;
+	
+	$scope.showLogin = function() {
+		$scope.loginVisible = true;
+	}
 });
