@@ -1,6 +1,5 @@
 'use strict';
 
-var http = require('http');
 var rs = require('request-promise');
 var config = browser.params;
 
