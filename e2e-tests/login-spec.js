@@ -73,6 +73,10 @@ describe('Login functionality from the home page', function() {
 				expect(signupButton.isDisplayed()).toBe(false);
 				expect(userLoginMessage.isDisplayed()).toBe(false);
 			});
+			
+			it('when registering with an existing email', function() {
+				
+			});
 		});
 	});
 	
@@ -105,7 +109,16 @@ describe('Login functionality from the home page', function() {
 	describe('when a user is logged in', function() {
 		
 		it('they stay logged in when navigating between pages', function() {
+			browser.get('');
+			loginLink.click();
 			
+			signupNameField.sendKeys('OhaiAgain');
+			signupEmailField.sendKeys('its@meagain.com');
+			signupButton.click();			
+			expect(loggedInUserMessage.getText()).toBe('Welcome, OhaiAgain');
+			
+			element(by.id('browse-all-button')).click();
+			expect(loggedInUserMessage.getText()).toBe('Welcome, OhaiAgain');
 		});
 	});
 });
