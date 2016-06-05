@@ -1,5 +1,6 @@
 <nav class="user-section navbar-default hidden-print" ng-controller="UserCtrl">
-	<div class="container-fluid">
+
+	<div class="container-fluid" ng-hide="isLoggedIn">
 
 		<ul class="nav navbar-nav navbar-right navbar-link">
 			<li>
@@ -13,12 +14,24 @@
 
 			<li class="form-group">
 				<label for="sign-up-user-name">Name</label>
-				<input id="sign-up-user-name" class="form-control input-sm" placeholder="Jane"></input>
+				<input id="sign-up-user-name" class="form-control input-sm" ng-model="name" placeholder="Jane"></input>
 			</li>
 
 			<li class="form-group">
 				<label for="sign-up-user-email">Email</label>
-				<input id="sign-up-user-email" class="form-control input-sm" placeholder="jane.doe@example.com"></input>
+				<input id="sign-up-user-email" class="form-control input-sm" ng-model="email" placeholder="jane.doe@example.com"></input>
+			</li>
+			
+			<li class="form-group">
+				<button id="sign-up-user-button" class="btn btn-default btn-sm" ng-click="logIn()">Sign Up</button>
+			</li>
+		</ul>
+	</div>
+	
+	<div class="container-fluid" ng-show="isLoggedIn">
+		<ul class="nav navbar-nav navbar-right navbar-link">
+			<li>
+				<a id="logged-in-user-message">Welcome, {{user.userName}}</a>
 			</li>
 		</ul>
 	</div>

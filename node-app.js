@@ -114,6 +114,20 @@ function performRecipePOST(recipe) {
 	return rs.post(postOptions);
 }
 
+function performUserPOST(user) {
+	var postOptions = {
+		uri : serviceRoot + '/user',
+		headers : {
+			'Content-Type' : 'application/json',
+			'Content-Length' : user.length
+		},
+		json : true,
+		body : user,
+		simple: false
+	};
+	return rs.post(postOptions);
+}
+
 app.get('/api/recipe', function(request, response, next) {
 	performRecipeListGET(request.query.searchString).then(function(data) {
 		response.json(data);
@@ -140,6 +154,16 @@ app.post('/api/recipe', function(request, response, next) {
 	})
 	.caught(function(error) {
 		console.log('Error posting a new recipe:', recipe, 'Error:', error);
+	});
+});
+
+app.post('/api/user', function(request, response, next) {
+	var user = request.body;
+	performUserPOST(user).then(function(data) {
+		response.json(data);
+	})
+	.caught(function(error) {
+		console.log('Error posting a new user:', user, 'Error:', error);
 	});
 });
 

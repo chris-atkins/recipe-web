@@ -3,7 +3,7 @@
 var rs = require('request-promise')
 var config = browser.params;
 
-fdescribe('The User endpoints', function() {
+describe('The User endpoints', function() {
 	
 	function performUserPOST(userToPost, options) {
 		var postOptions = {

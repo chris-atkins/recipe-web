@@ -4,9 +4,13 @@ describe('Login functionality from the home page', function() {
 	
 	var userSection = element(by.className('user-section'));
 	var loginLink = userSection.element(by.className('login-link'));
+	
 	var userLoginMessage = userSection.element(by.className('user-login-message'));
 	var signupNameField = element(by.id('sign-up-user-name'));
 	var signupEmailField = element(by.id('sign-up-user-email'));
+	var signupButton = element(by.id('sign-up-user-button'));
+	
+	var loggedInUserMessage = element(by.id('logged-in-user-message'));
 	
 	beforeAll(function() {
 		browser.get('');
@@ -36,10 +40,12 @@ describe('Login functionality from the home page', function() {
 				it('has fields for a new user to sign up', function() {
 					expect(signupNameField.isDisplayed()).toBe(true);
 					expect(signupEmailField.isDisplayed()).toBe(true);
+					expect(signupButton.isDisplayed()).toBe(true);
+					expect(signupButton.getText()).toBe('Sign Up');
 				});
 				
 				it('includes a message that no user is found', function() {
-					expect(userLoginMessage.isPresent()).toBe(true);
+					expect(userLoginMessage.isDisplayed()).toBe(true);
 					expect(userLoginMessage.getText()).toBe("We don't recognize a user from here. Please register or sign in.");
 				});
 			});
@@ -48,6 +54,23 @@ describe('Login functionality from the home page', function() {
 				loginLink.click();
 				expect(signupNameField.isDisplayed()).toBe(false);
 				expect(signupEmailField.isDisplayed()).toBe(false);
+				expect(userLoginMessage.isDisplayed()).toBe(false);
+			});
+		});
+		
+		describe('the user can register', function() {
+			
+			it('and their name is displayed instead of the Log In link', function() {
+				loginLink.click();
+				
+				signupNameField.sendKeys('Ohai');
+				signupEmailField.sendKeys('its@me.com');
+				signupButton.click();
+				
+				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
+				expect(signupNameField.isDisplayed()).toBe(false);
+				expect(signupEmailField.isDisplayed()).toBe(false);
+				expect(signupButton.isDisplayed()).toBe(false);
 				expect(userLoginMessage.isDisplayed()).toBe(false);
 			});
 		});
