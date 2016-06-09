@@ -8,14 +8,9 @@
 			</li>
 		</ul>
 
-		<ul class="login-fields nav navbar-form navbar-right" ng-show="loginVisible">
+		<ul class="login-fields nav navbar-form navbar-right" ng-show="shouldShowLogIn()">
 
-			<li class="user-login-message">We don't recognize a user from here. Please register or sign in.</li>
-
-			<li class="form-group">
-				<label for="sign-up-user-name">Name</label>
-				<input id="sign-up-user-name" class="form-control input-sm" ng-model="name" placeholder="Jane"></input>
-			</li>
+			<li class="user-login-message">Please enter your email address to log in, or to sign up if you are new to our site.</li>
 
 			<li class="form-group">
 				<label for="sign-up-user-email">Email</label>
@@ -23,7 +18,21 @@
 			</li>
 			
 			<li class="form-group">
-				<button id="sign-up-user-button" class="btn btn-default btn-sm" ng-click="logIn()">Sign Up</button>
+				<button id="log-in-user-button" class="btn btn-default btn-sm" ng-click="logIn()">Log In</button>
+			</li>
+		</ul>
+		
+		<ul class="login-fields nav navbar-form navbar-right" ng-show="shouldShowSignUp()">
+
+			<li class="user-sign-up-message">What name would you like to use?</li>
+
+			<li class="form-group">
+				<label for="sign-up-user-name">Name</label>
+				<input id="sign-up-user-name" class="form-control input-sm" ng-model="name" placeholder="Jane"></input>
+			</li>
+			
+			<li class="form-group">
+				<button id="sign-up-user-button" class="btn btn-default btn-sm" ng-click="signUp()">Sign Up</button>
 			</li>
 		</ul>
 	</div>

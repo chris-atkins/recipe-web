@@ -6,17 +6,19 @@ describe('Login functionality from the home page', function() {
 	var loginLink = userSection.element(by.className('login-link'));
 	
 	var userLoginMessage = userSection.element(by.className('user-login-message'));
+	var userSignUpMessage = userSection.element(by.className('user-sign-up-message'));
 	var signupNameField = element(by.id('sign-up-user-name'));
 	var signupEmailField = element(by.id('sign-up-user-email'));
+	var loginButton = element(by.id('log-in-user-button'));
 	var signupButton = element(by.id('sign-up-user-button'));
 	
 	var loggedInUserMessage = element(by.id('logged-in-user-message'));
 	
-	beforeAll(function() {
-		browser.get('');
-	});
-	
 	describe('with NO existing user associated with the current client machine', function() {
+
+		beforeAll(function() {
+			browser.get('');
+		});
 		
 		it('the user section has a link to "Log In"', function() {
 			expect(loginLink.isPresent()).toBe(true);
@@ -31,26 +33,16 @@ describe('Login functionality from the home page', function() {
 		
 		describe('when selecting "Log In" in the user section', function() {
 			
-			beforeAll(function() {
+			beforeEach(function() {
+				browser.get('');
+			});
+			
+			it('toggles login fields when the login link is selected', function() {
 				loginLink.click();
-			});
-			
-			describe('with NO existing user associated with the current client machine, and a new user', function() {
+				expect(userLoginMessage.isDisplayed()).toBe(true);
+				expect(signupEmailField.isDisplayed()).toBe(true);
+				expect(loginButton.isDisplayed()).toBe(true);
 				
-				it('has fields for a new user to sign up', function() {
-					expect(signupNameField.isDisplayed()).toBe(true);
-					expect(signupEmailField.isDisplayed()).toBe(true);
-					expect(signupButton.isDisplayed()).toBe(true);
-					expect(signupButton.getText()).toBe('Sign Up');
-				});
-				
-				it('includes a message that no user is found', function() {
-					expect(userLoginMessage.isDisplayed()).toBe(true);
-					expect(userLoginMessage.getText()).toBe("We don't recognize a user from here. Please register or sign in.");
-				});
-			});
-			
-			it('dismisses the login fields when the login link is selected again', function() {
 				loginLink.click();
 				expect(signupNameField.isDisplayed()).toBe(false);
 				expect(signupEmailField.isDisplayed()).toBe(false);
@@ -59,24 +51,66 @@ describe('Login functionality from the home page', function() {
 		});
 		
 		describe('the user can register', function() {
+
+			beforeEach(function() {
+				browser.get('');
+			});
 			
 			it('and their name is displayed instead of the Log In link', function() {
 				loginLink.click();
-				
-				signupNameField.sendKeys('Ohai');
+				expectLoginFieldsAreDisplayed();
 				signupEmailField.sendKeys('its@me.com');
-				signupButton.click();
 				
+				loginButton.click();
+				expectSignupFieldsAreDisplayed();
+				signupNameField.sendKeys('Ohai');
+				
+				signupButton.click();
+				expectNoUserFieldsAreDisplayed();
 				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
-				expect(signupNameField.isDisplayed()).toBe(false);
-				expect(signupEmailField.isDisplayed()).toBe(false);
-				expect(signupButton.isDisplayed()).toBe(false);
-				expect(userLoginMessage.isDisplayed()).toBe(false);
 			});
 			
 			it('when registering with an existing email', function() {
+				loginLink.click();
+				expectLoginFieldsAreDisplayed();
+				signupEmailField.sendKeys('its@me.com');
 				
+				loginButton.click();
+				expectNoUserFieldsAreDisplayed();
+				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
 			});
+
+			function expectLoginFieldsAreDisplayed() {
+				expect(userSignUpMessage.isDisplayed()).toBe(false);
+				expect(userLoginMessage.isDisplayed()).toBe(true);
+				expect(userLoginMessage.getText()).toBe("Please enter your email address to log in, or to sign up if you are new to our site.");
+				expect(signupNameField.isDisplayed()).toBe(false);
+				expect(signupEmailField.isDisplayed()).toBe(true);
+				expect(loginButton.isDisplayed()).toBe(true);
+				expect(signupButton.isDisplayed()).toBe(false);
+				expect(loginButton.getText()).toBe('Log In');
+			}
+			
+			function expectSignupFieldsAreDisplayed() {
+				expect(userSignUpMessage.isDisplayed()).toBe(true);
+				expect(userSignUpMessage.getText()).toBe("What name would you like to use?");
+				expect(userLoginMessage.isDisplayed()).toBe(false);
+				expect(signupNameField.isDisplayed()).toBe(true);
+				expect(signupEmailField.isDisplayed()).toBe(false);
+				expect(loginButton.isDisplayed()).toBe(false);
+				expect(signupButton.isDisplayed()).toBe(true);
+				expect(signupButton.getText()).toBe('Sign Up');
+			}
+			
+			function expectNoUserFieldsAreDisplayed() {
+				expect(userSignUpMessage.isDisplayed()).toBe(false);
+				expect(userLoginMessage.isDisplayed()).toBe(false);
+				expect(signupNameField.isDisplayed()).toBe(false);
+				expect(signupEmailField.isDisplayed()).toBe(false);
+				expect(signupButton.isDisplayed()).toBe(false);
+				expect(loginButton.isDisplayed()).toBe(false);
+				expect(userLoginMessage.isDisplayed()).toBe(false);
+			}
 		});
 	});
 	
@@ -112,8 +146,10 @@ describe('Login functionality from the home page', function() {
 			browser.get('');
 			loginLink.click();
 			
-			signupNameField.sendKeys('OhaiAgain');
 			signupEmailField.sendKeys('its@meagain.com');
+			loginButton.click();
+			
+			signupNameField.sendKeys('OhaiAgain');
 			signupButton.click();			
 			expect(loggedInUserMessage.getText()).toBe('Welcome, OhaiAgain');
 			

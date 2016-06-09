@@ -86,7 +86,8 @@ function performRecipeListGET(searchString) {
 	var getOptions = {
 		uri : uri,
 		json : true,
-		simple: false
+		simple: false,
+		resolveWithFullResponse: true
 	}
 	return rs.get(getOptions);
 }
@@ -95,7 +96,8 @@ function performRecipeGET(recipeId) {
 	var getOptions = {
 		uri : serviceRoot + '/recipe/' + recipeId,
 		json : true,
-		simple: false
+		simple: false,
+		resolveWithFullResponse: true
 	}
 	return rs.get(getOptions);
 }
@@ -109,7 +111,8 @@ function performRecipePOST(recipe) {
 		},
 		json : true,
 		body : recipe,
-		simple: false
+		simple: false,
+		resolveWithFullResponse: true
 	};
 	return rs.post(postOptions);
 }
@@ -123,16 +126,29 @@ function performUserPOST(user) {
 		},
 		json : true,
 		body : user,
-		simple: false
+		simple: false,
+		resolveWithFullResponse: true
 	};
 	return rs.post(postOptions);
 }
 
+function performUserGETByEmail(email) {
+	var getOptions = {
+			uri : serviceRoot + '/user?email=' + email,
+			json : true,
+			simple: false,
+			resolveWithFullResponse: true
+	}
+	
+	return rs.get(getOptions);
+}
+
 app.get('/api/recipe', function(request, response, next) {
 	performRecipeListGET(request.query.searchString).then(function(data) {
-		response.json(data);
+		response.statusCode = data.statusCode;	
+		response.json(data.body);
 	})
-	.caught(function(error) {
+	.catch(function(error) {
 		console.log('Error getting recipes: ', error);
 	});
 });
@@ -140,9 +156,10 @@ app.get('/api/recipe', function(request, response, next) {
 app.get('/api/recipe/:recipeId', function(request, response, next) {
 	var recipeId = request.params.recipeId;
 	performRecipeGET(recipeId).then(function(data) {
-		response.json(data);
+		response.statusCode = data.statusCode;	
+		response.json(data.body);
 	})
-	.caught(function(error) {
+	.catch(function(error) {
 		console.log('Error getting recipe with id ' + recipeId + ': ', error);
 	});
 });
@@ -150,9 +167,10 @@ app.get('/api/recipe/:recipeId', function(request, response, next) {
 app.post('/api/recipe', function(request, response, next) {
 	var recipe = request.body;
 	performRecipePOST(recipe).then(function(data) {
-		response.json(data);
+		response.statusCode = data.statusCode;	
+		response.json(data.body);
 	})
-	.caught(function(error) {
+	.catch(function(error) {
 		console.log('Error posting a new recipe:', recipe, 'Error:', error);
 	});
 });
@@ -160,10 +178,22 @@ app.post('/api/recipe', function(request, response, next) {
 app.post('/api/user', function(request, response, next) {
 	var user = request.body;
 	performUserPOST(user).then(function(data) {
-		response.json(data);
+		response.statusCode = data.statusCode;	
+		response.json(data.body);
 	})
-	.caught(function(error) {
+	.catch(function(error) {
 		console.log('Error posting a new user:', user, 'Error:', error);
+	});
+});
+
+app.get('/api/user', function(request, response, next) {
+	var email = request.query.email;
+	performUserGETByEmail(email).then(function(data) {
+		response.statusCode = data.statusCode;	
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Could not get a user with email:', email, 'Error:', error);
 	});
 });
 

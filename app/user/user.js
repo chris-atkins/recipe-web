@@ -4,6 +4,8 @@ angular.module('recipe.user', [])
 
 .controller('UserCtrl', function($scope, $http, userService) {
 	
+	var loginHasBeenAttempted;
+	
 	$scope.user = userService.getLoggedInUser();
 	$scope.isLoggedIn = userService.isLoggedIn();
 	
@@ -16,12 +18,27 @@ angular.module('recipe.user', [])
 	}
 	
 	$scope.logIn = function() {
-		userService.logIn($scope.name, $scope.email).then(function() {
+		loginHasBeenAttempted = true;
+		userService.logIn($scope.email).then(function() {
 			$scope.user = userService.getLoggedInUser();
 			$scope.isLoggedIn = userService.isLoggedIn();
 		});
 	}
 	
+	$scope.signUp = function() {
+		userService.signUp($scope.name, $scope.email).then(function() {
+			$scope.user = userService.getLoggedInUser();
+			$scope.isLoggedIn = userService.isLoggedIn();
+		});
+	}
+	
+	$scope.shouldShowLogIn = function() {
+		return $scope.loginVisible && !loginHasBeenAttempted;
+	}
+	
+	$scope.shouldShowSignUp = function() {
+		return $scope.loginVisible && loginHasBeenAttempted;
+	}
 })
 
 .factory('userService', function($http) {
@@ -37,7 +54,19 @@ angular.module('recipe.user', [])
 		return loggedInUser;
 	}
 		
-	var logIn = function(name, email) {
+	var logIn = function(email) {
+		return $http.get('api/user?email=' + email)
+		.success(function(user) {
+			loggedInUser = user;
+			loggedIn = true;
+			return user;
+		})
+		.error(function(error) {
+			return {};
+		});
+	}
+	
+	var signUp = function(name, email) {
 		var userToSave = {userName: name, userEmail: email}
 		
 		return $http.post('/api/user', userToSave)
@@ -47,7 +76,6 @@ angular.module('recipe.user', [])
 			return data;
 		})
 		.error(function(error) {
-			console.log('failure saving user:', error);
 			return {};
 		});
 	};
@@ -55,6 +83,7 @@ angular.module('recipe.user', [])
 	return {
 		getLoggedInUser: getLoggedInUser,
 		isLoggedIn: isLoggedIn,
-		logIn: logIn
+		logIn: logIn,
+		signUp: signUp
 	};
 });
