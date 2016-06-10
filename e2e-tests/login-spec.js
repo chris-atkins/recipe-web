@@ -60,7 +60,7 @@ describe('Login functionality from the home page', function() {
 				browser.get('');
 			});
 			
-			it('and their name is displayed instead of the Log In link', function() {
+			it('and their name is displayed instead of the Log In link, and is persisted when refreshed', function() {
 				loginLink.click();
 				expectLoginFieldsAreDisplayed();
 				signupEmailField.sendKeys('its@me.com');
@@ -72,15 +72,21 @@ describe('Login functionality from the home page', function() {
 				signupButton.click();
 				expectNoUserFieldsAreDisplayed();
 				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
+
+				browser.refresh();
+				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
 			});
 			
-			it('when registering with an existing email', function() {
+			it('when registering with an existing email, and is persisted when refreshed', function() {
 				loginLink.click();
 				expectLoginFieldsAreDisplayed();
 				signupEmailField.sendKeys('its@me.com');
 				
 				loginButton.click();
 				expectNoUserFieldsAreDisplayed();
+				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
+				
+				browser.refresh();
 				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
 			});
 

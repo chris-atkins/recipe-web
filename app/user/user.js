@@ -63,8 +63,7 @@ angular.module('recipe.user', [])
 	var logIn = function(email) {
 		return $http.get('api/user?email=' + email)
 		.success(function(user) {
-			loggedInUser = user;
-			loggedIn = true;
+			handleNewlyLoggedInUser(user)
 			return user;
 		})
 		.error(function(error) {
@@ -76,11 +75,9 @@ angular.module('recipe.user', [])
 		var userToSave = {userName: name, userEmail: email}
 		
 		return $http.post('/api/user', userToSave)
-		.success(function(data) {
-			loggedInUser = data;
-			loggedIn = true;
-			saveUserToCookie(data);
-			return data;
+		.success(function(user) {
+			handleNewlyLoggedInUser(user)
+			return user;
 		})
 		.error(function(error) {
 			return {};
@@ -97,6 +94,12 @@ angular.module('recipe.user', [])
 			loggedIn = true;
 			loggedInUser = userFromCookie; 
 		}
+	};
+	
+	function handleNewlyLoggedInUser(user) {
+		loggedInUser = user;
+		loggedIn = true;
+		saveUserToCookie(user);
 	};
 	
 	function saveUserToCookie(user) {
