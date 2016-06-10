@@ -13,5 +13,8 @@
     "angular-cookies": "^1.5.6",
     "html5-boilerplate": "~5.2.0",
     "bootstrap": "~3.3.6"
+  },
+  "resolutions": {
+    "angular": "^1.5.6"
   }
 }
