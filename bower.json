@@ -6,12 +6,15 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "angular": "^1.5.6",
-    "angular-route": "^1.5.6",
-    "angular-loader": "^1.5.6",
-    "angular-mocks": "^1.5.6",
-    "angular-cookies": "^1.5.6",
+    "angular": "~1.4.11",
+    "angular-route": "~1.4.11",
+    "angular-loader": "~1.4.11",
+    "angular-mocks": "~1.4.11",
     "html5-boilerplate": "~5.2.0",
-    "bootstrap": "~3.3.6"
+    "bootstrap": "~3.3.6",
+    "angular-cookies": "^1.4.11"
+  },
+  "resolutions": {
+    "angular": "~1.4.11"
   }
 }
