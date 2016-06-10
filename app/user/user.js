@@ -41,10 +41,16 @@ angular.module('recipe.user', [])
 	}
 })
 
-.factory('userService', function($http) {
-		
-	var loggedInUser = {};	
-	var loggedIn = false;
+.factory('userService', function($http, $cookies) {
+	
+	var userCookieKey = 'myrecipeconnection.com.usersLoggedInFromThisBrowser';
+	var now = new Date();
+    var cookieExpires = new Date(now.getFullYear() + 10, now.getMonth(), now.getDate());
+	
+	var loggedIn;
+	var loggedInUser;
+	
+	initializeUserAndLoggedInStatus();
 	
 	var isLoggedIn = function() {
 		return loggedIn;
@@ -73,11 +79,28 @@ angular.module('recipe.user', [])
 		.success(function(data) {
 			loggedInUser = data;
 			loggedIn = true;
+			saveUserToCookie(data);
 			return data;
 		})
 		.error(function(error) {
 			return {};
 		});
+	};
+	
+	function initializeUserAndLoggedInStatus() {
+		var userFromCookie = $cookies.getObject(userCookieKey);
+		console.log('got user', userFromCookie);
+		if (userFromCookie === undefined) {
+			loggedIn = false;
+			loggedInUser = {}; 
+		} else {
+			loggedIn = true;
+			loggedInUser = userFromCookie; 
+		}
+	};
+	
+	function saveUserToCookie(user) {
+		$cookies.putObject(userCookieKey, user, {expires:cookieExpires});
 	};
 	
 	return {
