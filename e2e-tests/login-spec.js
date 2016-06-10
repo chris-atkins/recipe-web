@@ -116,11 +116,24 @@ describe('Login functionality from the home page', function() {
 	
 	describe('with a single existing user associated with the current client machine', function() {
 		
-		it('automatically logs the user in', function() {
+		beforeAll(function() {
+			browser.get('');
+			loginLink.click();
+			signupEmailField.sendKeys('wellHelloIts@me.com');
 			
+			loginButton.click();
+			signupNameField.sendKeys('UserAlreadySignedInFromThisBrowser');
+			
+			signupButton.click();
+			expect(loggedInUserMessage.getText()).toBe('Welcome, UserAlreadySignedInFromThisBrowser');
 		});
 		
-		it('has fields for a new user to sign up', function() {
+		it('automatically logs the user in', function() {
+			browser.refresh();
+			expect(loggedInUserMessage.getText()).toBe('Welcome, UserAlreadySignedInFromThisBrowser');
+		});
+		
+		it('the user can sign in as a different user', function() {
 			
 		});
 	});
