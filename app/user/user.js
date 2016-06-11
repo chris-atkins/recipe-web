@@ -10,34 +10,47 @@ angular.module('recipe.user', [])
 	$scope.isLoggedIn = userService.isLoggedIn();
 	
 	$scope.loginVisible = false;
+	$scope.logoutVisible = false;
 	$scope.name = '';
 	$scope.email = '';
 	
 	$scope.toggleLogin = function() {
 		$scope.loginVisible = !$scope.loginVisible;
-	}
+	};
+	
+	$scope.toggleLogout = function() {
+		$scope.logoutVisible = !$scope.logoutVisible;
+	};
 	
 	$scope.logIn = function() {
 		loginHasBeenAttempted = true;
 		userService.logIn($scope.email).then(function() {
-			$scope.user = userService.getLoggedInUser();
-			$scope.isLoggedIn = userService.isLoggedIn();
+			updateUserStatus();
 		});
-	}
+	};
 	
 	$scope.signUp = function() {
 		userService.signUp($scope.name, $scope.email).then(function() {
-			$scope.user = userService.getLoggedInUser();
-			$scope.isLoggedIn = userService.isLoggedIn();
+			updateUserStatus();
 		});
-	}
+	};
+	
+	$scope.logOut = function() {
+		userService.logOut();
+		updateUserStatus();
+	};
 	
 	$scope.shouldShowLogIn = function() {
 		return $scope.loginVisible && !loginHasBeenAttempted;
-	}
+	};
 	
 	$scope.shouldShowSignUp = function() {
 		return $scope.loginVisible && loginHasBeenAttempted;
+	};
+	
+	function updateUserStatus() {
+		$scope.user = userService.getLoggedInUser();
+		$scope.isLoggedIn = userService.isLoggedIn();
 	}
 })
 
@@ -45,7 +58,7 @@ angular.module('recipe.user', [])
 	
 	var userCookieKey = 'myrecipeconnection.com.usersLoggedInFromThisBrowser';
 	var now = new Date();
-    var cookieExpires = new Date(now.getFullYear() + 10, now.getMonth(), now.getDate());
+    var cookieExpires = new Date(now.getFullYear() + 100, now.getMonth(), now.getDate());
 	
 	var loggedIn;
 	var loggedInUser;
@@ -84,9 +97,14 @@ angular.module('recipe.user', [])
 		});
 	};
 	
+	var logOut = function() {
+		$cookies.remove(userCookieKey);
+		loggedInUser = {};
+		loggedIn = false;
+	}
+	
 	function initializeUserAndLoggedInStatus() {
 		var userFromCookie = $cookies.getObject(userCookieKey);
-		console.log('got user', userFromCookie);
 		if (userFromCookie === undefined) {
 			loggedIn = false;
 			loggedInUser = {}; 
@@ -110,6 +128,7 @@ angular.module('recipe.user', [])
 		getLoggedInUser: getLoggedInUser,
 		isLoggedIn: isLoggedIn,
 		logIn: logIn,
-		signUp: signUp
+		signUp: signUp,
+		logOut: logOut
 	};
 });

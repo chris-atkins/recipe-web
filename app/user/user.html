@@ -40,8 +40,15 @@
 	<div class="container-fluid" ng-show="isLoggedIn">
 		<ul class="nav navbar-nav navbar-right navbar-link">
 			<li>
-				<a id="logged-in-user-message">Welcome, {{user.userName}}</a>
+				<a id="logged-in-user-message" ng-click="toggleLogout()">Welcome, {{user.userName}}</a>
 			</li>
 		</ul>
+		
+		<ul class="logout-section nav navbar-form navbar-right" ng-show="logoutVisible">
+			<li class="form-group">
+				<button id="log-out-button" class="btn btn-default btn-sm" ng-click="logOut()">Log Out</button>
+			</li>
+		</ul>
+		
 	</div>
 </nav>

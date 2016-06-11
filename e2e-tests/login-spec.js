@@ -11,8 +11,9 @@ describe('Login functionality from the home page', function() {
 	var signupEmailField = element(by.id('sign-up-user-email'));
 	var loginButton = element(by.id('log-in-user-button'));
 	var signupButton = element(by.id('sign-up-user-button'));
+	var logoutButton = element(by.id('log-out-button'));
 	
-	var loggedInUserMessage = element(by.id('logged-in-user-message'));
+	var loggedInUserLink = element(by.id('logged-in-user-message'));
 	
 	afterEach(function() {
 		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser');
@@ -71,10 +72,10 @@ describe('Login functionality from the home page', function() {
 				
 				signupButton.click();
 				expectNoUserFieldsAreDisplayed();
-				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
+				expect(loggedInUserLink.getText()).toBe('Welcome, Ohai');
 
 				browser.refresh();
-				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
+				expect(loggedInUserLink.getText()).toBe('Welcome, Ohai');
 			});
 			
 			it('when registering with an existing email, and is persisted when refreshed', function() {
@@ -84,10 +85,10 @@ describe('Login functionality from the home page', function() {
 				
 				loginButton.click();
 				expectNoUserFieldsAreDisplayed();
-				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
+				expect(loggedInUserLink.getText()).toBe('Welcome, Ohai');
 				
 				browser.refresh();
-				expect(loggedInUserMessage.getText()).toBe('Welcome, Ohai');
+				expect(loggedInUserLink.getText()).toBe('Welcome, Ohai');
 			});
 
 			function expectLoginFieldsAreDisplayed() {
@@ -135,12 +136,12 @@ describe('Login functionality from the home page', function() {
 			signupNameField.sendKeys('UserAlreadySignedInFromThisBrowser');
 			
 			signupButton.click();
-			expect(loggedInUserMessage.getText()).toBe('Welcome, UserAlreadySignedInFromThisBrowser');
+			expect(loggedInUserLink.getText()).toBe('Welcome, UserAlreadySignedInFromThisBrowser');
 		});
 		
 		it('automatically logs the user in', function() {
 			browser.refresh();
-			expect(loggedInUserMessage.getText()).toBe('Welcome, UserAlreadySignedInFromThisBrowser');
+			expect(loggedInUserLink.getText()).toBe('Welcome, UserAlreadySignedInFromThisBrowser');
 		});
 		
 		it('the user can sign in as a different user', function() {
@@ -174,10 +175,36 @@ describe('Login functionality from the home page', function() {
 			
 			signupNameField.sendKeys('OhaiAgain');
 			signupButton.click();			
-			expect(loggedInUserMessage.getText()).toBe('Welcome, OhaiAgain');
+			expect(loggedInUserLink.getText()).toBe('Welcome, OhaiAgain');
 			
 			element(by.id('browse-all-button')).click();
-			expect(loggedInUserMessage.getText()).toBe('Welcome, OhaiAgain');
+			expect(loggedInUserLink.getText()).toBe('Welcome, OhaiAgain');
+		});
+		
+		it('they can log out', function() {
+			browser.get('');
+			loginLink.click();
+			
+			signupEmailField.sendKeys('its@meyetOneMoreTime.com');
+			loginButton.click();
+			
+			signupNameField.sendKeys('OhaiOneMoreTime');
+			signupButton.click();			
+			expect(loggedInUserLink.getText()).toBe('Welcome, OhaiOneMoreTime');
+			
+			element(by.id('browse-all-button')).click();
+			expect(loggedInUserLink.getText()).toBe('Welcome, OhaiOneMoreTime');
+			
+			loggedInUserLink.click();
+			expect(logoutButton.isDisplayed()).toBe(true);
+			expect(logoutButton.getText()).toBe('Log Out');
+			
+			logoutButton.click();
+			expect(loginLink.isDisplayed()).toBe(true);
+			expect(logoutButton.isDisplayed()).toBe(false);
+			
+			browser.refresh();
+			expect(loginLink.isDisplayed()).toBe(true);
 		});
 	});
 });
