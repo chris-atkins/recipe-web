@@ -96,9 +96,24 @@ function performRecipeDELETEFunction(recipeId) {
 	};
 }
 
+function randomString(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for(var i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
+
+function randomEmail() {
+	var length = Math.floor(Math.random() * 10) + 15;
+	return randomString(20);
+}
+
 module.exports = {
 	addRecipe: postRecipe,
 	addRecipes: addRecipes,
 	cleanupData: cleanupData, 
-	removeAllRecipeData: removeAllRecipeData
+	removeAllRecipeData: removeAllRecipeData,
+	randomEmail: randomEmail
 }

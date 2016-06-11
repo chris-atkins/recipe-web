@@ -1,6 +1,7 @@
 'use strict';
 
-var rs = require('request-promise')
+var rs = require('request-promise');
+var dataUtils = require('./data-utils');
 var config = browser.params;
 
 describe('The User endpoints', function() {
@@ -51,19 +52,21 @@ describe('The User endpoints', function() {
 	}
 	
 	it('saves a new user', function(done) {
-		var user = {userName: 'ohai', userEmail: 'itsme'}
+		var email = dataUtils.randomEmail();
+		var user = {userName: 'ohai', userEmail: email}
 		
 		performUserPOST(user).then(function(user) {
 			expect(user.userId).not.toBeUndefined();
 			expect(user.userId).not.toBeNull();
 			expect(user.userName).toBe('ohai');
-			expect(user.userEmail).toBe('itsme');
+			expect(user.userEmail).toBe(email);
 			done();
 		});
 	});
 	
 	it('gets a saved user', function(done) {
-		var user = {userName: 'another', userEmail: 'user@a.com'}
+		var email = dataUtils.randomEmail();
+		var user = {userName: 'another', userEmail: email}
 		var newUserId;
 		
 		performUserPOST(user).then(function(user) {
@@ -74,30 +77,32 @@ describe('The User endpoints', function() {
 		.then(function(user) {
 			expect(user.userId).toBe(newUserId);
 			expect(user.userName).toBe('another');
-			expect(user.userEmail).toBe('user@a.com');
+			expect(user.userEmail).toBe(email);
 			done();
 		});
 	});
 
 	it('gets a saved user by email', function(done) {
-		var user = {userName: 'oneMore', userEmail: 'user@b.io'}
+		var email = dataUtils.randomEmail();
+		var user = {userName: 'oneMore', userEmail: email}
 		var newUserId;
 		
 		performUserPOST(user).then(function(user) {
 			newUserId = user.userId;
 		})
-		.then(performUserGETByEmailFunction('user@b.io'))
+		.then(performUserGETByEmailFunction(email))
 		.then(function(user) {
 			expect(user.userId).toBe(newUserId);
 			expect(user.userName).toBe('oneMore');
-			expect(user.userEmail).toBe('user@b.io');
+			expect(user.userEmail).toBe(email);
 			done();
 		});
 	});
 	
 	it('returns 403 when trying to save a user with an existing email', function(done) {
-		var user1 = {userName: 'firstOfTwo', userEmail: 'same@b.io'}
-		var user2 = {userName: 'secondOfTwo', userEmail: 'same@b.io'}
+		var email = dataUtils.randomEmail();
+		var user1 = {userName: 'firstOfTwo', userEmail: email}
+		var user2 = {userName: 'secondOfTwo', userEmail: email}
 		
 		performUserPOST(user1).then(function() {
 			return performUserPOST(user2, {fullResponse: true})

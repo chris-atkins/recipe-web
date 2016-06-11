@@ -1,5 +1,7 @@
 'use strict';
 
+var dataUtils = require('./data-utils');
+
 describe('Login functionality from the home page', function() {
 	
 	var userSection = element(by.className('user-section'));
@@ -57,6 +59,8 @@ describe('Login functionality from the home page', function() {
 		
 		describe('the user can register', function() {
 
+			var email = dataUtils.randomEmail();
+			
 			beforeEach(function() {
 				browser.get('');
 			});
@@ -64,7 +68,7 @@ describe('Login functionality from the home page', function() {
 			it('and their name is displayed instead of the Log In link, and is persisted when refreshed', function() {
 				loginLink.click();
 				expectLoginFieldsAreDisplayed();
-				signupEmailField.sendKeys('its@me.com');
+				signupEmailField.sendKeys(email);
 				
 				loginButton.click();
 				expectSignupFieldsAreDisplayed();
@@ -81,7 +85,7 @@ describe('Login functionality from the home page', function() {
 			it('when registering with an existing email, and is persisted when refreshed', function() {
 				loginLink.click();
 				expectLoginFieldsAreDisplayed();
-				signupEmailField.sendKeys('its@me.com');
+				signupEmailField.sendKeys(email);
 				
 				loginButton.click();
 				expectNoUserFieldsAreDisplayed();
@@ -130,7 +134,7 @@ describe('Login functionality from the home page', function() {
 		beforeAll(function() {
 			browser.get('');
 			loginLink.click();
-			signupEmailField.sendKeys('wellHelloIts@me.com');
+			signupEmailField.sendKeys(dataUtils.randomEmail());
 			
 			loginButton.click();
 			signupNameField.sendKeys('UserAlreadySignedInFromThisBrowser');
@@ -170,7 +174,7 @@ describe('Login functionality from the home page', function() {
 			browser.get('');
 			loginLink.click();
 			
-			signupEmailField.sendKeys('its@meagain.com');
+			signupEmailField.sendKeys(dataUtils.randomEmail());
 			loginButton.click();
 			
 			signupNameField.sendKeys('OhaiAgain');
@@ -185,7 +189,7 @@ describe('Login functionality from the home page', function() {
 			browser.get('');
 			loginLink.click();
 			
-			signupEmailField.sendKeys('its@meyetOneMoreTime.com');
+			signupEmailField.sendKeys(dataUtils.randomEmail());
 			loginButton.click();
 			
 			signupNameField.sendKeys('OhaiOneMoreTime');
