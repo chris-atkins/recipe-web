@@ -17,8 +17,8 @@ describe('Login functionality from the home page', function() {
 	
 	var loggedInUserLink = element(by.id('logged-in-user-message'));
 	
-	afterEach(function() {
-		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser');
+	afterEach(function(done) {
+		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser').then(done);
 	});
 	
 	describe('with NO existing user associated with the current client machine', function() {
