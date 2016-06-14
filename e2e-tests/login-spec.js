@@ -196,9 +196,6 @@ describe('Login functionality from the home page', function() {
 			signupButton.click();			
 			expectLoggedInUserLinkToBe('Welcome, OhaiOneMoreTime');
 			
-			element(by.id('browse-all-button')).click();
-			expectLoggedInUserLinkToBe('Welcome, OhaiOneMoreTime');
-			
 			loggedInUserLink.click();
 			expect(logoutButton.isDisplayed()).toBe(true);
 			expect(logoutButton.getText()).toBe('Log Out');
