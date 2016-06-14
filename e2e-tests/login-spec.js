@@ -17,8 +17,8 @@ describe('Login functionality from the home page', function() {
 	
 	var loggedInUserLink = element(by.id('logged-in-user-message'));
 	
-	afterEach(function() {
-		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser');
+	afterEach(function(done) {
+		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser').then(done);
 	});
 	
 	describe('with NO existing user associated with the current client machine', function() {
@@ -76,10 +76,10 @@ describe('Login functionality from the home page', function() {
 				
 				signupButton.click();
 				expectNoUserFieldsAreDisplayed();
-				expect(loggedInUserLink.getText()).toBe('Welcome, Ohai');
+				expectLoggedInUserLinkToBe('Welcome, Ohai');
 
 				browser.refresh();
-				expect(loggedInUserLink.getText()).toBe('Welcome, Ohai');
+				expectLoggedInUserLinkToBe('Welcome, Ohai');
 			});
 			
 			it('when registering with an existing email, and is persisted when refreshed', function() {
@@ -89,10 +89,10 @@ describe('Login functionality from the home page', function() {
 				
 				loginButton.click();
 				expectNoUserFieldsAreDisplayed();
-				expect(loggedInUserLink.getText()).toBe('Welcome, Ohai');
+				expectLoggedInUserLinkToBe('Welcome, Ohai');
 				
 				browser.refresh();
-				expect(loggedInUserLink.getText()).toBe('Welcome, Ohai');
+				expectLoggedInUserLinkToBe('Welcome, Ohai');
 			});
 
 			function expectLoginFieldsAreDisplayed() {
@@ -140,12 +140,12 @@ describe('Login functionality from the home page', function() {
 			signupNameField.sendKeys('UserAlreadySignedInFromThisBrowser');
 			
 			signupButton.click();
-			expect(loggedInUserLink.getText()).toBe('Welcome, UserAlreadySignedInFromThisBrowser');
+			expectLoggedInUserLinkToBe('Welcome, UserAlreadySignedInFromThisBrowser');
 		});
 		
 		it('automatically logs the user in', function() {
 			browser.refresh();
-			expect(loggedInUserLink.getText()).toBe('Welcome, UserAlreadySignedInFromThisBrowser');
+			expectLoggedInUserLinkToBe('Welcome, UserAlreadySignedInFromThisBrowser');
 		});
 		
 		it('the user can sign in as a different user', function() {
@@ -179,10 +179,10 @@ describe('Login functionality from the home page', function() {
 			
 			signupNameField.sendKeys('OhaiAgain');
 			signupButton.click();			
-			expect(loggedInUserLink.getText()).toBe('Welcome, OhaiAgain');
+			expectLoggedInUserLinkToBe('Welcome, OhaiAgain');
 			
 			element(by.id('browse-all-button')).click();
-			expect(loggedInUserLink.getText()).toBe('Welcome, OhaiAgain');
+			expectLoggedInUserLinkToBe('Welcome, OhaiAgain');
 		});
 		
 		it('they can log out', function() {
@@ -194,7 +194,7 @@ describe('Login functionality from the home page', function() {
 			
 			signupNameField.sendKeys('OhaiOneMoreTime');
 			signupButton.click();			
-			expect(loggedInUserLink.getText()).toBe('Welcome, OhaiOneMoreTime');
+			expectLoggedInUserLinkToBe('Welcome, OhaiOneMoreTime');
 			
 			loggedInUserLink.click();
 			expect(logoutButton.isDisplayed()).toBe(true);
@@ -208,4 +208,11 @@ describe('Login functionality from the home page', function() {
 			expect(loginLink.isDisplayed()).toBe(true);
 		});
 	});
+	
+	function expectLoggedInUserLinkToBe(expectedText) {
+		browser.wait(function() {
+			return loggedInUserLink.isDisplayed();
+		}, 2000);
+		expect(loggedInUserLink.getText()).toBe(expectedText);
+	}
 });
