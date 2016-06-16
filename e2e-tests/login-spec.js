@@ -210,9 +210,6 @@ describe('Login functionality from the home page', function() {
 	});
 	
 	function expectLoggedInUserLinkToBe(expectedText) {
-		browser.wait(function() {
-			return loggedInUserLink.isDisplayed();
-		}, 2000);
 		expect(loggedInUserLink.getText()).toBe(expectedText);
 	}
 });
