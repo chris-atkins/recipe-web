@@ -16,9 +16,13 @@ describe('Login functionality from the home page', function() {
 	var logoutButton = element(by.id('log-out-button'));
 	
 	var loggedInUserLink = element(by.id('logged-in-user-message'));
+
+	beforeEach(function() {
+		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser');
+	});
 	
-	afterEach(function(done) {
-		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser').then(done);
+	afterEach(function() {
+		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser');
 	});
 	
 	describe('with NO existing user associated with the current client machine', function() {
@@ -40,11 +44,9 @@ describe('Login functionality from the home page', function() {
 		
 		describe('when selecting "Log In" in the user section', function() {
 			
-			beforeEach(function() {
-				browser.get('');
-			});
-			
 			it('toggles login fields when the login link is selected', function() {
+				browser.get('');
+				
 				loginLink.click();
 				expect(userLoginMessage.isDisplayed()).toBe(true);
 				expect(signupEmailField.isDisplayed()).toBe(true);
@@ -61,11 +63,9 @@ describe('Login functionality from the home page', function() {
 
 			var email = dataUtils.randomEmail();
 			
-			beforeEach(function() {
-				browser.get('');
-			});
-			
 			it('and their name is displayed instead of the Log In link, and is persisted when refreshed', function() {
+				browser.get('');
+				
 				loginLink.click();
 				expectLoginFieldsAreDisplayed();
 				signupEmailField.sendKeys(email);
@@ -83,6 +83,8 @@ describe('Login functionality from the home page', function() {
 			});
 			
 			it('when registering with an existing email, and is persisted when refreshed', function() {
+				browser.get('');
+				
 				loginLink.click();
 				expectLoginFieldsAreDisplayed();
 				signupEmailField.sendKeys(email);
@@ -131,7 +133,7 @@ describe('Login functionality from the home page', function() {
 	
 	describe('with a single existing user associated with the current client machine', function() {
 		
-		beforeAll(function() {
+		it('automatically logs the user in', function() {
 			browser.get('');
 			loginLink.click();
 			signupEmailField.sendKeys(dataUtils.randomEmail());
@@ -141,9 +143,7 @@ describe('Login functionality from the home page', function() {
 			
 			signupButton.click();
 			expectLoggedInUserLinkToBe('Welcome, UserAlreadySignedInFromThisBrowser');
-		});
 		
-		it('automatically logs the user in', function() {
 			browser.refresh();
 			expectLoggedInUserLinkToBe('Welcome, UserAlreadySignedInFromThisBrowser');
 		});
