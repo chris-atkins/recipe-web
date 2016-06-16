@@ -16,6 +16,10 @@ describe('Login functionality from the home page', function() {
 	var logoutButton = element(by.id('log-out-button'));
 	
 	var loggedInUserLink = element(by.id('logged-in-user-message'));
+
+	beforeEach(function(done) {
+		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser').then(done);
+	});
 	
 	afterEach(function(done) {
 		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser').then(done);
@@ -131,7 +135,7 @@ describe('Login functionality from the home page', function() {
 	
 	describe('with a single existing user associated with the current client machine', function() {
 		
-		beforeAll(function() {
+		it('automatically logs the user in', function() {
 			browser.get('');
 			loginLink.click();
 			signupEmailField.sendKeys(dataUtils.randomEmail());
@@ -141,9 +145,7 @@ describe('Login functionality from the home page', function() {
 			
 			signupButton.click();
 			expectLoggedInUserLinkToBe('Welcome, UserAlreadySignedInFromThisBrowser');
-		});
 		
-		it('automatically logs the user in', function() {
 			browser.refresh();
 			expectLoggedInUserLinkToBe('Welcome, UserAlreadySignedInFromThisBrowser');
 		});
