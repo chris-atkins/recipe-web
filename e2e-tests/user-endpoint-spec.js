@@ -30,7 +30,7 @@ describe('The User endpoints', function() {
 				uri : config.apiBaseUrl + '/user/' + userId,
 				json : true,
 				simple: false //https://github.com/request/request-promise
-		}
+		};
 		
 		return rs.get(getOptions);
 	}
@@ -40,7 +40,7 @@ describe('The User endpoints', function() {
 				uri : config.apiBaseUrl + '/user?email=' + email,
 				json : true,
 				simple: false //https://github.com/request/request-promise
-		}
+		};
 		
 		return rs.get(getOptions);
 	}
@@ -48,12 +48,12 @@ describe('The User endpoints', function() {
 	function performUserGETByEmailFunction(email) {
 		return function() {
 			return performUserGETByEmail(email);
-		}
+		};
 	}
 	
 	it('saves a new user', function(done) {
 		var email = dataUtils.randomEmail();
-		var user = {userName: 'ohai', userEmail: email}
+		var user = {userName: 'ohai', userEmail: email};
 		
 		performUserPOST(user).then(function(user) {
 			expect(user.userId).not.toBeUndefined();
@@ -66,7 +66,7 @@ describe('The User endpoints', function() {
 	
 	it('gets a saved user', function(done) {
 		var email = dataUtils.randomEmail();
-		var user = {userName: 'another', userEmail: email}
+		var user = {userName: 'another', userEmail: email};
 		var newUserId;
 		
 		performUserPOST(user).then(function(user) {
@@ -84,7 +84,7 @@ describe('The User endpoints', function() {
 
 	it('gets a saved user by email', function(done) {
 		var email = dataUtils.randomEmail();
-		var user = {userName: 'oneMore', userEmail: email}
+		var user = {userName: 'oneMore', userEmail: email};
 		var newUserId;
 		
 		performUserPOST(user).then(function(user) {
@@ -101,11 +101,11 @@ describe('The User endpoints', function() {
 	
 	it('returns 403 when trying to save a user with an existing email', function(done) {
 		var email = dataUtils.randomEmail();
-		var user1 = {userName: 'firstOfTwo', userEmail: email}
-		var user2 = {userName: 'secondOfTwo', userEmail: email}
+		var user1 = {userName: 'firstOfTwo', userEmail: email};
+		var user2 = {userName: 'secondOfTwo', userEmail: email};
 		
 		performUserPOST(user1).then(function() {
-			return performUserPOST(user2, {fullResponse: true})
+			return performUserPOST(user2, {fullResponse: true});
 		})
 		.then(function(response) {
 			expect(response.statusCode).toBe(403);

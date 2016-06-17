@@ -20,7 +20,7 @@ describe('the home page', function() {
 		});
 	  
 	  it('has a title', function() {
-		  var pageTitle = element(by.id('page-title'))
+		  var pageTitle = element(by.id('page-title'));
 		  expect(pageTitle.getText()).toBe('Recipe Connection');
 	  });
 	  

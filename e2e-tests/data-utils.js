@@ -17,7 +17,7 @@ var addRecipes = function(recipeArray) {
 	});
 	
 	return p;
-}
+};
 
 function postRecipe(recipe) {
 	var postOptions = {
@@ -45,7 +45,7 @@ function postRecipeFunction(recipeToPost) {
 var cleanupData = function(done) {
 	cleanUpTestRecipesThatHaveBeenPosted()
 		.then(function(){done();});
-}
+};
 
 function cleanUpTestRecipesThatHaveBeenPosted() {
 	var p = cleanUpTestRecipes(listOfRecipeIdsToCleanUp);
@@ -70,14 +70,14 @@ var removeAllRecipeData = function(done) {
 		});
 		cleanUpTestRecipes(recipeIds).then(function(){done();});
 	});
-}
+};
 
 function performRecipeListGET() {
 	var getOptions = {
 			uri : config.apiBaseUrl + '/recipe',
 			json : true,
 			simple: false //https://github.com/request/request-promise
-	}
+	};
 	return rs.get(getOptions);
 }
 
@@ -86,7 +86,7 @@ function performRecipeDELETE(recipeId) {
 			uri : config.apiBaseUrl + '/recipe/' + recipeId,
 			resolveWithFullResponse: true,
 			simple: false //https://github.com/request/request-promise
-	}
+	};
 	return rs.del(deleteOptions);
 }
 
@@ -116,4 +116,4 @@ module.exports = {
 	cleanupData: cleanupData, 
 	removeAllRecipeData: removeAllRecipeData,
 	randomEmail: randomEmail
-}
+};

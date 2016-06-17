@@ -18,7 +18,7 @@ describe('the search recipes page', function() {
 	  var recipe3 = {
 			  recipeName: 'Third Recipe Name',
 			  recipeContent: 'Third Recipe Content'
-	  }
+	  };
 	
 	describe('content', function() {
 		

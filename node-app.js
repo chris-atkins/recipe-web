@@ -1,3 +1,4 @@
+'use strict';
 var express = require('express');
 
 var http = require('http');
@@ -9,8 +10,8 @@ var rs = require('request-promise');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;	
 var LocalStrategy = require('passport-local').Strategy;
-const jwt = require('jsonwebtoken');
-const expressJwt = require('express-jwt');
+var jwt = require('jsonwebtoken');
+var expressJwt = require('express-jwt');
 
 var serviceIp = process.env.SERVICE_IP || '127.0.0.1';
 var webIp = process.env.WEB_IP || 'localhost';
@@ -31,7 +32,7 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(userName, done) {
 	if (userName === 'Chris') {
-		done({name: 'Chris'})
+		done({name: 'Chris'});
 	}
 	done('error', null);
 });
@@ -88,7 +89,7 @@ function performRecipeListGET(searchString) {
 		json : true,
 		simple: false,
 		resolveWithFullResponse: true
-	}
+	};
 	return rs.get(getOptions);
 }
 
@@ -98,7 +99,7 @@ function performRecipeGET(recipeId) {
 		json : true,
 		simple: false,
 		resolveWithFullResponse: true
-	}
+	};
 	return rs.get(getOptions);
 }
 
@@ -138,7 +139,7 @@ function performUserGETByEmail(email) {
 			json : true,
 			simple: false,
 			resolveWithFullResponse: true
-	}
+	};
 	
 	return rs.get(getOptions);
 }
@@ -230,7 +231,7 @@ function serialize(req, res, next) {
 	  });
 	}
 
-const db = {  
+var db = {  
   updateOrCreate: function(user, cb){
     // db dummy, we just cb the user
     cb(null, user);
@@ -243,9 +244,9 @@ function generateToken(req, res, next) {
 				id: req.user.id,
 				email: req.user.email,
 				ipAddress: req.user.ipAddress
-			}
-			,'server secret'
-//			,{expiresInMinutes: 120}
+			},
+			'server secret'
+			//,{expiresInMinutes: 120}
 	);
 	next();
 }
@@ -257,7 +258,7 @@ function respond(req, res) {
 	  });
 }
 
-const authenticate = expressJwt({secret : 'server secret'});
+var authenticate = expressJwt({secret : 'server secret'});
 app.get('/test-auth', authenticate, function(request, response, next) {
 	response.json({auth: 'success', user: request.user});
 });

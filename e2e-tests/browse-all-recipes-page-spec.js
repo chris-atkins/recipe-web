@@ -15,7 +15,7 @@ describe('the browse all recipes page', function() {
   var recipe3 = {
 		  recipeName: 'Third Recipe Name',
 		  recipeContent: 'Third Recipe Content'
-  }
+  };
   
   beforeAll(function(done) {
 	  dataUtils.addRecipes([recipe1, recipe2, recipe3]).then(done);
@@ -37,7 +37,7 @@ describe('the browse all recipes page', function() {
 		});
 	  
 	  it('has a title', function() {
-		  var pageTitle = element(by.id('page-title'))
+		  var pageTitle = element(by.id('page-title'));
 		  expect(pageTitle.getText()).toBe('Browse All Recipes');
 	  });
 	  
@@ -66,7 +66,7 @@ describe('the browse all recipes page', function() {
 			  });
 		});
 		expect(foundRecipes.count()).toBe(1);
-	  };
+	  }
   });
   
   describe('has navigation:', function() {

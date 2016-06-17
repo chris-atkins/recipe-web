@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 var rs = require('request-promise');
 var config = browser.params;
@@ -9,7 +9,7 @@ describe('the endpoint', function() {
 	
 	afterAll(function(done) {
 		cleanUpTestRecipesThatHaveBeenPosted()
-		.then(function() {done();})
+		.then(function() {done();});
 	});
 	
 	function cleanUpTestRecipesThatHaveBeenPosted() {
@@ -29,7 +29,7 @@ describe('the endpoint', function() {
 				uri : config.apiBaseUrl + '/recipe',
 				json : true,
 				simple: false //https://github.com/request/request-promise
-		}
+		};
 		return rs.get(getOptions);
 	}
 	
@@ -38,14 +38,14 @@ describe('the endpoint', function() {
 				uri : config.apiBaseUrl + '/recipe?searchString=' + searchString,
 				json : true,
 				simple: false //https://github.com/request/request-promise
-		}
+		};
 		return rs.get(getOptions);
 	}
 	
 	function performRecipeListGETwithSearchStringFunction(searchString) {
 		return function() {
 			return performRecipeListGETwithSearchString(searchString);
-		}
+		};
 	}
 	
 	function performRecipePOST(recipeToPost) {
@@ -76,7 +76,7 @@ describe('the endpoint', function() {
 				uri : config.apiBaseUrl + '/recipe/' + newRecipeId,
 				json : true,
 				simple: false //https://github.com/request/request-promise
-		}
+		};
 		
 		if (typeOfResponse && typeOfResponse === 'fullResponse') {
 			getOptions.resolveWithFullResponse = true;
@@ -94,7 +94,7 @@ describe('the endpoint', function() {
 				uri : config.apiBaseUrl + '/recipe/' + recipeId,
 				resolveWithFullResponse: true,
 				simple: false //https://github.com/request/request-promise
-		}
+		};
 		return rs.del(deleteOptions);
 	}
 	
@@ -129,7 +129,7 @@ describe('the endpoint', function() {
 			performRecipePOST(newRecipe).then(function(response) { return response.recipeId;})
 			.then(performRecipeGET).then(function(recipe) {
 				expect(recipe.recipeName).toBe('hi again');
-				expect(recipe.recipeContent).toBe('it is more of me')
+				expect(recipe.recipeContent).toBe('it is more of me');
 				done();
 			});
 		});

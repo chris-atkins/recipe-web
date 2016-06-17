@@ -8,6 +8,16 @@
     "beforeEach": false,
     "afterEach": false,
     "module": false,
-    "inject": false
-  }
+    "inject": false,
+    "element": false,
+    "by": false,
+    "require": false,
+    "browser": false,
+    "console": false,
+    "exports": false,
+    "process": false,
+    "__dirname": false
+  },
+  "jasmine": true
+  
 }

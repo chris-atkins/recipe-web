@@ -24,7 +24,7 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 			.error(function(error) {
 				console.log('Error getting recipes:', error);
 			});
-	}
+	};
 })
 
 .directive('focus', function($timeout) {

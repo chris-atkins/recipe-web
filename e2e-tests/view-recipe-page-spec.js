@@ -42,7 +42,7 @@ describe('the vew recipe page', function() {
 	
 	describe('handles multi-line content', function() {
 		var multilineRecipeId;
-		var multilineContent = 'First Line\nSecond Line'
+		var multilineContent = 'First Line\nSecond Line';
 		
 		beforeAll(function(done) {
 			var recipeToAdd = {recipeName: recipeName, recipeContent: multilineContent};
@@ -68,7 +68,7 @@ describe('the vew recipe page', function() {
 		
 		beforeEach(function() {
 			browser.get('/#/view-recipe/' + recipeId);
-		})
+		});
 		
 		it('has a home button that navigates to the home page', function() {
 			var homeButton = element(by.id('home-button'));

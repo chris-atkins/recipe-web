@@ -29,7 +29,7 @@ describe('Login functionality from the home page', function() {
 			expect(loginLink.isPresent()).toBe(true);
 			expect(loginLink.getText()).toBe("Log In");
 			
-			expectNoUserFieldsAreDisplayed()
+			expectNoUserFieldsAreDisplayed();
 		});
 		
 		describe('when selecting "Log In" in the user section', function() {

@@ -71,25 +71,25 @@ angular.module('recipe.user', [])
 	
 	var getLoggedInUser = function() {
 		return loggedInUser;
-	}
+	};
 		
 	var logIn = function(email) {
 		return $http.get('api/user?email=' + email)
 		.success(function(user) {
-			handleNewlyLoggedInUser(user)
+			handleNewlyLoggedInUser(user);
 			return user;
 		})
 		.error(function(error) {
 			return {};
 		});
-	}
+	};
 	
 	var signUp = function(name, email) {
-		var userToSave = {userName: name, userEmail: email}
+		var userToSave = {userName: name, userEmail: email};
 		
 		return $http.post('/api/user', userToSave)
 		.success(function(user) {
-			handleNewlyLoggedInUser(user)
+			handleNewlyLoggedInUser(user);
 			return user;
 		})
 		.error(function(error) {
@@ -101,7 +101,7 @@ angular.module('recipe.user', [])
 		$cookies.remove(userCookieKey);
 		loggedInUser = {};
 		loggedIn = false;
-	}
+	};
 	
 	function initializeUserAndLoggedInStatus() {
 		var userFromCookie = $cookies.getObject(userCookieKey);
@@ -112,17 +112,17 @@ angular.module('recipe.user', [])
 			loggedIn = true;
 			loggedInUser = userFromCookie; 
 		}
-	};
+	}
 	
 	function handleNewlyLoggedInUser(user) {
 		loggedInUser = user;
 		loggedIn = true;
 		saveUserToCookie(user);
-	};
+	}
 	
 	function saveUserToCookie(user) {
 		$cookies.putObject(userCookieKey, user, {expires:cookieExpires});
-	};
+	}
 	
 	return {
 		getLoggedInUser: getLoggedInUser,

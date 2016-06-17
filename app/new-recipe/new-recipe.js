@@ -27,5 +27,5 @@ angular.module('recipe.newRecipe', ['ngRoute'])
 			.error(function(error) {
 				console.log('failure saving recipe:', error);
 			});
-	}
+	};
 });
