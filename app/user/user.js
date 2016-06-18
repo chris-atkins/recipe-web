@@ -38,6 +38,7 @@ angular.module('recipe.user', [])
 	$scope.logOut = function() {
 		userService.logOut();
 		updateUserStatus();
+		$scope.loginVisible = false;
 	};
 	
 	$scope.shouldShowLogIn = function() {

@@ -1,16 +1,26 @@
 <nav class="user-section navbar-default hidden-print" ng-controller="UserCtrl">
 
-	<div class="container-fluid" ng-hide="isLoggedIn">
-
-		<ul class="nav navbar-nav navbar-right navbar-link">
+	<div class="container-fluid">
+	
+		<ul class="nav navbar-nav navbar-right navbar-link" ng-hide="isLoggedIn">
 			<li>
 				<a class="login-link" ng-click="toggleLogin()">Log In</a>
 			</li>
 		</ul>
+		
+		<ul class="nav navbar-nav navbar-right navbar-link" ng-show="isLoggedIn">
+			<li>
+				<a id="logged-in-user-message" ng-click="toggleLogout()">Welcome, {{user.userName}}</a>
+			</li>
+		</ul>
+		
+	</div>
+
+	<div class="container-fluid" ng-hide="isLoggedIn">
 
 		<ul class="login-fields nav navbar-form navbar-right" ng-show="shouldShowLogIn()">
 
-			<li class="user-login-message">Please enter your email address to log in, or to sign up if you are new to our site.</li>
+			<li class="user-login-message">Please enter your email address to log in or sign up.</li>
 
 			<li class="form-group">
 				<label for="sign-up-user-email">Email</label>
@@ -38,11 +48,6 @@
 	</div>
 	
 	<div class="container-fluid" ng-show="isLoggedIn">
-		<ul class="nav navbar-nav navbar-right navbar-link">
-			<li>
-				<a id="logged-in-user-message" ng-click="toggleLogout()">Welcome, {{user.userName}}</a>
-			</li>
-		</ul>
 		
 		<ul class="logout-section nav navbar-form navbar-right" ng-show="logoutVisible">
 			<li class="form-group">

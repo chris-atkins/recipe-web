@@ -93,7 +93,7 @@ describe('Login functionality from the home page', function() {
 	function expectLoginFieldsAreDisplayed() {
 		expect(userSignUpMessage.isDisplayed()).toBe(false);
 		expect(userLoginMessage.isDisplayed()).toBe(true);
-		expect(userLoginMessage.getText()).toBe("Please enter your email address to log in, or to sign up if you are new to our site.");
+		expect(userLoginMessage.getText()).toBe("Please enter your email address to log in or sign up.");
 		expect(signupNameField.isDisplayed()).toBe(false);
 		expect(signupEmailField.isDisplayed()).toBe(true);
 		expect(loginButton.isDisplayed()).toBe(true);
@@ -196,6 +196,7 @@ describe('Login functionality from the home page', function() {
 			logoutButton.click();
 			expect(loginLink.isDisplayed()).toBe(true);
 			expect(logoutButton.isDisplayed()).toBe(false);
+			expectNoUserFieldsAreDisplayed();
 			
 			browser.refresh();
 			expect(loginLink.isDisplayed()).toBe(true);
