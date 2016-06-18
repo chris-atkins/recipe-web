@@ -198,6 +198,9 @@ describe('Login functionality from the home page', function() {
 			expect(logoutButton.isDisplayed()).toBe(false);
 			expectNoUserFieldsAreDisplayed();
 			
+			loginLink.click();
+			expectLoginFieldsAreDisplayed();
+			
 			browser.refresh();
 			expect(loginLink.isDisplayed()).toBe(true);
 		});
