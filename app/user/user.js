@@ -4,7 +4,7 @@ angular.module('recipe.user', [])
 
 .controller('UserCtrl', function($scope, $http, userService) {
 	
-	var loginHasBeenAttempted;
+	var loginHasBeenAttempted = false;
 	
 	$scope.user = userService.getLoggedInUser();
 	$scope.isLoggedIn = userService.isLoggedIn();
@@ -38,8 +38,7 @@ angular.module('recipe.user', [])
 	$scope.logOut = function() {
 		userService.logOut();
 		updateUserStatus();
-		$scope.loginVisible = false;
-		loginHasBeenAttempted = false;
+		resetLogin();
 	};
 	
 	$scope.shouldShowLogIn = function() {
@@ -53,6 +52,12 @@ angular.module('recipe.user', [])
 	function updateUserStatus() {
 		$scope.user = userService.getLoggedInUser();
 		$scope.isLoggedIn = userService.isLoggedIn();
+	}
+	
+	function resetLogin() {
+		$scope.loginVisible = false;
+		$scope.logoutVisible = false;
+		loginHasBeenAttempted = false;
 	}
 })
 

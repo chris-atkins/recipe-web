@@ -11,7 +11,7 @@ describe('Login functionality from the home page', function() {
 	var userSignUpMessage = userSection.element(by.className('user-sign-up-message'));
 	var signupButton = element(by.id('sign-up-user-button'));
 	var signupNameField = element(by.id('sign-up-user-name'));
-	var signupEmailField = element(by.id('sign-up-user-email'));
+	var loginEmailField = element(by.id('sign-up-user-email'));
 	var loggedInUserLink = element(by.id('logged-in-user-message'));
 	var logoutButton = element(by.id('log-out-button'));
 	
@@ -39,12 +39,12 @@ describe('Login functionality from the home page', function() {
 				
 				loginLink.click();
 				expect(userLoginMessage.isDisplayed()).toBe(true);
-				expect(signupEmailField.isDisplayed()).toBe(true);
+				expect(loginEmailField.isDisplayed()).toBe(true);
 				expect(loginButton.isDisplayed()).toBe(true);
 				
 				loginLink.click();
 				expect(signupNameField.isDisplayed()).toBe(false);
-				expect(signupEmailField.isDisplayed()).toBe(false);
+				expect(loginEmailField.isDisplayed()).toBe(false);
 				expect(userLoginMessage.isDisplayed()).toBe(false);
 			});
 		});
@@ -58,7 +58,7 @@ describe('Login functionality from the home page', function() {
 				
 				loginLink.click();
 				expectLoginFieldsAreDisplayed();
-				signupEmailField.sendKeys(email);
+				loginEmailField.sendKeys(email);
 				
 				loginButton.click();
 				expectSignupFieldsAreDisplayed();
@@ -77,7 +77,7 @@ describe('Login functionality from the home page', function() {
 				
 				loginLink.click();
 				expectLoginFieldsAreDisplayed();
-				signupEmailField.sendKeys(email);
+				loginEmailField.sendKeys(email);
 				
 				loginButton.click();
 				expectNoUserFieldsAreDisplayed();
@@ -95,7 +95,7 @@ describe('Login functionality from the home page', function() {
 		expect(userLoginMessage.isDisplayed()).toBe(true);
 		expect(userLoginMessage.getText()).toBe("Please enter your email address to log in or sign up.");
 		expect(signupNameField.isDisplayed()).toBe(false);
-		expect(signupEmailField.isDisplayed()).toBe(true);
+		expect(loginEmailField.isDisplayed()).toBe(true);
 		expect(loginButton.isDisplayed()).toBe(true);
 		expect(signupButton.isDisplayed()).toBe(false);
 		expect(loginButton.getText()).toBe('Log In');
@@ -106,7 +106,7 @@ describe('Login functionality from the home page', function() {
 		expect(userSignUpMessage.getText()).toBe("What name would you like to use?");
 		expect(userLoginMessage.isDisplayed()).toBe(false);
 		expect(signupNameField.isDisplayed()).toBe(true);
-		expect(signupEmailField.isDisplayed()).toBe(false);
+		expect(loginEmailField.isDisplayed()).toBe(false);
 		expect(loginButton.isDisplayed()).toBe(false);
 		expect(signupButton.isDisplayed()).toBe(true);
 		expect(signupButton.getText()).toBe('Sign Up');
@@ -116,7 +116,7 @@ describe('Login functionality from the home page', function() {
 		expect(userSignUpMessage.isDisplayed()).toBe(false);
 		expect(userLoginMessage.isDisplayed()).toBe(false);
 		expect(signupNameField.isDisplayed()).toBe(false);
-		expect(signupEmailField.isDisplayed()).toBe(false);
+		expect(loginEmailField.isDisplayed()).toBe(false);
 		expect(signupButton.isDisplayed()).toBe(false);
 		expect(loginButton.isDisplayed()).toBe(false);
 		expect(userLoginMessage.isDisplayed()).toBe(false);
@@ -127,7 +127,7 @@ describe('Login functionality from the home page', function() {
 		beforeAll(function() {
 			browser.get('');
 			loginLink.click();
-			signupEmailField.sendKeys(dataUtils.randomEmail());
+			loginEmailField.sendKeys(dataUtils.randomEmail());
 			
 			loginButton.click();
 			signupNameField.sendKeys('UserAlreadySignedInFromThisBrowser');
@@ -167,7 +167,7 @@ describe('Login functionality from the home page', function() {
 			browser.get('');
 			loginLink.click();
 			
-			signupEmailField.sendKeys(dataUtils.randomEmail());
+			loginEmailField.sendKeys(dataUtils.randomEmail());
 			loginButton.click();
 			
 			signupNameField.sendKeys('OhaiAgain');
@@ -179,10 +179,12 @@ describe('Login functionality from the home page', function() {
 		});
 		
 		it('they can log out', function() {
+			var email=dataUtils.randomEmail();
+			
 			browser.get('');
 			loginLink.click();
 			
-			signupEmailField.sendKeys(dataUtils.randomEmail());
+			loginEmailField.sendKeys(email);
 			loginButton.click();
 			
 			signupNameField.sendKeys('OhaiOneMoreTime');
@@ -200,7 +202,14 @@ describe('Login functionality from the home page', function() {
 			
 			loginLink.click();
 			expectLoginFieldsAreDisplayed();
+			loginEmailField.clear();
+			loginEmailField.sendKeys(email);
+			loginButton.click();
+			expect(logoutButton.isDisplayed()).toBe(false);
+			expectLoggedInUserLinkToBe('Welcome, OhaiOneMoreTime');
 			
+			loggedInUserLink.click();
+			logoutButton.click();
 			browser.refresh();
 			expect(loginLink.isDisplayed()).toBe(true);
 		});
