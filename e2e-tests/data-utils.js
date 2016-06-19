@@ -36,6 +36,21 @@ function postRecipe(recipe) {
 	});
 }
 
+function postUser(userToPost) {
+		var postOptions = {
+			uri : config.apiBaseUrl + '/user',
+			headers : {
+				'Content-Type' : 'application/json',
+				'Content-Length' : userToPost.length
+			},
+			json : true,
+			body : userToPost,
+			simple: false
+		};
+		
+		return rs.post(postOptions);
+	}
+
 function postRecipeFunction(recipeToPost) {
 	return function() {
 		return postRecipe(recipeToPost);
@@ -113,7 +128,8 @@ function randomEmail() {
 module.exports = {
 	addRecipe: postRecipe,
 	addRecipes: addRecipes,
-	cleanupData: cleanupData, 
+	postUser: postUser,
+	cleanupData: cleanupData,
 	removeAllRecipeData: removeAllRecipeData,
 	randomEmail: randomEmail
 };

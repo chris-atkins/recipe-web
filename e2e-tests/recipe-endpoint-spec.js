@@ -2,10 +2,21 @@
 
 var rs = require('request-promise');
 var config = browser.params;
+var dataUtils = require('./data-utils');
 
 describe('the endpoint', function() {
 
 	var listOfRecipeIdsToCleanUp = [];
+	var userId;
+	
+	beforeAll(function(done) {
+		var email = dataUtils.randomEmail();
+		var user = {userName: 'ohai', userEmail: email};
+		
+		dataUtils.postUser(user).then(function(user) {
+			userId = user.userId;
+		}).then(done);
+	});
 	
 	afterAll(function(done) {
 		cleanUpTestRecipesThatHaveBeenPosted()
@@ -27,6 +38,9 @@ describe('the endpoint', function() {
 	function performRecipeListGET() {
 		var getOptions = {
 				uri : config.apiBaseUrl + '/recipe',
+				headers : {
+					'Auth' : userId
+				},
 				json : true,
 				simple: false //https://github.com/request/request-promise
 		};
@@ -36,6 +50,9 @@ describe('the endpoint', function() {
 	function performRecipeListGETwithSearchString(searchString) {
 		var getOptions = {
 				uri : config.apiBaseUrl + '/recipe?searchString=' + searchString,
+				headers : {
+					'Auth' : userId
+				},
 				json : true,
 				simple: false //https://github.com/request/request-promise
 		};
@@ -53,7 +70,8 @@ describe('the endpoint', function() {
 			uri : config.apiBaseUrl + '/recipe',
 			headers : {
 				'Content-Type' : 'application/json',
-				'Content-Length' : recipeToPost.length
+				'Content-Length' : recipeToPost.length,
+				'Auth' : userId
 			},
 			json : true,
 			body : recipeToPost,
@@ -74,6 +92,9 @@ describe('the endpoint', function() {
 	function performRecipeGET(newRecipeId, typeOfResponse) {
 		var getOptions = {
 				uri : config.apiBaseUrl + '/recipe/' + newRecipeId,
+				headers : {
+					'Auth' : userId
+				},
 				json : true,
 				simple: false //https://github.com/request/request-promise
 		};
@@ -92,19 +113,20 @@ describe('the endpoint', function() {
 	function performRecipeDELETE(recipeId) {
 		var deleteOptions = {
 				uri : config.apiBaseUrl + '/recipe/' + recipeId,
+				headers : {
+					'Auth' : userId
+				},
 				resolveWithFullResponse: true,
 				simple: false //https://github.com/request/request-promise
 		};
 		return rs.del(deleteOptions);
 	}
 	
-	
 	function performRecipeDELETEFunction(recipeId) {
 		return function() {
 			return performRecipeDELETE(recipeId);
 		};
 	}
-	
 	
 	function performRecipeDELETEandReturnId(recipeId) {
 		return performRecipeDELETE(recipeId).then(function(){return recipeId;});
@@ -119,6 +141,7 @@ describe('the endpoint', function() {
 				expect(recipe.recipeName).toBe('hi');
 				expect(recipe.recipeContent).toBe('it is me');
 				expect(recipe.recipeId).not.toBe(null);
+				expect(recipe.editable).toBe(true);
 				done();
 			});
 		});
@@ -167,6 +190,39 @@ describe('the endpoint', function() {
 			.then(function(response) {
 				expect(response.statusCode).toBe(204);
 				done();
+			});
+		});
+		
+		describe('authentication', function() {
+			
+			it('will respond with editable set to true when a recipe is POSTed with a user id', function(done) {
+				var recipe = {'recipeName': 'The greatest recipe ever', 'recipeContent': 'believe me'};
+				
+				performRecipePOST(recipe).then(function(response) {
+					expect(response.editable).toBe(true);
+				}).then(done);
+			});
+			
+			it('will not allow a POST without a user id in the header and will respond with 403', function() {
+				
+			});
+			
+			it('will respond with editable set to true when a GET is performed on a recipe that was ' +
+							'created with the same user that is making the GET request', function() {
+				
+			});
+			
+			it('will respond with editable set to false if a GET is performe on a recipe that was ' + 
+					'created with a different user than made the GET request', function() {
+				
+			});
+			
+			it('will respond with editable set to false with no userId set in the header', function() {
+				
+			});
+			
+			it('will respond with 403 if a bad user id is set in the header', function() {
+				
 			});
 		});
 	});
