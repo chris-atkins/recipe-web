@@ -31,7 +31,7 @@ angular.module('recipe', [
 			var user = userService.getLoggedInUser();
 			if (user) {
 				config.headers.RequestingUser = user.userId;				
-			};
+			}
             return config;
         }
     };

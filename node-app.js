@@ -86,7 +86,7 @@ function headersFromRequest(request) {
 		headers['Content-Length'] = request.headers['Content-Length'];
 	}
 	if (request.headers.requestinguser) {
-		headers['RequestingUser'] = request.headers.requestinguser;
+		headers.RequestingUser = request.headers.requestinguser;
 	}
 	console.log(request.headers);
 	console.log(headers);

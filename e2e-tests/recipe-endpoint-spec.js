@@ -195,7 +195,7 @@ describe('the endpoint', function() {
 			})
 			.then(performRecipeDELETEandReturnId)
 			.then(function(recipeId) {
-				return performRecipeGET(recipeId, {responseType: 'full'})
+				return performRecipeGET(recipeId, {responseType: 'full'});
 			})
 			.then(function(response) {
 				expect(response.statusCode).toBe(404);
@@ -272,7 +272,7 @@ describe('the endpoint', function() {
 
 				performRecipePOST(newRecipe)
 				.then(function(response) {
-					return performRecipeGET(response.recipeId, {userId: 'none'})
+					return performRecipeGET(response.recipeId, {userId: 'none'});
 				})
 				.then(function(recipe) {
 					expect(recipe.editable).toBe(false);
