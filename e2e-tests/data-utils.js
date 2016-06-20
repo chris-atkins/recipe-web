@@ -7,10 +7,10 @@ var config = browser.params;
 
 var listOfRecipeIdsToCleanUp = [];
 
-var addRecipes = function(recipeArray) {
-	var p = postRecipe(recipeArray[0]);
+var addRecipes = function(recipeArray, userId) {
+	var p = postRecipe(recipeArray[0], userId);
 	for (var i = 1; i < recipeArray.length; i++) {
-		p = p.then(postRecipeFunction(recipeArray[i]));
+		p = p.then(postRecipeFunction(recipeArray[i], userId));
 	}
 	p = p.then(function(response){
 		return;
@@ -19,12 +19,13 @@ var addRecipes = function(recipeArray) {
 	return p;
 };
 
-function postRecipe(recipe) {
+function postRecipe(recipe, userId) {
 	var postOptions = {
 		uri : config.apiBaseUrl + '/recipe',
 		headers : {
 			'Content-Type' : 'application/json',
-			'Content-Length' : recipe.length
+			'Content-Length' : recipe.length,
+			'RequestingUser' : userId
 		},
 		json : true,
 		body : recipe,
@@ -37,27 +38,28 @@ function postRecipe(recipe) {
 }
 
 function postUser(userToPost) {
-		var postOptions = {
-			uri : config.apiBaseUrl + '/user',
-			headers : {
-				'Content-Type' : 'application/json',
-				'Content-Length' : userToPost.length
-			},
-			json : true,
-			body : userToPost,
-			simple: false
-		};
-		
-		return rs.post(postOptions);
-	}
+	var postOptions = {
+		uri : config.apiBaseUrl + '/user',
+		headers : {
+			'Content-Type' : 'application/json',
+			'Content-Length' : userToPost.length
+		},
+		json : true,
+		body : userToPost,
+		simple: false
+	};
+	
+	return rs.post(postOptions);
+}
 
-function postRecipeFunction(recipeToPost) {
+function postRecipeFunction(recipeToPost, userId) {
 	return function() {
-		return postRecipe(recipeToPost);
+		return postRecipe(recipeToPost, userId);
 	};
 }
 
 var cleanupData = function(done) {
+	done();
 	cleanUpTestRecipesThatHaveBeenPosted()
 		.then(function(){done();});
 };
@@ -87,9 +89,12 @@ var removeAllRecipeData = function(done) {
 	});
 };
 
-function performRecipeListGET() {
+function performRecipeListGET(userId) {
 	var getOptions = {
 			uri : config.apiBaseUrl + '/recipe',
+			headers : {
+				'RequestingUser' : userId
+			},
 			json : true,
 			simple: false //https://github.com/request/request-promise
 	};

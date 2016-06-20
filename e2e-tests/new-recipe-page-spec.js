@@ -3,6 +3,22 @@ var pageUtils = require('./page-utils');
 var dataUtils = require('./data-utils');
 
 describe('the new recipe page', function() {
+	var email;
+	
+	beforeAll(function(done) {
+		  email = dataUtils.randomEmail();
+		  var user = {userName: 'ohai', userEmail: email};
+			
+		  dataUtils.postUser(user)
+		  .then(function(user) {
+			  return pageUtils.login(email);
+		  })
+		  .then(done);
+	});
+	
+	afterAll(function() {
+		pageUtils.logout();
+	});
 	
 	describe('content', function() {
 

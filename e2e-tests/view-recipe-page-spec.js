@@ -1,20 +1,33 @@
 'use strict';
 var dataUtils = require('./data-utils');
+var pageUtils = require('./page-utils');
 
 describe('the vew recipe page', function() {
 	
 	var recipeName = 'Recipe Being Tested - Name';
 	var recipeContent = 'Recipe Being Tested - Content';
 	var recipeId;
+	var email;
+	var userId;
 	
 	beforeAll(function(done) {
+		email = dataUtils.randomEmail();
+		var user = {userName: 'ohai', userEmail: email};
 		var recipeToAdd = {recipeName: recipeName, recipeContent: recipeContent};
-		dataUtils.addRecipe(recipeToAdd).then(function(recipe) {
+		
+		dataUtils.postUser(user)
+		.then(function(postedUser) {
+			userId = postedUser.userId;
+			return dataUtils.addRecipe(recipeToAdd, userId);
+		})
+		.then(function(recipe) {
 			recipeId = recipe.recipeId;
+			return pageUtils.login(email);
 		}).then(done);
 	});
 	
 	afterAll(function(done) {
+		pageUtils.logout();
 		dataUtils.cleanupData(done);
 	});
 	
@@ -46,13 +59,9 @@ describe('the vew recipe page', function() {
 		
 		beforeAll(function(done) {
 			var recipeToAdd = {recipeName: recipeName, recipeContent: multilineContent};
-			dataUtils.addRecipe(recipeToAdd).then(function(recipe) {
+			dataUtils.addRecipe(recipeToAdd, userId).then(function(recipe) {
 				multilineRecipeId = recipe.recipeId;
 			}).then(done);
-		});
-		
-		afterAll(function(done) {
-			dataUtils.cleanupData(done);
 		});
 		
 		it('shows the content on separate lines', function() {

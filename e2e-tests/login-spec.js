@@ -15,6 +15,10 @@ describe('Login functionality from the home page', function() {
 	var loggedInUserLink = element(by.id('logged-in-user-message'));
 	var logoutButton = element(by.id('log-out-button'));
 	
+	beforeAll(function() {
+		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser');
+	});
+	
 	afterEach(function() {
 		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser');
 	});

@@ -4,6 +4,8 @@ var pageUtils = require('./page-utils');
 
 describe('the browse all recipes page', function() {
 
+  var email;
+	
   var recipe1 = {
 		  recipeName: 'First Recipe Name',
 		  recipeContent: 'First Recipe Content'
@@ -18,11 +20,25 @@ describe('the browse all recipes page', function() {
   };
   
   beforeAll(function(done) {
-	  dataUtils.addRecipes([recipe1, recipe2, recipe3]).then(done);
+	  email = dataUtils.randomEmail();
+	  var user = {userName: 'ohai', userEmail: email};
+		
+	  dataUtils.postUser(user)
+	  .then(function(user) {
+		  return dataUtils.addRecipes([recipe1, recipe2, recipe3], user.userId);
+	  })
+	  .then(function() {
+		  return pageUtils.login(email);
+	  })
+	  .then(done);
   });
   
   afterAll(function(done) {
 	  dataUtils.cleanupData(done);
+  });
+  
+  afterAll(function() {
+	  pageUtils.logout();
   });
   
   describe('content', function() {

@@ -20,6 +20,27 @@ describe('the search recipes page', function() {
 			  recipeContent: 'Third Recipe Content'
 	  };
 	
+		var email;
+		
+	beforeAll(function(done) {
+		  email = dataUtils.randomEmail();
+		  var user = {userName: 'ohai', userEmail: email};
+			
+		  dataUtils.postUser(user)
+		  .then(function(user) {
+			  return dataUtils.addRecipes([recipe1, recipe2, recipe3], user.userId);
+		  })
+		  .then(function() {
+			  return pageUtils.login(email);
+		  })
+		  .then(done);
+	});
+	  
+	afterAll(function(done) {
+		pageUtils.logout();
+		dataUtils.cleanupData(done);
+	});
+	  
 	describe('content', function() {
 		
 		beforeAll(function() {
@@ -59,14 +80,6 @@ describe('the search recipes page', function() {
 	});
 	
 	describe('the search function', function() {
-		
-		beforeAll(function(done) {
-			dataUtils.addRecipes([recipe1, recipe2, recipe3]).then(done);
-		});
-		  
-		afterAll(function(done) {
-			dataUtils.cleanupData(done);
-		});
 		  
 		beforeEach(function() {
 			browser.get("/#search-recipes");
@@ -116,14 +129,6 @@ describe('the search recipes page', function() {
 	});
 	
 	describe('navigation', function() {
-
-		beforeAll(function(done) {
-			dataUtils.addRecipes([recipe1, recipe2, recipe3]).then(done);
-		});
-		  
-		afterAll(function(done) {
-			dataUtils.cleanupData(done);
-		});
 		  
 		beforeEach(function() {
 			browser.get("/#search-recipes");

@@ -1,6 +1,7 @@
 'use strict';
 
 var rs = require('request-promise');
+var Promise = require('bluebird');
 var config = browser.params;
 var dataUtils = require('./data-utils');
 
@@ -39,7 +40,7 @@ describe('the endpoint', function() {
 		var getOptions = {
 				uri : config.apiBaseUrl + '/recipe',
 				headers : {
-					'Auth' : userId
+					'RequestingUser' : userId
 				},
 				json : true,
 				simple: false //https://github.com/request/request-promise
@@ -51,7 +52,7 @@ describe('the endpoint', function() {
 		var getOptions = {
 				uri : config.apiBaseUrl + '/recipe?searchString=' + searchString,
 				headers : {
-					'Auth' : userId
+					'RequestingUser' : userId
 				},
 				json : true,
 				simple: false //https://github.com/request/request-promise
@@ -65,18 +66,27 @@ describe('the endpoint', function() {
 		};
 	}
 	
-	function performRecipePOST(recipeToPost) {
+	function performRecipePOST(recipeToPost, options) {
 		var postOptions = {
 			uri : config.apiBaseUrl + '/recipe',
 			headers : {
 				'Content-Type' : 'application/json',
 				'Content-Length' : recipeToPost.length,
-				'Auth' : userId
+				'RequestingUser' : userId
 			},
 			json : true,
 			body : recipeToPost,
 			simple: false //https://github.com/request/request-promise
 		};
+
+		if (options && options.responseType && options.responseType === 'full') {
+			postOptions.resolveWithFullResponse = true;
+		}
+		
+		if (options && options.userId && options.userId === 'none') {
+			delete postOptions.headers.RequestingUser;
+		}
+		
 		return rs.post(postOptions).then(function(response){
 			listOfRecipeIdsToCleanUp.push(response.recipeId);
 			return response;
@@ -89,32 +99,34 @@ describe('the endpoint', function() {
 		};
 	}
 
-	function performRecipeGET(newRecipeId, typeOfResponse) {
+	function performRecipeGET(newRecipeId, options) {
+		var requestingUserId = (options && options.userId) ? options.userId : userId;
+		
 		var getOptions = {
 				uri : config.apiBaseUrl + '/recipe/' + newRecipeId,
 				headers : {
-					'Auth' : userId
+					'RequestingUser' : requestingUserId
 				},
 				json : true,
 				simple: false //https://github.com/request/request-promise
 		};
-		
-		if (typeOfResponse && typeOfResponse === 'fullResponse') {
+
+		if (options && options.responseType && options.responseType === 'full') {
 			getOptions.resolveWithFullResponse = true;
 		}
 		
+		if (options && options.userId && options.userId === 'none') {
+			delete getOptions.headers.RequestingUser;
+		}
+		
 		return rs.get(getOptions);
-	}
-	
-	function performRecipeGETandReturnFullResponse(recipeId) {
-		return performRecipeGET(recipeId, 'fullResponse');
 	}
 	
 	function performRecipeDELETE(recipeId) {
 		var deleteOptions = {
 				uri : config.apiBaseUrl + '/recipe/' + recipeId,
 				headers : {
-					'Auth' : userId
+					'RequestingUser' : userId
 				},
 				resolveWithFullResponse: true,
 				simple: false //https://github.com/request/request-promise
@@ -149,8 +161,11 @@ describe('the endpoint', function() {
 		it('will GET a recipe by id after it has been saved', function(done) {
 			var newRecipe = {'recipeName' : 'hi again', 'recipeContent' : 'it is more of me'};
 	
-			performRecipePOST(newRecipe).then(function(response) { return response.recipeId;})
-			.then(performRecipeGET).then(function(recipe) {
+			performRecipePOST(newRecipe)
+			.then(function(response) {
+				return performRecipeGET(response.recipeId);
+			})
+			.then(function(recipe) {
 				expect(recipe.recipeName).toBe('hi again');
 				expect(recipe.recipeContent).toBe('it is more of me');
 				done();
@@ -160,7 +175,8 @@ describe('the endpoint', function() {
 		it('will return 404 Not Found when performing a GET with an unknown id', function(done) {
 			var nonExistentRecipeId = -1;
 			
-			performRecipeGET(nonExistentRecipeId, 'fullResponse').then(function(response) {
+			performRecipeGET(nonExistentRecipeId, {responseType: 'full'})
+			.then(function(response) {
 				expect(response.statusCode).toBe(404);
 				done();
 			}); 
@@ -169,13 +185,19 @@ describe('the endpoint', function() {
 		it('will DELETE an existing recipe', function(done) {
 			var newRecipe = {'recipeName': 'the best name', 'recipeContent': 'some pretty good content'};
 			
-			performRecipePOST(newRecipe).then(function(response) {return response.recipeId;})
-			.then(performRecipeGET).then(function(recipe){
+			performRecipePOST(newRecipe)
+			.then(function(response) {
+				return performRecipeGET(response.recipeId);
+			})
+			.then(function(recipe){
 				expect(recipe.recipeName).toBe('the best name');
 				return recipe.recipeId;
 			})
-			.then(performRecipeDELETEandReturnId) 
-			.then(performRecipeGETandReturnFullResponse).then(function(response) {
+			.then(performRecipeDELETEandReturnId)
+			.then(function(recipeId) {
+				return performRecipeGET(recipeId, {responseType: 'full'})
+			})
+			.then(function(response) {
 				expect(response.statusCode).toBe(404);
 				done();
 			});
@@ -184,8 +206,11 @@ describe('the endpoint', function() {
 		it('DELETE returns 204', function(done) {
 			var newRecipe = {'recipeName': 'THE name', 'recipeContent': 'reasonably ok content'};
 			
-			performRecipePOST(newRecipe).then(function(response) {return response.recipeId;})
-			.then(performRecipeGET).then(function(recipe) {return recipe.recipeId;})
+			performRecipePOST(newRecipe)
+			.then(function(response) {
+				return performRecipeGET(response.recipeId);
+			})
+			.then(function(recipe) {return recipe.recipeId;})
 			.then(performRecipeDELETE)
 			.then(function(response) {
 				expect(response.statusCode).toBe(204);
@@ -203,26 +228,55 @@ describe('the endpoint', function() {
 				}).then(done);
 			});
 			
-			it('will not allow a POST without a user id in the header and will respond with 403', function() {
+			it('will not allow a POST without a user id in the header and will respond with 401', function(done) {
+				var recipe = {'recipeName': 'The most bigly recipe ever', 'recipeContent': 'believe me'};
 				
+				performRecipePOST(recipe, {responseType: 'full', userId: 'none'})
+				.then(function(response) {
+					expect(response.statusCode).toBe(401);
+				}).then(done);
 			});
 			
 			it('will respond with editable set to true when a GET is performed on a recipe that was ' +
-							'created with the same user that is making the GET request', function() {
+							'created with the same user that is making the GET request', function(done) {
+				var newRecipe = {'recipeName' : 'bigly', 'recipeContent' : 'the bigliest'};
 				
+				performRecipePOST(newRecipe)
+				.then(function(response) {
+					return performRecipeGET(response.recipeId);
+				})
+				.then(function(recipe) {
+					expect(recipe.editable).toBe(true);
+				}).then(done);
 			});
 			
 			it('will respond with editable set to false if a GET is performe on a recipe that was ' + 
-					'created with a different user than made the GET request', function() {
+					'created with a different user than made the GET request', function(done) {
+				var user = {userName: 'ohai', userEmail: dataUtils.randomEmail()};
+				var recipe = {'recipeName': 'The greatest recipe ever', 'recipeContent': 'believe me'};
 				
+				Promise.props({
+					recipe: performRecipePOST(recipe),
+					newUser: dataUtils.postUser(user)
+				}).then(function(props) {
+					return performRecipeGET(props.recipe.recipeId, {userId: props.newUser.userId});
+				}).then(function(response) {
+					expect(response.recipeName).toBe('The greatest recipe ever');
+					expect(response.recipeContent).toBe('believe me');
+					expect(response.editable).toBe(false);
+				}).then(done);
 			});
 			
-			it('will respond with editable set to false with no userId set in the header', function() {
-				
-			});
-			
-			it('will respond with 403 if a bad user id is set in the header', function() {
-				
+			it('GET will respond with editable set to false with no userId set in the header', function(done) {
+				var newRecipe = {'recipeName' : 'bigly', 'recipeContent' : 'the bigliest'};
+
+				performRecipePOST(newRecipe)
+				.then(function(response) {
+					return performRecipeGET(response.recipeId, {userId: 'none'})
+				})
+				.then(function(recipe) {
+					expect(recipe.editable).toBe(false);
+				}).then(done);
 			});
 		});
 	});

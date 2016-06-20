@@ -77,6 +77,21 @@ function(req, email, ipAddress, done) { // callback with email and ipAddress fro
 }));
 app.use(passport.initialize());
 
+function headersFromRequest(request) {
+	var headers = {};
+	if (request.headers['Content-Type']) {
+		headers['Content-Type'] = request.headers['Content-Type'];
+	}
+	if (request.headers['Content-Length']) {
+		headers['Content-Length'] = request.headers['Content-Length'];
+	}
+	if (request.headers.requestinguser) {
+		headers['RequestingUser'] = request.headers.requestinguser;
+	}
+	console.log(request.headers);
+	console.log(headers);
+	return headers;
+} 
 
 
 function performRecipeListGET(searchString) {
@@ -103,12 +118,13 @@ function performRecipeGET(recipeId) {
 	return rs.get(getOptions);
 }
 
-function performRecipePOST(recipe) {
+function performRecipePOST(recipe, userId) {
 	var postOptions = {
 		uri : serviceRoot + '/recipe',
 		headers : {
 			'Content-Type' : 'application/json',
-			'Content-Length' : recipe.length
+			'Content-Length' : recipe.length,
+			'RequestingUser' : userId
 		},
 		json : true,
 		body : recipe,
@@ -167,7 +183,7 @@ app.get('/api/recipe/:recipeId', function(request, response, next) {
 
 app.post('/api/recipe', function(request, response, next) {
 	var recipe = request.body;
-	performRecipePOST(recipe).then(function(data) {
+	performRecipePOST(recipe, request.headers.requestinguser).then(function(data) {
 		response.statusCode = data.statusCode;	
 		response.json(data.body);
 	})
