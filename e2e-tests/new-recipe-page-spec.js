@@ -4,16 +4,21 @@ var dataUtils = require('./data-utils');
 
 describe('the new recipe page,', function () {
 
+    var email;
     var recipeNameInput = element(by.css('input#recipe-name-input'));
     var recipeContentInput = element(by.css('textarea#recipe-content-input'));
     var saveButton = element(by.className('save-button'));
     var errorMessage = element(by.className('save-error-message'));
     var allRecipesOnBrowsePage = element.all(by.className('recipe'));
 
+    var loginLink = element(by.className('login-link'));
+    var loginButton = element(by.id('log-in-user-button'));
+    var loginEmailField = element(by.id('sign-up-user-email'));
+
     describe('when a user is logged in, ', function () {
 
         beforeAll(function (done) {
-            var email = dataUtils.randomEmail();
+            email = dataUtils.randomEmail();
             var user = {userName: 'ohai', userEmail: email};
 
             dataUtils.postUser(user)
@@ -57,7 +62,7 @@ describe('the new recipe page,', function () {
                 expect(saveButton.getText()).toBe('Save Recipe');
             });
 
-            it('does not show the error message', function() {
+            it('does not show the error message', function () {
                 expect(errorMessage.isDisplayed()).toBe(false);
             });
 
@@ -105,9 +110,9 @@ describe('the new recipe page,', function () {
         });
     });
 
-    describe('when a user is not logged in', function() {
+    describe('when a user is not logged in', function () {
 
-        it('does not allow a recipe to be saved and gives an error message', function() {
+        it('does not allow a recipe to be saved and gives an error message', function () {
             browser.get('/#/new-recipe');
             recipeNameInput.sendKeys('recipe name');
             recipeContentInput.sendKeys('this should not be saved');
@@ -120,5 +125,24 @@ describe('the new recipe page,', function () {
             browser.get('/#/browse-all-recipes');
             expect(allRecipesOnBrowsePage.count()).toBe(0);
         });
+
+        it('and saves, the error message goes away once the user logs in', function () {
+            browser.get('/#/new-recipe');
+            recipeNameInput.sendKeys('recipe name');
+            recipeContentInput.sendKeys('this should not be saved');
+            saveButton.click();
+
+            expect(errorMessage.isDisplayed()).toBe(true);
+            login();
+
+            expect(errorMessage.isDisplayed()).toBe(false);
+            pageUtils.logout();
+        });
+
+        function login() {
+            loginLink.click();
+            loginEmailField.sendKeys(email);
+            loginButton.click();
+        }
     });
 });

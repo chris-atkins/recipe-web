@@ -26,7 +26,7 @@ angular.module('recipe.newRecipe', ['ngRoute'])
         };
 
         $scope.shouldShowErrorMessage = function () {
-            return attemptedToSaveWithNoLogin;
+            return attemptedToSaveWithNoLogin  && isNotLoggedIn();
         };
 
         function isNotLoggedIn() {
