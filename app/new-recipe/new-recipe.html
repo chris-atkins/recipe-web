@@ -16,5 +16,10 @@
 
 <div class="container">
 	<a id="home-button" class="btn btn-default" href="#/home" role="button">Home</a>
-	<a id="save-button" class="btn btn-default" href="#/home" role="button" ng-click="saveRecipe()">Save Recipe</a>
+	<a class="save-button btn btn-default" href="#/home" role="button" ng-click="saveRecipe()" ng-if="isLoggedIn()">Save Recipe</a>
+	<a class="save-button btn btn-default" role="button" ng-click="saveClickedWithNoLogin()" ng-if="!isLoggedIn()">Save Recipe</a>
+</div>
+
+<div class="container" ng-show="attemptedToSaveWithNoLogin">
+	<p class="save-error-message alert alert-danger">In order to save a recipe you must be logged in. Click the link in the top right corner and enter your email address.</p>
 </div>

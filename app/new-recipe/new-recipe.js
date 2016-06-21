@@ -9,10 +9,11 @@ angular.module('recipe.newRecipe', ['ngRoute'])
 	});
 }])
 
-.controller('NewRecipeCtrl', function($scope, $http) {
+.controller('NewRecipeCtrl', function($scope, $http, userService) {
 	
 	$scope.newRecipeName = '';
 	$scope.newRecipeContent = '';
+	$scope.attemptedToSaveWithNoLogin = false;
 	
 	$scope.saveRecipe = function() {
 		var recipeToSave = {
@@ -27,5 +28,13 @@ angular.module('recipe.newRecipe', ['ngRoute'])
 			.error(function(error) {
 				console.log('failure saving recipe:', error);
 			});
+	};
+
+	$scope.isLoggedIn = function() {
+		return userService.isLoggedIn();
+	};
+
+	$scope.saveClickedWithNoLogin = function() {
+		$scope.attemptedToSaveWithNoLogin = true;
 	};
 });

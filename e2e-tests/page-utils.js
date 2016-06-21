@@ -1,7 +1,5 @@
 'use strict';
 
-var dataUtils = require('./data-utils');
-
 var loginLink = element(by.className('login-link'));
 var loginButton = element(by.id('log-in-user-button'));
 var loginEmailField = element(by.id('sign-up-user-email'));
