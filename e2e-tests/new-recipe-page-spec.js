@@ -114,7 +114,7 @@ describe('the new recipe page,', function () {
             saveButton.click();
 
             expect(errorMessage.isDisplayed()).toBe(true);
-            expect(errorMessage.getText()).toBe('In order to save a recipe you must be logged in. Click the link in the top right corner and enter your email address.');
+            expect(errorMessage.getText()).toBe('In order to save a recipe you must be logged in. Click the \'Log In\' link in the top right corner and enter your email address.');
             expect(browser.getLocationAbsUrl()).toContain('/new-recipe');
 
             browser.get('/#/browse-all-recipes');

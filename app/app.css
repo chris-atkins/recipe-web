@@ -32,3 +32,7 @@
 .user-section {
 	/* background-color: #5EE896; */
 }
+
+.save-error-message {
+  margin-top: 15px;
+}
