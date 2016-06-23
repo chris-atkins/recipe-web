@@ -29,7 +29,7 @@ describe('the endpoint', function() {
 		for (var i = 0; i < listOfRecipeIdsToCleanUp.length; i++) {
 			p = p.then(performRecipeDELETEFunction(listOfRecipeIdsToCleanUp[i]));
 		}
-		p = p.then(function(response){
+		p = p.then(function(){
 			listOfRecipeIdsToCleanUp = [];
 		});
 		
@@ -133,6 +133,31 @@ describe('the endpoint', function() {
 		};
 		return rs.del(deleteOptions);
 	}
+
+	function performRecipePUT(updatedRecipe, options) {
+		var requestingUserId = (options && options.userId) ? options.userId : userId;
+		var putOptions = {
+			uri : config.apiBaseUrl + '/recipe/' + updatedRecipe.recipeId,
+			headers : {
+				'Content-Type' : 'application/json',
+				'Content-Length' : updatedRecipe.length,
+				'RequestingUser' : requestingUserId
+			},
+			json : true,
+			body : updatedRecipe,
+			simple: false //https://github.com/request/request-promise
+		};
+
+		if (options && options.responseType && options.responseType === 'full') {
+			putOptions.resolveWithFullResponse = true;
+		}
+
+		if (options && options.userId && options.userId === 'none') {
+			delete putOptions.headers.RequestingUser;
+		}
+
+		return rs.put(putOptions);
+	}
 	
 	function performRecipeDELETEFunction(recipeId) {
 		return function() {
@@ -171,11 +196,44 @@ describe('the endpoint', function() {
 				done();
 			});
 		});
-		
+
+		it('can PUT a recipe to change the name and content after it has been saved', function(done) {
+			var newRecipe = {'recipeName' : 'firstName', 'recipeContent' : 'firstContent'};
+			var recipeId;
+
+			performRecipePOST(newRecipe)
+			.then(function(recipe) {
+				recipeId = recipe.recipeId;
+				recipe.recipeName = 'secondName';
+				recipe.recipeContent = 'secondContent';
+				return performRecipePUT(recipe, {responseType: 'full'});
+			})
+			.then(function(response) {
+				expect(response.statusCode).toBe(200);
+				return performRecipeGET(recipeId);
+			})
+			.then(function(recipe) {
+				expect(recipe.recipeName).toBe('secondName');
+				expect(recipe.recipeContent).toBe('secondContent');
+				done();
+			});
+		});
+
 		it('will return 404 Not Found when performing a GET with an unknown id', function(done) {
 			var nonExistentRecipeId = -1;
-			
+
 			performRecipeGET(nonExistentRecipeId, {responseType: 'full'})
+				.then(function(response) {
+					expect(response.statusCode).toBe(404);
+					done();
+				});
+		});
+		
+		it('will return 404 Not Found when performing a PUT with an unknown id', function(done) {
+			var nonExistentRecipeId = -1;
+			var recipe = {recipeId: nonExistentRecipeId, recipeName: 'name', recipeContent: 'content'};
+			
+			performRecipePUT(recipe, {responseType: 'full'})
 			.then(function(response) {
 				expect(response.statusCode).toBe(404);
 				done();
@@ -277,6 +335,34 @@ describe('the endpoint', function() {
 				.then(function(recipe) {
 					expect(recipe.editable).toBe(false);
 				}).then(done);
+			});
+
+			it('will not allow a PUT without a user id in the header and will respond with 401', function(done) {
+				var recipe = {'recipeName': 'name', 'recipeContent': 'content'};
+
+				performRecipePOST(recipe)
+					.then(function(response) {
+						response.recipeContent = 'newContent'
+						return performRecipePUT(response,  {responseType: 'full', userId: 'none'});
+					})
+					.then(function(response) {
+						expect(response.statusCode).toBe(401);
+					})
+					.then(done);
+			});
+
+			it('will not allow a PUT with a user id that is not the creator of the original recipe and will respond with 401', function(done) {
+				var recipe = {'recipeName': 'name', 'recipeContent': 'content'};
+
+				performRecipePOST(recipe)
+					.then(function(response) {
+						response.recipeContent = 'newContent'
+						return performRecipePUT(response,  {responseType: 'full', userId: '576b339ea7c0a0146aba1337'});
+					})
+					.then(function(response) {
+						expect(response.statusCode).toBe(401);
+					})
+					.then(done);
 			});
 		});
 	});
