@@ -342,7 +342,7 @@ describe('the endpoint', function() {
 
 				performRecipePOST(recipe)
 					.then(function(response) {
-						response.recipeContent = 'newContent'
+						response.recipeContent = 'newContent';
 						return performRecipePUT(response,  {responseType: 'full', userId: 'none'});
 					})
 					.then(function(response) {
@@ -356,7 +356,7 @@ describe('the endpoint', function() {
 
 				performRecipePOST(recipe)
 					.then(function(response) {
-						response.recipeContent = 'newContent'
+						response.recipeContent = 'newContent';
 						return performRecipePUT(response,  {responseType: 'full', userId: '576b339ea7c0a0146aba1337'});
 					})
 					.then(function(response) {
