@@ -88,8 +88,6 @@ function headersFromRequest(request) {
 	if (request.headers.requestinguser) {
 		headers.RequestingUser = request.headers.requestinguser;
 	}
-	console.log(request.headers);
-	console.log(headers);
 	return headers;
 } 
 
@@ -108,9 +106,10 @@ function performRecipeListGET(searchString) {
 	return rs.get(getOptions);
 }
 
-function performRecipeGET(recipeId) {
+function performRecipeGET(recipeId, request) {
 	var getOptions = {
 		uri : serviceRoot + '/recipe/' + recipeId,
+		headers: headersFromRequest(request),
 		json : true,
 		simple: false,
 		resolveWithFullResponse: true
@@ -118,20 +117,28 @@ function performRecipeGET(recipeId) {
 	return rs.get(getOptions);
 }
 
-function performRecipePOST(recipe, userId) {
+function performRecipePOST(recipe, request) {
 	var postOptions = {
 		uri : serviceRoot + '/recipe',
-		headers : {
-			'Content-Type' : 'application/json',
-			'Content-Length' : recipe.length,
-			'RequestingUser' : userId
-		},
+		headers : headersFromRequest(request),
 		json : true,
 		body : recipe,
 		simple: false,
 		resolveWithFullResponse: true
 	};
 	return rs.post(postOptions);
+}
+
+function performRecipePUT(recipe, request) {
+	var postOptions = {
+		uri : serviceRoot + '/recipe/' + recipe.recipeId,
+		headers : headersFromRequest(request),
+		json : true,
+		body : recipe,
+		simple: false,
+		resolveWithFullResponse: true
+	};
+	return rs.put(postOptions);
 }
 
 function performUserPOST(user) {
@@ -172,7 +179,7 @@ app.get('/api/recipe', function(request, response, next) {
 
 app.get('/api/recipe/:recipeId', function(request, response, next) {
 	var recipeId = request.params.recipeId;
-	performRecipeGET(recipeId).then(function(data) {
+	performRecipeGET(recipeId, request).then(function(data) {
 		response.statusCode = data.statusCode;	
 		response.json(data.body);
 	})
@@ -183,12 +190,23 @@ app.get('/api/recipe/:recipeId', function(request, response, next) {
 
 app.post('/api/recipe', function(request, response, next) {
 	var recipe = request.body;
-	performRecipePOST(recipe, request.headers.requestinguser).then(function(data) {
+	performRecipePOST(recipe, request).then(function(data) {
 		response.statusCode = data.statusCode;	
 		response.json(data.body);
 	})
 	.catch(function(error) {
 		console.log('Error posting a new recipe:', recipe, 'Error:', error);
+	});
+});
+
+app.put('/api/recipe/:recipeId', function(request, response, next) {
+	var recipe = request.body;
+	performRecipePUT(recipe, request).then(function(data) {
+		response.statusCode = data.statusCode;
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Error putting a new recipe:', recipe, 'Error:', error);
 	});
 });
 

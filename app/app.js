@@ -22,11 +22,6 @@ angular.module('recipe', [
     var injector = {
         request: function(config) {
         	var userService = $injector.get('userService');
-        	
-			console.log('IM HERE');
-			console.log('config', config);
-			console.log(userService);
-			console.log('user', userService.getLoggedInUser());
 			
 			var user = userService.getLoggedInUser();
 			if (user) {

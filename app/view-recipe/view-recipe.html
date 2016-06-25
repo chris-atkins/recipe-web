@@ -1,14 +1,24 @@
 <div ng-include="'user/user.html'"></div>
-<div class="container">
+
+<div class="container" ng-hide="inEditMode()">
 	<h2><span id="recipe-name">{{recipe.recipeName}}</span></h2>
+	<p><span id="recipe-content" class="show-line-breaks" ng-bind-html="recipe.recipeContent"></span></p>
 </div>
 
-<div class="container">
-	<p>
-		<span id="recipe-content" ng-bind-html="recipe.recipeContent"></span>
-	</p>
+<div class="container" ng-show="inEditMode()">
+	<h2>
+		<span id="edit-recipe-page-title">Edit Recipe</span>
+	</h2>
+	<div class="form-group">
+		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="nameBeingEdited"/>
+	</div>
+	<div class="form-group">
+		<textarea id="recipe-content-input" class="form-control" rows="10" placeholder="Recipe Content" type="text" ng-model="contentBeingEdited"></textarea>
+	</div>
 </div>
 
-<div class="container">
+<div class="container hidden-print">
 	<a id="home-button" class="btn btn-default" href="#/home" role="button">Home</a>
+	<a id="edit-recipe-button" class="btn btn-default" ng-click="editClicked()" role="button" ng-if="shouldShowEditButtons()" ng-hide="inEditMode()">Edit Recipe</a>
+	<a id="update-recipe-button" class="btn btn-default" ng-click="saveClicked()" role="button" ng-if="shouldShowEditButtons()" ng-show="inEditMode()">Save Recipe</a>
 </div>
