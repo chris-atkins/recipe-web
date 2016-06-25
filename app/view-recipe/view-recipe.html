@@ -2,7 +2,7 @@
 
 <div class="container" ng-hide="inEditMode()">
 	<h2><span id="recipe-name">{{recipe.recipeName}}</span></h2>
-	<p><span id="recipe-content" class="show-line-breaks" ng-bind-html="recipe.recipeContent"></span></p>
+	<p><span id="recipe-content" class="show-line-breaks">{{recipe.recipeContent}}</span></p>
 </div>
 
 <div class="container" ng-show="inEditMode()">

@@ -9,7 +9,7 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 	});
 }])
 
-.controller('ViewRecipeCtrl', function($scope, $http, $routeParams, $sce, userService) {
+.controller('ViewRecipeCtrl', function($scope, $http, $routeParams) {
 
 	var inEditMode = false;
 	$scope.recipe = {};
@@ -19,7 +19,6 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 	$http.get('api/recipe/' + $routeParams.recipeId)
 		.success(function(recipe) {
 			$scope.recipe = recipe;
-			$scope.recipe.recipeContent = $sce.trustAsHtml($scope.recipe.recipeContent);
 		})
 		.error(function(error) {
 			console.log('error retrieving recipe: ', error);
@@ -49,7 +48,6 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 		$http.put('/api/recipe/' + $scope.recipe.recipeId, recipeToPut)
 			.success(function (recipe) {
 				$scope.recipe = recipe;
-				$scope.recipe.recipeContent = $sce.trustAsHtml($scope.recipe.recipeContent);
 			})
 			.error(function (error) {
 				console.log('failure saving recipe:', error);
