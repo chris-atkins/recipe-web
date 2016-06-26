@@ -87,12 +87,19 @@ describe('the new recipe page,', function () {
                 dataUtils.removeAllRecipeData(done);
             });
 
-            it('takes the user back to the home page', function () {
+            it('takes the user to the view page for the newly saved recipe', function () {
                 recipeNameInput.sendKeys('test name');
                 recipeContentInput.sendKeys('test content');
 
                 saveButton.click();
-                expect(browser.getLocationAbsUrl()).toMatch('/home');
+                expect(browser.getLocationAbsUrl()).toContain('/view-recipe/');
+
+
+                var recipeNameElement = element(by.id('recipe-name'));
+                expect(recipeNameElement.getText()).toBe('test name');
+
+                var recipeContentElement = element(by.id('recipe-content'));
+                expect(recipeContentElement.getText()).toBe('test content');
             });
 
             it('saves whatever was entered in the input fields as a new recipe that can now be navigated to', function () {

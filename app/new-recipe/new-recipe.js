@@ -20,8 +20,10 @@ angular.module('recipe.newRecipe', ['ngRoute'])
                 attemptedToSaveWithNoLogin = true;
                 return;
             } else {
-                saveRecipe();
-                $location.path('#/home');
+                saveRecipe()
+                    .then(function(response) {
+                        $location.path('/view-recipe/' + response.data.recipeId);
+                    });
             }
         };
 
@@ -39,9 +41,9 @@ angular.module('recipe.newRecipe', ['ngRoute'])
                 recipeContent: $scope.newRecipeContent
             };
 
-            $http.post('/api/recipe', recipeToSave)
-                .success(function (data) {
-                    //don't do anything
+            return $http.post('/api/recipe', recipeToSave)
+                .success(function (recipe) {
+                    return recipe;
                 })
                 .error(function (error) {
                     console.log('failure saving recipe:', error);
