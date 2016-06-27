@@ -34,6 +34,37 @@ angular.module('recipe', [
 }])
 .config(['$httpProvider', function($httpProvider) {  
     $httpProvider.interceptors.push('userHeaderInjector');
-}]);
+}])
+
+.factory('routeHistory', function() {
+
+    var lastRoute;
+    var lastPathParams;
+
+    function registerRoute(current) {
+        if (current !== undefined) {
+            lastRoute = current.originalPath;
+            lastPathParams = current.pathParams;
+        }
+        // for (var attribute in current) {
+        //     console.log(attribute);
+        //     console.log(current[attribute]);
+        // }
+    }
+
+    function getLastRoute() {
+        return lastRoute;
+    }
+
+    return {
+        registerRoute: registerRoute,
+        getLastRoute: getLastRoute
+    };
+})
+.run(function($rootScope, routeHistory) {
+    $rootScope.$on("$routeChangeStart", function (event, next, current) {
+        routeHistory.registerRoute(current);
+    });
+});
 
 

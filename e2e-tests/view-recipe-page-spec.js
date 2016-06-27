@@ -64,10 +64,11 @@ describe('the vew recipe page', function() {
 
 		describe('handles multi-line content', function () {
 			var multilineRecipeId;
+			var newName = 'newName';
 			var multilineContent = 'First Line\nSecond Line';
 
 			beforeAll(function (done) {
-				var recipeToAdd = {recipeName: recipeName, recipeContent: multilineContent};
+				var recipeToAdd = {recipeName: newName, recipeContent: multilineContent};
 				dataUtils.addRecipe(recipeToAdd, userId).then(function (recipe) {
 					multilineRecipeId = recipe.recipeId;
 				}).then(done);
@@ -93,6 +94,57 @@ describe('the vew recipe page', function() {
 				homeButton.click();
 				expect(browser.getLocationAbsUrl()).toMatch('/home');
 			});
+
+		});
+	});
+
+	describe('the back button', function() {
+
+		var backButton = element(by.id('back-button'));
+
+		it('navigates back to the browse screen if it was the path used to get to the view page', function() {
+			browser.get('/#/browse-all-recipes');
+
+			var allRecipes = element.all(by.className('recipe'));
+			var recipe = pageUtils.findRecipeWithName('Recipe Being Tested - Name', allRecipes);
+			var recipeLink = recipe.element(by.className('view-recipe-link'));
+
+			recipeLink.click();
+			expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId);
+
+			expect(backButton.isPresent()).toBe(true);
+			expect(backButton.isDisplayed()).toBe(true);
+			backButton.click();
+
+			expect(browser.getLocationAbsUrl()).toMatch('/browse-all-recipes');
+		});
+
+		it('navigates back to the browse screen if it was the path used to get to the view page', function() {
+			browser.get("/#/search-recipes");
+
+			var searchInput = element(by.id('search-input'));
+			var searchButton = element(by.id('search-button'));
+			searchInput.sendKeys('Recipe');
+			searchButton.click();
+
+			var recipe = pageUtils.findRecipeWithName('Recipe Being Tested - Name', element.all(by.className('recipe')));
+			var recipeLink = recipe.element(by.css('a.view-recipe-link'));
+
+			recipeLink.click();
+			expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId);
+
+			expect(backButton.isPresent()).toBe(true);
+			expect(backButton.isDisplayed()).toBe(true);
+			backButton.click();
+
+			expect(browser.getLocationAbsUrl()).toMatch('/search-recipes');
+		});
+
+		it('does not show up if there was no previous screen (like if it was navigated to with a bookmark)', function() {
+			browser.get('/#/view-recipe/' + recipeId);
+			browser.refresh();
+
+			expect(backButton.isPresent()).toBe(false);
 		});
 	});
 

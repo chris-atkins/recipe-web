@@ -9,7 +9,7 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 	});
 }])
 
-.controller('ViewRecipeCtrl', function($scope, $http, $routeParams) {
+.controller('ViewRecipeCtrl', function($scope, $http, $routeParams, $location, routeHistory) {
 
 	var inEditMode = false;
 	$scope.recipe = {};
@@ -53,5 +53,14 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 				console.log('failure saving recipe:', error);
 			});
 		inEditMode = false;
+	};
+
+	$scope.back = function() {
+		var lastPath = routeHistory.getLastRoute();
+		$location.path(lastPath);
+	};
+
+	$scope.shouldShowBackButton = function() {
+		return routeHistory.getLastRoute() !== undefined;
 	};
 });
