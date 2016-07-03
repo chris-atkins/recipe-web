@@ -112,11 +112,7 @@ describe('the search recipes page', function() {
 		it('searches for recipes when enter is typed in the input field', function() {
 				
 		});
-		
-		it('a search results page can be navigated to with a url (ex: with a bookmark)', function() {
-			
-		});
-		
+
 		it('gives a message when no recipes are found', function() {
 			var noSearchResultsMessage = element(by.id('no-search-results-message'));
 			expect(noSearchResultsMessage.isDisplayed()).toBe(false);
@@ -126,8 +122,13 @@ describe('the search recipes page', function() {
 			
 			expect(noSearchResultsMessage.getText()).toBe('No recipes were found that match the search.');
 		});
+
+		it('results can be navigated to with a url (ex: with a bookmark)', function() {
+			browser.get("/#search-recipes?searchFor=findMe");
+			expect(element.all(by.className('recipe')).count()).toBe(2);
+		});
 	});
-	
+
 	describe('navigation', function() {
 		  
 		beforeEach(function() {
@@ -152,6 +153,21 @@ describe('the search recipes page', function() {
 				recipeLink.click();
 				expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId);
 			});
+		});
+
+		it('when navigating to a recipe, then back to the search page, the search and found recipes are still on the page', function() {
+			searchInput.sendKeys('findMe');
+			searchButton.click();
+
+			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
+			var recipeLink = firstRecipe.element(by.css('a.view-recipe-link'));
+
+			recipeLink.click();
+			element(by.id('back-button')).click();
+
+			expect(searchInput.getAttribute('value')).toBe('findMe');
+			var foundRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
+			expect(foundRecipe.isPresent()).toBe(true);
 		});
 	});
 });

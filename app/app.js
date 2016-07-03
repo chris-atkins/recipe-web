@@ -1,6 +1,5 @@
 'use strict';
 
-// Declare app level module which depends on views, and components
 angular.module('recipe', [
   'ngRoute',
   'ngCookies',
@@ -40,20 +39,29 @@ angular.module('recipe', [
 
     var lastRoute;
     var lastPathParams;
+    var lastQueryParams;
 
     function registerRoute(current) {
         if (current !== undefined) {
             lastRoute = current.originalPath;
             lastPathParams = current.pathParams;
+            lastQueryParams = current.params;
         }
-        // for (var attribute in current) {
-        //     console.log(attribute);
-        //     console.log(current[attribute]);
-        // }
     }
 
     function getLastRoute() {
+        if(useQueryParams()) {
+            return lastRoute + buildQueryParamString();
+        }
         return lastRoute;
+    }
+
+    function useQueryParams() {
+        return lastQueryParams !== undefined && lastQueryParams.searchFor !== undefined;
+    }
+
+    function buildQueryParamString() {
+        return '?searchFor=' + lastQueryParams.searchFor;
     }
 
     return {

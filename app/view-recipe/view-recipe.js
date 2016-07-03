@@ -57,7 +57,7 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 
 	$scope.back = function() {
 		var lastPath = routeHistory.getLastRoute();
-		$location.path(lastPath);
+		$location.url(lastPath);
 	};
 
 	$scope.shouldShowBackButton = function() {

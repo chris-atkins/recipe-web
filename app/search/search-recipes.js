@@ -9,14 +9,24 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 	});
 }])
 
-.controller('SearchRecipesCtrl', function($scope, $http) {
+.controller('SearchRecipesCtrl', function($scope, $http, $routeParams, $location) {
 	
 	$scope.recipeList = [];
 	$scope.searchString = '';
 	$scope.searchHasOccurred = false;
-	
+
+	var queryParamSearchString = $routeParams.searchFor;
+	if(queryParamSearchString) {
+		$scope.searchString = queryParamSearchString;
+		performSearchAndDisplayResults(queryParamSearchString);
+	}
+
 	$scope.searchRecipes = function() {
-		$http.get('/api/recipe?searchString=' + $scope.searchString)
+		$location.url('/search-recipes?searchFor=' + $scope.searchString);
+	};
+
+	function performSearchAndDisplayResults(searchString){
+		$http.get('/api/recipe?searchString=' + searchString)
 			.success(function(data) {
 				$scope.recipeList = data;
 				$scope.searchHasOccurred = true;
@@ -24,7 +34,7 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 			.error(function(error) {
 				console.log('Error getting recipes:', error);
 			});
-	};
+	}
 })
 
 .directive('focus', function($timeout) {
