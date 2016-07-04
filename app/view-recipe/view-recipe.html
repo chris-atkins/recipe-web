@@ -18,8 +18,9 @@
 </div>
 
 <div class="container hidden-print">
-	<a id="home-button" class="btn btn-default" href="#/home" role="button">Home</a>
-	<a id="back-button" class="btn btn-default" ng-click="back()" role="button" ng-if="shouldShowBackButton()">Back</a>
+	<a id="home-button" class="btn btn-default" href="#/home" role="button" ng-hide="inEditMode()">Home</a>
+	<a id="back-button" class="btn btn-default" ng-click="back()" role="button" ng-if="shouldShowBackButton()" ng-hide="inEditMode()">Back</a>
 	<a id="edit-recipe-button" class="btn btn-default" ng-click="editClicked()" role="button" ng-if="shouldShowEditButtons()" ng-hide="inEditMode()">Edit Recipe</a>
+	<a id="cancel-edit-button" class="btn btn-default" ng-click="cancelEdit()" role="button" ng-if="shouldShowEditButtons()" ng-show="inEditMode()">Cancel</a>
 	<a id="update-recipe-button" class="btn btn-default" ng-click="saveClicked()" role="button" ng-if="shouldShowEditButtons()" ng-show="inEditMode()">Save Recipe</a>
 </div>

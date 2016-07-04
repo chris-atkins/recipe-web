@@ -150,6 +150,9 @@ describe('the vew recipe page', function() {
 
 
 	var editRecipeButton = element(by.id('edit-recipe-button'));
+	var homeButton = element(by.id('home-button'));
+	var backButton = element(by.id('back-button'));
+	var cancelEditButton = element(by.id('cancel-edit-button'));
 	var updateRecipeButton = element(by.id('update-recipe-button'));
 	var recipeNameInput = element(by.css('input#recipe-name-input'));
 	var recipeContentInput = element(by.css('textarea#recipe-content-input'));
@@ -178,9 +181,20 @@ describe('the vew recipe page', function() {
 		});
 
 		it('when clicking the edit button, editable recipe fields and a save button appear', function() {
+			browser.get('/#/browse-all-recipes');
+			var recipe = pageUtils.findRecipeWithName('Recipe Being Tested - Name', element.all(by.className('recipe')));
+			var recipeLink = recipe.element(by.className('view-recipe-link'));
+			recipeLink.click();
+
 			editRecipeButton.click();
 
 			expect(editRecipeButton.isDisplayed()).toBe(false);
+			expect(homeButton.isDisplayed()).toBe(false);
+			expect(backButton.isDisplayed()).toBe(false);
+
+			expect(cancelEditButton.isDisplayed()).toBe(true);
+			expect(cancelEditButton.getText()).toBe('Cancel');
+
 			expect(updateRecipeButton.isDisplayed()).toBe(true);
 			expect(updateRecipeButton.getText()).toBe('Save Recipe');
 
@@ -192,6 +206,26 @@ describe('the vew recipe page', function() {
 
 			expect(recipeContentInput.isDisplayed()).toBe(true);
 			expect(recipeContentInput.getAttribute('value')).toBe('Recipe Being Tested - Content');
+		});
+
+		it('editing can be cancelled without altering the recipe contents or title', function() {
+			browser.get('/#/view-recipe/' + recipeId);
+			editRecipeButton.click();
+
+			recipeNameInput.sendKeys('edited');
+			recipeContentInput.sendKeys('moreedited');
+
+			cancelEditButton.click();
+
+			expect(recipeNameElement.getText()).toBe('Recipe Being Tested - Name');
+			expect(recipeContentElement.getText()).toBe('Recipe Being Tested - Content');
+
+			expect(editRecipeButton.isDisplayed()).toBe(true);
+			expect(updateRecipeButton.isDisplayed()).toBe(false);
+
+			browser.get('/#/view-recipe/' + recipeId);
+			expect(recipeNameElement.getText()).toBe('Recipe Being Tested - Name');
+			expect(recipeContentElement.getText()).toBe('Recipe Being Tested - Content');
 		});
 
 		it('the recipe can be updated', function() {

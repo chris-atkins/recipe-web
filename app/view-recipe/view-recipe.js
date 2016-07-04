@@ -38,6 +38,10 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 		inEditMode = true;
 	};
 
+	$scope.cancelEdit = function() {
+		inEditMode = false;
+	};
+
 	$scope.saveClicked = function() {
 		var recipeToPut = {
 			recipeId: $scope.recipe.recipeId,
