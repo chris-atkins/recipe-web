@@ -167,6 +167,17 @@ function performUserGETByEmail(email) {
 	return rs.get(getOptions);
 }
 
+function performUserGET(userId) {
+	var getOptions = {
+			uri : serviceRoot + '/user/' + userId,
+			json : true,
+			simple: false,
+			resolveWithFullResponse: true
+	};
+
+	return rs.get(getOptions);
+}
+
 app.get('/api/recipe', function(request, response, next) {
 	performRecipeListGET(request.query.searchString).then(function(data) {
 		response.statusCode = data.statusCode;	
@@ -229,6 +240,17 @@ app.get('/api/user', function(request, response, next) {
 	})
 	.catch(function(error) {
 		console.log('Could not get a user with email:', email, 'Error:', error);
+	});
+});
+
+app.get('/api/user/:userId', function(request, response, next) {
+	var userId =  request.params.userId;
+	performUserGET(userId).then(function(data) {
+		response.statusCode = data.statusCode;
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Could not get a user with id:', userId, 'Error:', error);
 	});
 });
 

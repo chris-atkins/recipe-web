@@ -16,8 +16,12 @@ function findRecipeWithName(recipeName, recipeElements) {
 
 function login(userEmail) {
 	return browser.get('').then(function() {
-		return loginLink.click();
-	})
+		return loginWithoutNavigating(userEmail);
+	});
+}
+
+function loginWithoutNavigating(userEmail) {
+	return loginLink.click()
 	.then(function() {
 		return loginEmailField.sendKeys(userEmail);
 	})
@@ -33,5 +37,6 @@ function logout() {
 module.exports = {
 	findRecipeWithName: findRecipeWithName,
 	login: login,
+	loginWithoutNavigating: loginWithoutNavigating,
 	logout: logout
 };

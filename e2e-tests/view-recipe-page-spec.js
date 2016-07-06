@@ -32,6 +32,10 @@ describe('the vew recipe page', function() {
 	afterAll(function (done) {
 		dataUtils.cleanupData(done);
 	});
+	
+	afterAll(function() {
+		pageUtils.logout();
+	});
 
 	describe('when no user is logged in', function() {
 		describe('content', function () {

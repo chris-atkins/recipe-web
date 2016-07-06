@@ -13,4 +13,9 @@
 	<a id="search-button" class="btn btn-default" href="#/search-recipes" role="button">Search Recipes</a> 
 	<a id="save-button" class="btn btn-default" href="#/new-recipe" role="button">Save New Recipe</a> 
 	<a id="browse-all-button" class="btn btn-default" href="#/browse-all-recipes" role="button">Browse All Recipes</a>
+	<a id="recipe-book-button" class="btn btn-default" ng-click="navigateToRecipeBook()" role="button">My Recipe Book</a>
+</div>
+
+<div class="container" ng-show="shouldShowErrorMessage()">
+	<p id="recipe-book-error-message" class="recipe-error-message alert alert-danger">In order to see your own recipe book you must be logged in. Click the 'Log In' link in the top right corner and enter your email address.</p>
 </div>

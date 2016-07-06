@@ -4,7 +4,6 @@ describe('the home page', function() {
 
   it('should be redirected to when location hash/fragment is empty', function() {
     browser.get('');
-//    browser.getCurrentUrl().then(function(url) {console.log(url);});
     expect(browser.getLocationAbsUrl()).toMatch('/home');
   });
   

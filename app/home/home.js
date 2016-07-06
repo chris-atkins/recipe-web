@@ -9,6 +9,23 @@ angular.module('recipe.home', ['ngRoute'])
 	});
 }])
 
-.controller('HomeCtrl', [function() {
+.controller('HomeCtrl', function($scope, $location, userService) {
 
-}]);
+	var userHasClickedRecipeBook = false;
+
+	$scope.navigateToRecipeBook = function() {
+		userHasClickedRecipeBook = true;
+		if (!userService.isLoggedIn()) {
+			return;
+		}
+		
+		var currentUser = userService.getLoggedInUser();
+		var recipeBookUrl = '/user/' + currentUser.userId + '/recipe-book';
+		console.log('going to: ', recipeBookUrl);
+		$location.url(recipeBookUrl);
+	};
+
+	$scope.shouldShowErrorMessage = function() {
+		return userHasClickedRecipeBook && !userService.isLoggedIn();
+	};
+});
