@@ -4,23 +4,23 @@ var pageUtils = require('./page-utils');
 
 describe('the search recipes page', function() {
 
-	  var searchInput = element(by.id('search-input'));
-	  var searchButton = element(by.id('search-button'));
+	var searchInput = element(by.id('search-input'));
+	var searchButton = element(by.id('search-button'));
+		
+	var recipe1 = {
+		recipeName: 'First Recipe Name', 
+		recipeContent: 'First Recipe Content findMe'
+	};
+	var recipe2 = {
+		recipeName: 'Second Recipe Name findMe',
+		recipeContent: 'Second Recipe Content'
+	};
+	var recipe3 = {
+		recipeName: 'Third Recipe Name',
+		recipeContent: 'Third Recipe Content'
+	};
 	
-	  var recipe1 = {
-			  recipeName: 'First Recipe Name',
-			  recipeContent: 'First Recipe Content findMe'
-	  };
-	  var recipe2 = {
-			  recipeName: 'Second Recipe Name findMe',
-			  recipeContent: 'Second Recipe Content'
-	  };
-	  var recipe3 = {
-			  recipeName: 'Third Recipe Name',
-			  recipeContent: 'Third Recipe Content'
-	  };
-	
-		var email;
+	var email;
 		
 	beforeAll(function(done) {
 		  email = dataUtils.randomEmail();
