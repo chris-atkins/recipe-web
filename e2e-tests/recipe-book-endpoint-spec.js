@@ -10,10 +10,10 @@ describe('the Recipe Book endpoints', function() {
 
 	var recipe1 = {
 		recipeName: 'First Recipe Name',
-		recipeContent: 'First Recipe Content findMe'
+		recipeContent: 'First Recipe Content'
 	};
 	var recipe2 = {
-		recipeName: 'Second Recipe Name findMe',
+		recipeName: 'Second Recipe Name',
 		recipeContent: 'Second Recipe Content'
 	};
 	var recipe3 = {
@@ -41,7 +41,7 @@ describe('the Recipe Book endpoints', function() {
 		.then(function(recipe) {
 			listOfRecipeIds.push(recipe.recipeId);
 		})
-		.then(done);
+		.then(done, done.fail);
 	});
 
 	afterAll(function(done) {
@@ -90,6 +90,15 @@ describe('the Recipe Book endpoints', function() {
 		return rs.get(getOptions);
 	}
 
+	function performRecipeListGETByUserRecipeBook(userId) {
+		var getOptions = {
+			uri : config.apiBaseUrl + '/recipe?recipeBook=' + userId,
+			json : true,
+			simple: false //https://github.com/request/request-promise
+		};
+		return rs.get(getOptions);
+	}
+
 	it('can POST a recipe into a users recipe book', function(done) {
 		var recipeIdToPost = {recipeId: listOfRecipeIds[0]};
 		performRecipeBookPOSTRecipe(recipeIdToPost, {responseType: 'full'})
@@ -97,11 +106,15 @@ describe('the Recipe Book endpoints', function() {
 			expect(response.statusCode).toBe(200);
 			expect(response.body).toEqual(recipeIdToPost);
 		})
-		.then(done);
+		.then(done, done.fail);
 	});
 
-	it('POSTing a recipeId that does not exist to a recipe book returns 403', function(done) {
-		done();
+	it('POSTing a recipeId that does not exist to a recipe book returns 403', function() {
+
+	});
+
+	it('POSTing a recipeId that is invalid to a recipe book returns 403', function() {
+
 	});
 
 	it('posted recipe ids will be returned from the recipe book GET', function(done) {
@@ -119,11 +132,35 @@ describe('the Recipe Book endpoints', function() {
 			expect(body).toContain({recipeId: listOfRecipeIds[0]});
 			expect(body).toContain({recipeId: listOfRecipeIds[1]});
 		})
-		.then(done);
+		.then(done, done.fail);
 	});
 
-	it('the recipe endpoint can return recipes from a specific users recipe book', function() {
-		// get('recipe?recipeBook=userId');
+	it('the recipe endpoint can return recipes from a specific users recipe book', function(done) {
+		performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[0]})
+		.then(function() {
+			return performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[1]});
+		})
+		.then(function() {
+			return performRecipeListGETByUserRecipeBook(userId);
+		})
+		.then(function(response) {
+			expect(response.length).toBe(2);
+
+			var recipe1 = response[0];
+			expect(recipe1.recipeId).toBe(listOfRecipeIds[0]);
+			expect(recipe1.recipeName).toBe('First Recipe Name');
+			expect(recipe1.recipeContent).toBe('First Recipe Content');
+
+			var recipe2 = response[1];
+			expect(recipe2.recipeId).toBe(listOfRecipeIds[1]);
+			expect(recipe2.recipeName).toBe('Second Recipe Name');
+			expect(recipe2.recipeContent).toBe('Second Recipe Content');
+		})
+		.then(done, done.fail);
+	});
+
+	it('the recipe endpoint will return with an empty recipe book if no user is found by the given id', function() {
+
 	});
 
 	describe('authorization', function() {
