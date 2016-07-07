@@ -76,6 +76,20 @@ describe('the Recipe Book endpoints', function() {
 		});
 	}
 
+	function performRecipeBookGET(options) {
+		var getOptions = {
+			uri : config.apiBaseUrl + '/user/' + userId + '/recipe-book',
+			json : true,
+			simple: false //https://github.com/request/request-promise
+		};
+
+		if (options && options.responseType && options.responseType === 'full') {
+			getOptions.resolveWithFullResponse = true;
+		}
+
+		return rs.get(getOptions);
+	}
+
 	it('can POST a recipe into a users recipe book', function(done) {
 		var recipeIdToPost = {recipeId: listOfRecipeIds[0]};
 		performRecipeBookPOSTRecipe(recipeIdToPost, {responseType: 'full'})
@@ -86,8 +100,26 @@ describe('the Recipe Book endpoints', function() {
 		.then(done);
 	});
 
-	it('posted recipe ids will be returned from the recipe book GET', function() {
-		// [{recipeId: 'id'}, {recipeId: 'id'}]
+	it('POSTing a recipeId that does not exist to a recipe book returns 403', function(done) {
+		done();
+	});
+
+	it('posted recipe ids will be returned from the recipe book GET', function(done) {
+		performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[0]})
+		.then(function() {
+			return performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[1]});
+		})
+		.then(function() {
+			return performRecipeBookGET({responseType: 'full'});
+		})
+		.then(function(response) {
+			expect(response.statusCode).toBe(200);
+			var body = response.body;
+			expect(body.length).toBe(2);
+			expect(body).toContain({recipeId: listOfRecipeIds[0]});
+			expect(body).toContain({recipeId: listOfRecipeIds[1]});
+		})
+		.then(done);
 	});
 
 	it('the recipe endpoint can return recipes from a specific users recipe book', function() {
