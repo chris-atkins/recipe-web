@@ -21,6 +21,7 @@ describe('the search recipes page', function() {
 	};
 	
 	var email;
+	var userId;
 		
 	beforeAll(function(done) {
 		  email = dataUtils.randomEmail();
@@ -28,6 +29,7 @@ describe('the search recipes page', function() {
 			
 		  dataUtils.postUser(user)
 		  .then(function(user) {
+			  userId = user.userId;
 			  return dataUtils.addRecipes([recipe1, recipe2, recipe3], user.userId);
 		  })
 		  .then(function() {
@@ -82,7 +84,7 @@ describe('the search recipes page', function() {
 	describe('the search function', function() {
 		  
 		beforeEach(function() {
-			browser.get("/#search-recipes");
+			browser.get("/#/search-recipes");
 		});
 		
 		it('the page starts with the search input having focus', function() {
@@ -132,7 +134,7 @@ describe('the search recipes page', function() {
 	describe('navigation', function() {
 		  
 		beforeEach(function() {
-			browser.get("/#search-recipes");
+			browser.get("/#/search-recipes");
 		});
 		
 		it('the home button navigates to the home page', function() {
@@ -168,6 +170,35 @@ describe('the search recipes page', function() {
 			expect(searchInput.getAttribute('value')).toBe('findMe');
 			var foundRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
 			expect(foundRecipe.isPresent()).toBe(true);
+		});
+	});
+
+	describe('when recipes are found, they can be added to a users recipe book', function() {
+
+		beforeEach(function() {
+			browser.get("/#/search-recipes");
+			searchInput.sendKeys('findMe');
+			searchButton.click();
+		});
+
+		it('for a logged in user', function() {
+			var foundRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
+			var recipeBookAddButton = foundRecipe.element(by.className('add-to-recipe-book-button'));
+			expect(recipeBookAddButton.isDisplayed()).toBe(true);
+			expect(recipeBookAddButton.getText()).toBe('Add to Recipe Book');
+
+			recipeBookAddButton.click();
+			expect(recipeBookAddButton.isPresent()).toBe(false);
+			var inRecipeBookIndicator = foundRecipe.element(by.className('in-recipe-book-indicator'));
+			expect(inRecipeBookIndicator.isDisplayed()).toBe(true);
+
+			browser.get('/#/user/' + userId + '/recipe-book');
+			var recipeOnRecipeBookPage = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
+			expect(recipeOnRecipeBookPage.isDisplayed()).toBe(true);
+		});
+
+		it('recipes already in the recipe book are marked as such', function() {
+
 		});
 	});
 });

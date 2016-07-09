@@ -12,8 +12,10 @@ angular.module('recipe.recipeBook', ['ngRoute'])
 .controller('RecipeBookCtrl', function($scope, $routeParams, $http) {
 
 	$scope.user = {};
+	$scope.recipeList = [];
 	
 	getUser();
+	getRecipeBook();
 	
 	function getUser() {
 		//TODO - check logged in user, if they are the same, don't make this WS call
@@ -26,5 +28,15 @@ angular.module('recipe.recipeBook', ['ngRoute'])
 				console.log('error retrieving user: ', error);
 			});
 	}
-	
+
+	function getRecipeBook() {
+		var userId = $routeParams.userId;
+		$http.get('api/recipe?recipeBook=' + userId)
+		.success(function(recipeList) {
+			$scope.recipeList = recipeList;
+		})
+		.error(function(error) {
+			console.log('error retrieving recipe book	: ', error);
+		});
+	}
 });

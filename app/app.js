@@ -3,6 +3,7 @@
 angular.module('recipe', [
 	'ngRoute',
 	'ngCookies',
+	'underscore',
 	'recipe.user',
 	'recipe.home',
 	'recipe.searchRecipes',

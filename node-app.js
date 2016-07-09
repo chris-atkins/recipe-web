@@ -92,11 +92,18 @@ function headersFromRequest(request) {
 } 
 
 
-function performRecipeListGET(searchString) {
+function performRecipeListGET(searchString, recipeBookUserId) {
 	var uri = serviceRoot + '/recipe';
 	if (searchString) {
 		uri += '?searchString=' + searchString;
 	}
+	if(searchString && recipeBookUserId) {
+		uri += '&recipeBook=' + recipeBookUserId;
+	}
+	if(!searchString && recipeBookUserId) {
+		uri += '?recipeBook=' + recipeBookUserId;
+	}
+
 	var getOptions = {
 		uri : uri,
 		json : true,
@@ -178,8 +185,32 @@ function performUserGET(userId) {
 	return rs.get(getOptions);
 }
 
+function performRecipeBookGET(userId) {
+	var getOptions = {
+		uri : serviceRoot + '/user/' + userId + '/recipe-book',
+		json : true,
+		simple: false,
+		resolveWithFullResponse: true
+	};
+
+	return rs.get(getOptions);
+}
+
+function performRecipeBookPOSTRecipe(recipeIdToPost, userId, request) {
+	var postOptions = {
+		uri : serviceRoot + '/user/' + userId + '/recipe-book',
+		headers : headersFromRequest(request),
+		json : true,
+		body : recipeIdToPost,
+		simple: false,
+		resolveWithFullResponse: true
+	};
+
+	return rs.post(postOptions);
+}
+
 app.get('/api/recipe', function(request, response, next) {
-	performRecipeListGET(request.query.searchString).then(function(data) {
+	performRecipeListGET(request.query.searchString, request.query.recipeBook).then(function(data) {
 		response.statusCode = data.statusCode;	
 		response.json(data.body);
 	})
@@ -267,6 +298,29 @@ app.post('/login', passport.authenticate('local-login', {
     failureRedirect : '/login', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
 }));
+
+app.get('/api/user/:userId/recipe-book', function(request, response, next) {
+	var userId = request.params.userId;
+	performRecipeBookGET(userId).then(function(data) {
+		response.statusCode = data.statusCode;
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Error getting recipe book for user with id ', userId, 'Error: ', error);
+	});
+});
+
+app.post('/api/user/:userId/recipe-book', function(request, response, next) {
+	var userId = request.params.userId;
+	var recipeId = request.body;
+	performRecipeBookPOSTRecipe(recipeId, userId, request).then(function(data) {
+		response.statusCode = data.statusCode;
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Error posting a new recipeId to user recipe book.  RecipeId: ', recipeId, " UserId: ", userId, 'Error:', error);
+	});
+});
 
 app.post('/auth', passport.authenticate(  
   'local-login', {
