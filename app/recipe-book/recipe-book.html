@@ -5,15 +5,15 @@
 
 	<div id="recipe-list">
 		<table class="table">
-			<!--<thead>-->
-			<!--<tr>-->
-				<!--<th>Recipe Name</th><th>Recipe Link</th>-->
-			<!--</tr>-->
-			<!--</thead>-->
+			<thead>
+			<tr>
+				<th>Recipe Name</th><th>Recipe Link</th>
+			</tr>
+			</thead>
 			<tbody>
 			<tr id="{{recipe.recipeId}}" class="recipe" ng-repeat="recipe in recipeList">
 				<td><span class="recipe-name">{{recipe.recipeName}}</span></td>
-				<!--<td><a class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>-->
+				<td><a class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>
 			</tr>
 			</tbody>
 		</table>

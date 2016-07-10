@@ -176,7 +176,7 @@ describe('the search recipes page', function() {
 	describe('when recipes are found, they can be added to a users recipe book', function() {
 
 		beforeEach(function() {
-			browser.get("/#/search-recipes");
+			browser.get('/#/search-recipes');
 			searchInput.sendKeys('findMe');
 			searchButton.click();
 		});
@@ -191,14 +191,15 @@ describe('the search recipes page', function() {
 			expect(recipeBookAddButton.isPresent()).toBe(false);
 			var inRecipeBookIndicator = foundRecipe.element(by.className('in-recipe-book-indicator'));
 			expect(inRecipeBookIndicator.isDisplayed()).toBe(true);
+			expect(inRecipeBookIndicator.getText()).toBe('In Recipe Book');
 
 			browser.get('/#/user/' + userId + '/recipe-book');
 			var recipeOnRecipeBookPage = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
 			expect(recipeOnRecipeBookPage.isDisplayed()).toBe(true);
-		});
 
-		it('recipes already in the recipe book are marked as such', function() {
 
+			browser.get('/#/search-recipes?searchFor=findMe');
+			expect(inRecipeBookIndicator.isDisplayed()).toBe(true);
 		});
 	});
 });

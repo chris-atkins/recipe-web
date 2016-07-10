@@ -96,7 +96,7 @@ function performRecipeListGET(userId) {
 				'RequestingUser' : userId
 			},
 			json : true,
-			simple: false //https://github.com/request/request-promise
+			simple: false
 	};
 	return rs.get(getOptions);
 }
@@ -105,7 +105,7 @@ function performRecipeDELETE(recipeId) {
 	var deleteOptions = {
 			uri : config.apiBaseUrl + '/recipe/' + recipeId,
 			resolveWithFullResponse: true,
-			simple: false //https://github.com/request/request-promise
+			simple: false
 	};
 	return rs.del(deleteOptions);
 }
@@ -114,6 +114,23 @@ function performRecipeDELETEFunction(recipeId) {
 	return function() {
 		return performRecipeDELETE(recipeId);
 	};
+}
+
+function addRecipeToRecipeBook(recipeId, userId) {
+	var recipeIdToPost = {recipeId: recipeId};
+	var postOptions = {
+		uri : config.apiBaseUrl + '/user/' + userId + '/recipe-book',
+		headers : {
+			'Content-Type' : 'application/json',
+			'Content-Length' : recipeIdToPost.length,
+			'RequestingUser' : userId
+		},
+		json : true,
+		body : recipeIdToPost,
+		simple: false
+	};
+
+	return rs.post(postOptions);
 }
 
 function randomString(length) {
@@ -127,7 +144,7 @@ function randomString(length) {
 
 function randomEmail() {
 	var length = Math.floor(Math.random() * 10) + 15;
-	return randomString(20);
+	return randomString(length);
 }
 
 module.exports = {
@@ -136,5 +153,6 @@ module.exports = {
 	postUser: postUser,
 	cleanupData: cleanupData,
 	removeAllRecipeData: removeAllRecipeData,
-	randomEmail: randomEmail
+	randomEmail: randomEmail,
+	addRecipeToRecipeBook: addRecipeToRecipeBook
 };

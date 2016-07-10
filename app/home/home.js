@@ -21,7 +21,6 @@ angular.module('recipe.home', ['ngRoute'])
 		
 		var currentUser = userService.getLoggedInUser();
 		var recipeBookUrl = '/user/' + currentUser.userId + '/recipe-book';
-		console.log('going to: ', recipeBookUrl);
 		$location.url(recipeBookUrl);
 	};
 

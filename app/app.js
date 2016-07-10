@@ -52,11 +52,22 @@ angular.module('recipe', [
     }
 
     function getLastRoute() {
+		var lastRouteWithPathParams = processWithPathParams();
+
         if(useQueryParams()) {
-            return lastRoute + buildQueryParamString();
+            return lastRouteWithPathParams + buildQueryParamString();
         }
-        return lastRoute;
+        return lastRouteWithPathParams;
     }
+
+	function processWithPathParams() {
+		var pathWithParams = lastRoute;
+		for (var param in lastPathParams) {
+			var stringToReplace = ':' + param;
+			pathWithParams = pathWithParams.replace(stringToReplace, lastPathParams[param]);
+		}
+		return pathWithParams;
+	}
 
     function useQueryParams() {
         return lastQueryParams !== undefined && lastQueryParams.searchFor !== undefined;

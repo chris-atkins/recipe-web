@@ -82,9 +82,49 @@ describe('the recipe book system', function() {
 
 	describe('content on the recipe-book page', function() {
 
-		beforeAll(function() {
+		var recipe1 = {
+			recipeName: 'First Recipe Name',
+			recipeContent: 'First Recipe Content'
+		};
+		var recipe2 = {
+			recipeName: 'Second Recipe Name',
+			recipeContent: 'Second Recipe Content'
+		};
+		var recipe3 = {
+			recipeName: 'Third Recipe Name',
+			recipeContent: 'Third Recipe Content'
+		};
+
+		var firstRecipeId;
+
+		beforeAll(function(done) {
+			dataUtils.addRecipe(recipe1, userId)
+			.then(function(recipe) {
+				firstRecipeId = recipe.recipeId;
+				return dataUtils.addRecipeToRecipeBook(recipe.recipeId, userId);
+			})
+			.then(function() {
+				return dataUtils.addRecipe(recipe2, userId);
+			})
+			.then(function() {
+				return dataUtils.addRecipe(recipe3, userId);
+			})
+			.then(function(recipe) {
+				return dataUtils.addRecipeToRecipeBook(recipe.recipeId, userId);
+			})
+			.then(done, done.fail);
+
+		});
+
+		beforeEach(function() {
 			browser.get('/#/user/' + userId + '/recipe-book');
 		});
+
+		afterAll(function(done) {
+			dataUtils.cleanupData(done);
+		});
+
+		var allRecipesOnThePage = element.all(by.className('recipe'));
 
 		it('shows a user section', function () {
 			var userSection = element(by.className('user-section'));
@@ -95,6 +135,43 @@ describe('the recipe book system', function() {
 			var recipeBookTitle = element(by.id('page-title'));
 			expect(recipeBookTitle.isDisplayed()).toBe(true);
 			expect(recipeBookTitle.getText()).toBe('Recipe Book: ohai');
+		});
+
+		it('shows all recipes in the users recipe book', function() {
+			expect(allRecipesOnThePage.count()).toBe(2);
+
+			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', allRecipesOnThePage);
+			var firstRecipeName = firstRecipe.element(by.className('recipe-name'));
+			expect(firstRecipeName.getText()).toBe('First Recipe Name');
+
+			var secondRecipe = pageUtils.findRecipeWithName('Third Recipe Name', allRecipesOnThePage);
+			var secondRecipeName = secondRecipe.element(by.className('recipe-name'));
+			expect(secondRecipeName.getText()).toBe('Third Recipe Name');
+		});
+
+		describe('each recipe', function() {
+
+			beforeAll(function() {
+				browser.get('/#/user/' + userId + '/recipe-book');
+			});
+
+			it('has a name', function() {
+				var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', allRecipesOnThePage);
+				var firstRecipeName = firstRecipe.element(by.className('recipe-name'));
+				expect(firstRecipeName.getText()).toBe('First Recipe Name');
+			});
+
+			it('has a link to take the user to the view recipe page, where the back button will return to the recipe book page', function() {
+				var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', allRecipesOnThePage);
+				var recipeLink = firstRecipe.element(by.css('a.view-recipe-link'));
+				expect(recipeLink.isDisplayed()).toBe(true);
+				expect(recipeLink.getText()).toBe('View');
+				recipeLink.click();
+
+				expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + firstRecipeId);
+				element(by.id('back-button')).click();
+				expect(browser.getLocationAbsUrl()).toMatch('/user/' + userId + '/recipe-book');
+			});
 		});
 	});
 });
