@@ -65,10 +65,10 @@ describe('the Recipe Book endpoints', function() {
 			postOptions.resolveWithFullResponse = true;
 		}
 
-		if (options && options.userId && options.userId === 'none') {
+		if (options && options.userId && options.authUserId === 'none') {
 			delete postOptions.headers.RequestingUser;
-		} else if (options && options.userId) {
-			postOptions.headers.RequestingUser = options.userId;
+		} else if (options && options.authUserId) {
+			postOptions.headers.RequestingUser = options.authUserId;
 		}
 
 		return rs.post(postOptions).then(function(response){
@@ -77,8 +77,9 @@ describe('the Recipe Book endpoints', function() {
 	}
 
 	function performRecipeBookGET(options) {
+		var userIdToUse = options && options.userId ? options.userId : userId;
 		var getOptions = {
-			uri : config.apiBaseUrl + '/user/' + userId + '/recipe-book',
+			uri : config.apiBaseUrl + '/user/' + userIdToUse + '/recipe-book',
 			json : true,
 			simple: false //https://github.com/request/request-promise
 		};
@@ -107,14 +108,6 @@ describe('the Recipe Book endpoints', function() {
 			expect(response.body).toEqual(recipeIdToPost);
 		})
 		.then(done, done.fail);
-	});
-
-	it('POSTing a recipeId that does not exist to a recipe book returns 403', function() {
-
-	});
-
-	it('POSTing a recipeId that is invalid to a recipe book returns 403', function() {
-
 	});
 
 	it('posted recipe ids will be returned from the recipe book GET', function(done) {
@@ -159,14 +152,88 @@ describe('the Recipe Book endpoints', function() {
 		.then(done, done.fail);
 	});
 
-	it('the recipe endpoint will return with an empty recipe book if no user is found by the given id', function() {
-
-	});
-
 	describe('authorization', function() {
 
-		it('attempting to POST into a users recipe book using a different user will return 401, and will not add the recipe', function() {
+		it('attempting to POST into a users recipe book using a different user will return 401, and will not add the recipe', function(done) {
 
+			performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[2]}, {authUserId: '577d1a8e3dcc7d0c76cb72d0', responseType: 'full'})
+			.then(function(response) {
+				expect(response.statusCode).toBe(401);
+			})
+			.then(function() {
+				return performRecipeBookGET();
+			})
+			.then(function(recipeBook) {
+				expect(recipeBook).not.toContain({recipeId: listOfRecipeIds[2]});
+			})
+			.then(done, done.fail);
+		});
+
+		it('attempting to POST into a users recipe book with no user will return 401, and will not add the recipe', function(done) {
+
+			performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[2]}, {authUserId: 'none', responseType: 'full'})
+			.then(function(response) {
+				expect(response.statusCode).toBe(401);
+			})
+			.then(function() {
+				return performRecipeBookGET();
+			})
+			.then(function(recipeBook) {
+				expect(recipeBook).not.toContain({recipeId: listOfRecipeIds[2]});
+			})
+			.then(done, done.fail);
+		});
+	});
+
+	describe('edge cases', function() {
+
+		it('POSTing a recipeId that does not exist to a recipe book returns with success, and will add the fake id to the recipe list, ' +
+			'but wont return from getRecipeBook', function(done) {
+
+			var fakeRecipeId = '577d1a8e3dcc7d0c76cb72d0';
+			var originalRecipeBookCount;
+
+			performRecipeListGETByUserRecipeBook(userId)
+			.then(function(response) {
+				originalRecipeBookCount = response.length;
+				return performRecipeBookPOSTRecipe({recipeId: fakeRecipeId}, {responseType: 'full'})
+			})
+			.then(function(response) {
+				expect(response.statusCode).toBe(200);
+				return performRecipeBookGET();
+			})
+			.then(function(recipeList) {
+				expect(recipeList[recipeList.length - 1].recipeId).toBe(fakeRecipeId);
+				return performRecipeListGETByUserRecipeBook(userId);
+			})
+			.then(function(recipes) {
+				expect(recipes.length).toBe(originalRecipeBookCount);
+			})
+			.then(done, done.fail);
+		});
+
+		it('POSTing a recipeId that is an invalid objectId to a recipe book returns 400', function(done) {
+			performRecipeBookPOSTRecipe({recipeId: 'hi'}, {responseType: 'full'})
+			.then(function(response) {
+				expect(response.statusCode).toBe(400);
+			})
+			.then(done, done.fail);
+		});
+
+		it('the recipe-book endpoint will return with an empty recipe book if no user is found by the given id', function(done) {
+			performRecipeBookGET({userId: '577d1a8e3dcc7d0c76cb72d0'})
+			.then(function(response) {
+				expect(response).toEqual([]);
+			})
+			.then(done, done.fail);
+		});
+
+		it('the recipe-book endpoint will return with an empty recipe book if the user id is bad', function(done) {
+			performRecipeBookGET({userId: 'badUserId'})
+			.then(function(response) {
+				expect(response).toEqual([]);
+			})
+			.then(done, done.fail);
 		});
 	});
 });
