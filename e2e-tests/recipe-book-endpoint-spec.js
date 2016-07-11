@@ -196,7 +196,7 @@ describe('the Recipe Book endpoints', function() {
 			performRecipeListGETByUserRecipeBook(userId)
 			.then(function(response) {
 				originalRecipeBookCount = response.length;
-				return performRecipeBookPOSTRecipe({recipeId: fakeRecipeId}, {responseType: 'full'})
+				return performRecipeBookPOSTRecipe({recipeId: fakeRecipeId}, {responseType: 'full'});
 			})
 			.then(function(response) {
 				expect(response.statusCode).toBe(200);
