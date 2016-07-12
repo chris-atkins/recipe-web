@@ -178,7 +178,7 @@ describe('Login functionality from the home page', function() {
 			signupButton.click();			
 			expectLoggedInUserLinkToBe('Welcome, OhaiAgain');
 			
-			element(by.id('browse-all-button')).click();
+			element(by.id('search-button')).click();
 			expectLoggedInUserLinkToBe('Welcome, OhaiAgain');
 		});
 		

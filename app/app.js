@@ -8,7 +8,6 @@ angular.module('recipe', [
 	'recipe.home',
 	'recipe.searchRecipes',
 	'recipe.newRecipe',
-	'recipe.browseAllRecipes',
 	'recipe.viewRecipe',
 	'recipe.recipeBook',
 	'myApp.view1',

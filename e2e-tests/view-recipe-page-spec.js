@@ -107,7 +107,7 @@ describe('the vew recipe page', function() {
 		var backButton = element(by.id('back-button'));
 
 		it('navigates back to the browse screen if it was the path used to get to the view page', function() {
-			browser.get('/#/browse-all-recipes');
+			browser.get('/#/search-recipes?searchFor=all');
 
 			var allRecipes = element.all(by.className('recipe'));
 			var recipe = pageUtils.findRecipeWithName('Recipe Being Tested - Name', allRecipes);
@@ -120,7 +120,7 @@ describe('the vew recipe page', function() {
 			expect(backButton.isDisplayed()).toBe(true);
 			backButton.click();
 
-			expect(browser.getLocationAbsUrl()).toMatch('/browse-all-recipes');
+			expect(browser.getLocationAbsUrl()).toBe('/search-recipes?searchFor=all');
 		});
 
 		it('navigates back to the browse screen if it was the path used to get to the view page', function() {
@@ -185,7 +185,7 @@ describe('the vew recipe page', function() {
 		});
 
 		it('when clicking the edit button, editable recipe fields and a save button appear', function() {
-			browser.get('/#/browse-all-recipes');
+			browser.get('/#/search-recipes?searchFor=all');
 			var recipe = pageUtils.findRecipeWithName('Recipe Being Tested - Name', element.all(by.className('recipe')));
 			var recipeLink = recipe.element(by.className('view-recipe-link'));
 			recipeLink.click();

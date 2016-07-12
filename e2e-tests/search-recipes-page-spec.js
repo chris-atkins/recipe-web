@@ -69,6 +69,11 @@ describe('the search recipes page', function() {
 			var searchButton = element(by.css('button#search-button'));
 			expect(searchButton.getText()).toBe('Search Recipes');
 		});
+
+		it('has a show all recipes button', function() {
+			var showAllRecipesButton = element(by.css('button#show-all-recipes-button'));
+			expect(showAllRecipesButton.getText()).toBe('Show All Recipes');
+		});
 		
 		it('has a home button', function() {
 			var homeButton = element(by.id('home-button'));
@@ -129,6 +134,43 @@ describe('the search recipes page', function() {
 			browser.get("/#search-recipes?searchFor=findMe");
 			expect(element.all(by.className('recipe')).count()).toBe(2);
 		});
+	});
+
+	describe('the Show All Recipes function', function() {
+
+		var showAllRecipesButton = element(by.css('button#show-all-recipes-button'));
+
+		beforeAll(function() {
+			browser.get("/#/search-recipes");
+			showAllRecipesButton.click();
+		});
+
+		it('shows a list of all recipes when the button is clicked', function() {
+			var recipeListHolder = element(by.id('recipe-list'));
+			var recipeList = recipeListHolder.all(by.className('recipe'));
+			expect(recipeList.count()).toBe(3);
+
+			assertRecipeIsInList(recipe1, recipeList);
+			assertRecipeIsInList(recipe2, recipeList);
+			assertRecipeIsInList(recipe3, recipeList);
+		});
+
+		it('has a link for each recipe', function() {
+			var recipeListHolder = element(by.id('recipe-list'));
+			var recipeList = recipeListHolder.all(by.className('recipe'));
+			var recipeLinks = recipeListHolder.all(by.css('a.view-recipe-link'));
+
+			expect(recipeList.count()).toBe(recipeLinks.count());
+		});
+
+		function assertRecipeIsInList(recipe, list) {
+			var foundRecipes = list.filter(function(item) {
+				return item.element(by.className('recipe-name')).getText().then(function(text) {
+					return text === recipe.recipeName;
+				});
+			});
+			expect(foundRecipes.count()).toBe(1);
+		}
 	});
 
 	describe('navigation', function() {

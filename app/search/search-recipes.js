@@ -20,9 +20,15 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 
 	function initializePage() {
 		var queryParamSearchString = $routeParams.searchFor;
-		if(queryParamSearchString) {
-			$scope.searchString = queryParamSearchString;
-			performSearchAndDisplayResults(queryParamSearchString);
+
+		if (queryParamSearchString) {
+			if(queryParamSearchString == 'all') {
+				$scope.searchString = '';
+				performSearchAndDisplayResults();
+			} else {
+				$scope.searchString = queryParamSearchString;
+				performSearchAndDisplayResults(queryParamSearchString);
+			}
 		}
 
 		retrieveUserRecipeBook();
@@ -45,8 +51,13 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 		$location.url('/search-recipes?searchFor=' + $scope.searchString);
 	};
 
+	$scope.showAllRecipes = function() {
+		$location.url('/search-recipes?searchFor=all');
+	};
+
 	function performSearchAndDisplayResults(searchString){
-		$http.get('/api/recipe?searchString=' + searchString)
+		var queryParams = searchString ? '?searchString=' + searchString : '';
+		$http.get('/api/recipe' + queryParams)
 			.success(function(data) {
 				$scope.recipeList = data;
 				$scope.searchHasOccurred = true;
