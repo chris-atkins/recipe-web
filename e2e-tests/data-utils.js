@@ -59,7 +59,6 @@ function postRecipeFunction(recipeToPost, userId) {
 }
 
 var cleanupData = function(done) {
-	done();
 	cleanUpTestRecipesThatHaveBeenPosted()
 		.then(function(){done();});
 };

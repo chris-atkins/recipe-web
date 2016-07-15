@@ -174,4 +174,100 @@ describe('the recipe book system', function() {
 			});
 		});
 	});
+
+	describe('on the view recipe page', function() {
+
+		var recipe1 = {
+			recipeName: 'First Recipe Name',
+			recipeContent: 'First Recipe Content'
+		};
+		var recipe2 = {
+			recipeName: 'Second Recipe Name',
+			recipeContent: 'Second Recipe Content'
+		};
+
+		var recipeInBook;
+		var unbookedRecipe;
+
+		beforeAll(function(done) {
+			dataUtils.addRecipe(recipe1, userId)
+			.then(function(recipe) {
+				recipeInBook = recipe.recipeId;
+				return dataUtils.addRecipeToRecipeBook(recipe.recipeId, userId);
+			})
+			.then(function() {
+				return dataUtils.addRecipe(recipe2, userId);
+			})
+			.then(function(recipe) {
+				unbookedRecipe = recipe.recipeId;
+			})
+			.then(done, done.fail);
+		});
+
+		afterAll(function(done) {
+			dataUtils.cleanupData(done);
+		});
+
+		var recipeMarker = element(by.id('in-recipe-book-marker'));
+		var addToRecipeButton = element(by.className('add-to-recipe-book-button'));
+
+		describe('when the recipe is in the logged in users recipe book', function() {
+			beforeAll(function(done) {
+				pageUtils.login(email).then(done);
+			});
+
+			afterAll(function() {
+				pageUtils.logout();
+			});
+
+			it('has a marker that lets the user know the recipe is part of their recipe book', function() {
+				browser.get('/#/view-recipe/' + recipeInBook);
+
+				expect(recipeMarker.isDisplayed()).toBe(true);
+				expect(recipeMarker.getText()).toBe('In Recipe Book');
+			});
+		});
+
+		describe('when the recipe is not in the logged in users recipe book', function() {
+
+			beforeAll(function(done) {
+				pageUtils.login(email).then(done);
+			});
+
+			afterAll(function() {
+				pageUtils.logout();
+			});
+
+			it('has a button that lets a user add the recipe to their recipe book', function() {
+				browser.get('/#/view-recipe/' + unbookedRecipe);
+
+				expect(recipeMarker.isDisplayed()).toBe(false);
+				expect(addToRecipeButton.isDisplayed()).toBe(true);
+				expect(addToRecipeButton.getText()).toBe('Add to Recipe Book');
+
+				addToRecipeButton.click();
+				expect(recipeMarker.isDisplayed()).toBe(true);
+				expect(addToRecipeButton.isDisplayed()).toBe(false);
+
+				browser.get('/#/user/' + userId + '/recipe-book');
+				var allRecipesOnThePage = element.all(by.className('recipe'));
+				var newlyAddedRecipe = pageUtils.findRecipeWithName('Second Recipe Name', allRecipesOnThePage);
+				expect(newlyAddedRecipe.isDisplayed()).toBe(true);
+			});
+		});
+
+		describe('when the user is not logged in ', function() {
+
+			beforeAll(function() {
+				pageUtils.logout();
+			});
+
+			it('there is no button or message about recipe-book', function() {
+				browser.get('/#/view-recipe/' + unbookedRecipe);
+
+				expect(recipeMarker.isDisplayed()).toBe(false);
+				expect(addToRecipeButton.isDisplayed()).toBe(false);
+			});
+		});
+	});
 });

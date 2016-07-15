@@ -23,4 +23,6 @@
 	<a id="edit-recipe-button" class="btn btn-default" ng-click="editClicked()" role="button" ng-if="shouldShowEditButtons()" ng-hide="inEditMode()">Edit Recipe</a>
 	<a id="cancel-edit-button" class="btn btn-default" ng-click="cancelEdit()" role="button" ng-if="shouldShowEditButtons()" ng-show="inEditMode()">Cancel</a>
 	<a id="update-recipe-button" class="btn btn-default" ng-click="saveClicked()" role="button" ng-if="shouldShowEditButtons()" ng-show="inEditMode()">Save Recipe</a>
+	<span id="in-recipe-book-marker" class="label label-default pull-right" ng-show="inRecipeBook()"><span class="glyphicon glyphicon-ok"></span> In Recipe Book</span>
+	<a class="add-to-recipe-book-button btn btn-default pull-right" ng-show="canAddToRecipeBook()" ng-click="addToRecipeBook()" role="button">Add to Recipe Book</a>
 </div>
