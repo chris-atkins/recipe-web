@@ -33,7 +33,7 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 		recipeBookService.getRecipeBookPromise().success(function(recipeBook) {
 			userRecipeBook = recipeBook;
 		});
-	};
+	}
 
 	$scope.shouldShowEditButtons = function() {
 		return $scope.recipe.editable;
@@ -117,5 +117,5 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 	return {
 		getRecipeBookPromise: getRecipeBookPromise,
 		addToRecipeBook: addToRecipeBook
-	}
+	};
 });
