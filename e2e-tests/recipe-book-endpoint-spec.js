@@ -111,7 +111,7 @@ describe('the Recipe Book endpoints', function() {
 			deleteOptions.headers.RequestingUser = options.authUserId;
 		}
 
-		return rs.delete(deleteOptions);
+		return rs.del(deleteOptions);
 	}
 
 	function performRecipeListGETByUserRecipeBook(userId) {
