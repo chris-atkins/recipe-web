@@ -91,6 +91,29 @@ describe('the Recipe Book endpoints', function() {
 		return rs.get(getOptions);
 	}
 
+	function performRecipeBookDELETERecipe(userId, recipeId, options) {
+		var deleteOptions = {
+			uri : config.apiBaseUrl + '/user/' + userId + '/recipe-book/' + recipeId,
+			headers : {
+				'RequestingUser' : userId
+			},
+			json : true,
+			simple: false //https://github.com/request/request-promise
+		};
+
+		if (options && options.responseType && options.responseType === 'full') {
+			deleteOptions.resolveWithFullResponse = true;
+		}
+
+		if (options && options.userId && options.authUserId === 'none') {
+			delete deleteOptions.headers.RequestingUser;
+		} else if (options && options.authUserId) {
+			deleteOptions.headers.RequestingUser = options.authUserId;
+		}
+
+		return rs.delete(deleteOptions);
+	}
+
 	function performRecipeListGETByUserRecipeBook(userId) {
 		var getOptions = {
 			uri : config.apiBaseUrl + '/recipe?recipeBook=' + userId,
@@ -152,6 +175,34 @@ describe('the Recipe Book endpoints', function() {
 		.then(done, done.fail);
 	});
 
+	it('a recipe can be DELETED from a recipe book', function(done) {
+		var sizeWithAllIds;
+		var recipeIdToDelete = listOfRecipeIds[2];
+
+		performRecipeBookPOSTRecipe({recipeId: recipeIdToDelete})
+		.then(function() {
+			return performRecipeListGETByUserRecipeBook(userId);
+		})
+		.then(function(response) {
+			sizeWithAllIds = response.length;
+		})
+		.then(function() {
+			return performRecipeBookDELETERecipe(userId, recipeIdToDelete, {responseType: 'full'});
+		})
+		.then(function(response) {
+			expect(response.statusCode).toBe(204);
+			return performRecipeListGETByUserRecipeBook(userId);
+		})
+		.then(function(response) {
+			expect(response.length).toBe(sizeWithAllIds - 1);
+
+			for (var i = 0; i < response.length; i++) {
+				expect(response[i].recipeId).not.toBe(recipeIdToDelete);
+			}
+		})
+		.then(done, done.fail);
+	});
+
 	describe('authorization', function() {
 
 		it('attempting to POST into a users recipe book using a different user will return 401, and will not add the recipe', function(done) {
@@ -180,6 +231,40 @@ describe('the Recipe Book endpoints', function() {
 			})
 			.then(function(recipeBook) {
 				expect(recipeBook).not.toContain({recipeId: listOfRecipeIds[2]});
+			})
+			.then(done, done.fail);
+		});
+
+		it('attempting to DELETE a recipe from a recipe book, if the user does not own the recipe book, will return 401 and will not delete the recipe', function(done) {
+			performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[0]})
+			.then(function() {
+				return performRecipeBookDELETERecipe(userId, listOfRecipeIds[0], {authUserId: '577d1a8e3dcc7d0c76cb72d0', responseType: 'full'});
+			})
+			.then(function(response) {
+				expect(response.statusCode).toBe(401);
+			})
+			.then(function() {
+				return performRecipeBookGET();
+			})
+			.then(function(recipeBook) {
+				expect(recipeBook).toContain({recipeId: listOfRecipeIds[0]});
+			})
+			.then(done, done.fail);
+		});
+
+		it('attempting to DELETE a recipe from a recipe book, if no user is logged in, will return 401 and will not delete the recipe', function(done) {
+			performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[0]})
+			.then(function() {
+				return performRecipeBookDELETERecipe(userId, listOfRecipeIds[0], {authUserId: 'none', responseType: 'full'});
+			})
+			.then(function(response) {
+				expect(response.statusCode).toBe(401);
+			})
+			.then(function() {
+				return performRecipeBookGET();
+			})
+			.then(function(recipeBook) {
+				expect(recipeBook).toContain({recipeId: listOfRecipeIds[0]});
 			})
 			.then(done, done.fail);
 		});
@@ -232,6 +317,15 @@ describe('the Recipe Book endpoints', function() {
 			performRecipeBookGET({userId: 'badUserId'})
 			.then(function(response) {
 				expect(response).toEqual([]);
+			})
+			.then(done, done.fail);
+		});
+
+		it('attempting to DELETE a recipe that does not exist in a recipe book, will return 404', function(done) {
+			var unknownRecipeId = '577d1a8e3dcc7d0c76cb72d1';
+			performRecipeBookDELETERecipe(userId, unknownRecipeId, {responseType: 'full'})
+			.then(function(response) {
+				expect(response.statusCode).toBe(404);
 			})
 			.then(done, done.fail);
 		});
