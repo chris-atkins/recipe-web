@@ -209,6 +209,18 @@ function performRecipeBookPOSTRecipe(recipeIdToPost, userId, request) {
 	return rs.post(postOptions);
 }
 
+function performRecipeBookDELETERecipe(userId, recipeId, request) {
+	var deleteOptions = {
+		uri : serviceRoot + '/user/' + userId + '/recipe-book/' + recipeId,
+		headers : headersFromRequest(request),
+		json : true,
+		simple: false,
+		resolveWithFullResponse: true
+	};
+
+	return rs.del(deleteOptions);
+}
+
 app.get('/api/recipe', function(request, response, next) {
 	performRecipeListGET(request.query.searchString, request.query.recipeBook).then(function(data) {
 		response.statusCode = data.statusCode;	
@@ -293,6 +305,7 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 		res.redirect('/');
 	}
 );
+
 app.post('/login', passport.authenticate('local-login', {
     successRedirect : '/', // redirect to the secure profile section
     failureRedirect : '/login', // redirect back to the signup page if there is an error
@@ -319,6 +332,18 @@ app.post('/api/user/:userId/recipe-book', function(request, response, next) {
 	})
 	.catch(function(error) {
 		console.log('Error posting a new recipeId to user recipe book.  RecipeId: ', recipeId, " UserId: ", userId, 'Error:', error);
+	});
+});
+
+app.delete('/api/user/:userId/recipe-book/:recipeId', function(request, response, next) {
+	var userId = request.params.userId;
+	var recipeId = request.params.recipeId;
+	performRecipeBookDELETERecipe(userId, recipeId, request).then(function(data) {
+		response.statusCode = data.statusCode;
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Error deleting a recipeId from a user recipe book.  UserId: ', userId, " RecipeId: ", recipeId, 'Error:', error);
 	});
 });
 

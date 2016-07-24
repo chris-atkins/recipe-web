@@ -5,20 +5,27 @@ var pageUtils = require('./page-utils');
 describe('the recipe book system', function() {
 
 	var email;
+	var differentUserEmail;
 	var userId;
 
 	var recipeBookButton = element(by.id('recipe-book-button'));
 	var errorMessage = element(by.id('recipe-book-error-message'));
+	var allRecipesOnThePage = element.all(by.className('recipe'));
 
 	beforeAll(function(done) {
 		email = dataUtils.randomEmail();
+		differentUserEmail = dataUtils.randomEmail();
 		var user = {userName: 'ohai', userEmail: email};
+		var otherUser = {userName: 'other', userEmail: differentUserEmail};
 
 		dataUtils.postUser(user)
 			.then(function(userResponse) {
 				userId = userResponse.userId;
 			})
-			.then(done);
+			.then(function() {
+				return dataUtils.postUser(otherUser);
+			})
+			.then(done, done.fail);
 	});
 
 	afterAll(function() {
@@ -124,8 +131,6 @@ describe('the recipe book system', function() {
 			dataUtils.cleanupData(done);
 		});
 
-		var allRecipesOnThePage = element.all(by.className('recipe'));
-
 		it('shows a user section', function () {
 			var userSection = element(by.className('user-section'));
 			expect(userSection.isPresent()).toBe(true);
@@ -172,6 +177,69 @@ describe('the recipe book system', function() {
 				element(by.id('back-button')).click();
 				expect(browser.getLocationAbsUrl()).toMatch('/user/' + userId + '/recipe-book');
 			});
+
+			describe('when no user is logged in', function() {
+
+				beforeAll(function() {
+					pageUtils.logout();
+				});
+
+				it('does not have a remove button', function() {
+					expect(allRecipesOnThePage.count()).toBe(2);
+					var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', allRecipesOnThePage);
+
+					var removeRecipeFromBookButton = firstRecipe.element(by.className('remove-recipe-from-book-button'));
+					expect(removeRecipeFromBookButton.isPresent()).toBe(false);
+					expect(firstRecipe.element(by.className('no-actions-possible-label')).getText()).toBe('N/A');
+				});
+			});
+
+			describe('when a different user than owns the recipe book is logged in', function() {
+
+				beforeAll(function(done) {
+					pageUtils.login(differentUserEmail).then(done, done.fail);
+				});
+
+				afterAll(function() {
+					pageUtils.logout();
+				});
+
+				it('does not have a remove button', function() {
+					expect(allRecipesOnThePage.count()).toBe(2);
+					var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', allRecipesOnThePage);
+
+					var removeRecipeFromBookButton = firstRecipe.element(by.className('remove-recipe-from-book-button'));
+					expect(removeRecipeFromBookButton.isPresent()).toBe(false);
+					expect(firstRecipe.element(by.className('no-actions-possible-label')).getText()).toBe('N/A');
+				});
+			});
+
+			describe('when a user is logged in and viewing their own recipe book', function() {
+
+				beforeAll(function(done) {
+					pageUtils.login(email).then(done);
+				});
+
+				afterAll(function() {
+					pageUtils.logout();
+				});
+
+				it('has a remove button that will remove a recipe from the recipe book and update the view', function() {
+					expect(allRecipesOnThePage.count()).toBe(2);
+					var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', allRecipesOnThePage);
+
+					var removeRecipeFromBookButton = firstRecipe.element(by.className('remove-recipe-from-book-button'));
+					expect(removeRecipeFromBookButton.isDisplayed()).toBe(true);
+					expect(removeRecipeFromBookButton.getText()).toBe('Remove from Recipe Book');
+					expect(firstRecipe.element(by.className('no-actions-possible-label')).isPresent()).toBe(false);
+
+					removeRecipeFromBookButton.click();
+
+					expect(allRecipesOnThePage.count()).toBe(1);
+					var remainingRecipe = pageUtils.findRecipeWithName('Third Recipe Name', allRecipesOnThePage);
+					expect(remainingRecipe.isDisplayed()).toBe(true);
+				});
+			});
 		});
 	});
 
@@ -210,10 +278,16 @@ describe('the recipe book system', function() {
 
 		var recipeMarker = element(by.id('in-recipe-book-marker'));
 		var addToRecipeButton = element(by.className('add-to-recipe-book-button'));
+		var removeRecipeFromBookButton = element(by.className('remove-recipe-from-book-button'));
 
 		describe('when the recipe is in the logged in users recipe book', function() {
 			beforeAll(function(done) {
 				pageUtils.login(email).then(done);
+			});
+
+			afterAll(function(done) {
+				dataUtils.addRecipeToRecipeBook(recipeInBook.recipeId, userId)
+					.then(done, done.fail);
 			});
 
 			afterAll(function() {
@@ -225,6 +299,25 @@ describe('the recipe book system', function() {
 
 				expect(recipeMarker.isDisplayed()).toBe(true);
 				expect(recipeMarker.getText()).toBe('In Recipe Book');
+			});
+
+			it('can be removed from a users recipe book', function() {
+				browser.get('/#/user/' + userId + '/recipe-book');
+				expect(allRecipesOnThePage.count()).toBe(1);
+
+				browser.get('/#/view-recipe/' + recipeInBook);
+
+				expect(removeRecipeFromBookButton.isDisplayed()).toBe(true);
+				expect(removeRecipeFromBookButton.getText()).toBe('Remove');
+
+				removeRecipeFromBookButton.click();
+
+				expect(recipeMarker.isDisplayed()).toBe(false);
+				expect(removeRecipeFromBookButton.isDisplayed()).toBe(false);
+				expect(addToRecipeButton.isDisplayed()).toBe(true);
+
+				browser.get('/#/user/' + userId + '/recipe-book');
+				expect(allRecipesOnThePage.count()).toBe(0);
 			});
 		});
 
@@ -242,6 +335,7 @@ describe('the recipe book system', function() {
 				browser.get('/#/view-recipe/' + unbookedRecipe);
 
 				expect(recipeMarker.isDisplayed()).toBe(false);
+				expect(removeRecipeFromBookButton.isDisplayed()).toBe(false);
 				expect(addToRecipeButton.isDisplayed()).toBe(true);
 				expect(addToRecipeButton.getText()).toBe('Add to Recipe Book');
 
@@ -267,6 +361,7 @@ describe('the recipe book system', function() {
 
 				expect(recipeMarker.isDisplayed()).toBe(false);
 				expect(addToRecipeButton.isDisplayed()).toBe(false);
+				expect(removeRecipeFromBookButton.isDisplayed()).toBe(false);
 			});
 		});
 	});

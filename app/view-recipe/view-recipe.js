@@ -96,6 +96,13 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 			userRecipeBook = response.data;
 		});
 	};
+
+	$scope.removeRecipeFromBook = function() {
+		recipeBookService.removeRecipeFromBook($scope.recipe.recipeId)
+		.then(function(response) {
+			userRecipeBook = response.data;
+		});
+	};
 })
 
 .factory('recipeBookService', function($http, userService) {
@@ -114,8 +121,18 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 		});
 	}
 
+	function removeRecipeFromBook(recipeId) {
+		var userId = userService.getLoggedInUser().userId;
+		var url = '/api/user/' + userId + '/recipe-book/' + recipeId;
+		return $http.delete(url)
+		.then(function() {
+			return getRecipeBookPromise();
+		});
+	}
+
 	return {
 		getRecipeBookPromise: getRecipeBookPromise,
-		addToRecipeBook: addToRecipeBook
+		addToRecipeBook: addToRecipeBook,
+		removeRecipeFromBook: removeRecipeFromBook
 	};
 });

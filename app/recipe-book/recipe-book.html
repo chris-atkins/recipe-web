@@ -6,20 +6,21 @@
 	<div id="recipe-list">
 		<table class="table">
 			<thead>
-			<tr>
-				<th>Recipe Name</th><th>Recipe Link</th>
-			</tr>
+				<tr>
+					<th>Recipe Name</th><th>Recipe Link</th><th>Actions</th>
+				</tr>
 			</thead>
 			<tbody>
-			<tr id="{{recipe.recipeId}}" class="recipe" ng-repeat="recipe in recipeList">
-				<td><span class="recipe-name">{{recipe.recipeName}}</span></td>
-				<td><a class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>
-			</tr>
+				<tr id="{{recipe.recipeId}}" class="recipe" ng-repeat="recipe in recipeList">
+					<td><span class="recipe-name">{{recipe.recipeName}}</span></td>
+					<td><a class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>
+					<td ng-if="actionsAllowed()"><a class="remove-recipe-from-book-button btn btn-default btn-xs" ng-click="removeRecipeFromBook(recipe)" role="button">Remove from Recipe Book</a></td>
+					<td ng-if="actionsNotAllowed()"><span class="no-actions-possible-label">N/A</span></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>
 
 	<a id="home-button" class="btn btn-default" href="#/home" role="button">Home</a>
-
 
 </div>

@@ -9,7 +9,7 @@ angular.module('recipe.recipeBook', ['ngRoute'])
 	});
 }])
 
-.controller('RecipeBookCtrl', function($scope, $routeParams, $http) {
+.controller('RecipeBookCtrl', function($scope, $routeParams, $http, recipeBookService, userService) {
 
 	$scope.user = {};
 	$scope.recipeList = [];
@@ -39,4 +39,22 @@ angular.module('recipe.recipeBook', ['ngRoute'])
 			console.log('error retrieving recipe book	: ', error);
 		});
 	}
+
+	$scope.removeRecipeFromBook = function(recipe) {
+		recipeBookService.removeRecipeFromBook(recipe.recipeId)
+		.then(function() {
+			getRecipeBook();
+		});
+	};
+
+	$scope.actionsAllowed = function() {
+		var bookOwnerId = $routeParams.userId;
+		var loggedInUserId = userService.getLoggedInUser().userId;
+
+		return loggedInUserId === bookOwnerId;
+	};
+
+	$scope.actionsNotAllowed = function() {
+		return !$scope.actionsAllowed();
+	};
 });
