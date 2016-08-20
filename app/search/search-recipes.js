@@ -61,7 +61,7 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 			.success(function(data) {
 				$scope.recipeList = data;
 				$scope.searchHasOccurred = true;
-				$scope.resultInfoMessage = searchString === undefined ? 'Showing all recipes' :'Showing recipes that match "' + searchString + '"'
+				$scope.resultInfoMessage = searchString === undefined ? 'Showing all recipes' :'Showing recipes that match "' + searchString + '"';
 			})
 			.error(function(error) {
 				console.log('Error getting recipes:', error);
