@@ -96,11 +96,14 @@ describe('the search recipes page', function() {
 			expect(browser.driver.switchTo().activeElement().getAttribute('id')).toBe('search-input');
 		});
 		
-		it('searches for recipes when the search button is pressed', function() {
+		it('searches for recipes when the search button is pressed, and displays info on what results are being shown', function() {
 			searchInput.sendKeys('findMe');
 			searchButton.click();
 			
 			expect(element.all(by.className('recipe')).count()).toBe(2);
+
+			expect(element(by.className('result-info-message')).isDisplayed()).toBe(true);
+			expect(element(by.className('result-info-message')).getText()).toBe('Showing recipes that match "findMe"');
 		});
 		
 		it('found recipes have a name and view button', function() {
@@ -145,7 +148,7 @@ describe('the search recipes page', function() {
 			showAllRecipesButton.click();
 		});
 
-		it('shows a list of all recipes when the button is clicked', function() {
+		it('shows a list of all recipes when the button is clicked, and a message showing that all recipes are displayed', function() {
 			var recipeListHolder = element(by.id('recipe-list'));
 			var recipeList = recipeListHolder.all(by.className('recipe'));
 			expect(recipeList.count()).toBe(3);
@@ -153,6 +156,9 @@ describe('the search recipes page', function() {
 			assertRecipeIsInList(recipe1, recipeList);
 			assertRecipeIsInList(recipe2, recipeList);
 			assertRecipeIsInList(recipe3, recipeList);
+
+			expect(element(by.className('result-info-message')).isDisplayed()).toBe(true);
+			expect(element(by.className('result-info-message')).getText()).toBe('Showing all recipes');
 		});
 
 		it('has a link for each recipe', function() {

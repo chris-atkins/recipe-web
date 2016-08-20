@@ -37,6 +37,11 @@
   margin-top: 15px;
 }
 
+.result-info-message {
+  color: #999999;
+  font-size: smaller;
+}
+
 .show-line-breaks {
   white-space: pre-line;
 }
