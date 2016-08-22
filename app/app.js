@@ -10,6 +10,7 @@ angular.module('recipe', [
 	'recipe.newRecipe',
 	'recipe.viewRecipe',
 	'recipe.recipeBook',
+	'recipe.recipeBook.service',
 	'myApp.view1',
 	'myApp.view2',
 	'myApp.version'
