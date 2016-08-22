@@ -6,6 +6,7 @@ angular.module('recipe', [
 	'underscore',
 	'recipe.user',
 	'recipe.home',
+	'recipe.recipe.service',
 	'recipe.searchRecipes',
 	'recipe.newRecipe',
 	'recipe.viewRecipe',
