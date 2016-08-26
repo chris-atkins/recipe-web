@@ -30,7 +30,8 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 			console.log('error retrieving recipe: ', error);
 		});
 
-		recipeBookService.getRecipeBookPromise().success(function(recipeBook) {
+		recipeBookService.getRecipeBook()
+		.then(function(recipeBook) {
 			userRecipeBook = recipeBook;
 		});
 	}
@@ -92,15 +93,15 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 
 	$scope.addToRecipeBook = function() {
 		recipeBookService.addToRecipeBook($scope.recipe.recipeId)
-		.then(function(response) {
-			userRecipeBook = response.data;
+		.then(function(recipeBook) {
+			userRecipeBook = recipeBook;
 		});
 	};
 
 	$scope.removeRecipeFromBook = function() {
 		recipeBookService.removeRecipeFromBook($scope.recipe.recipeId)
-		.then(function(response) {
-			userRecipeBook = response.data;
+		.then(function(recipeBook) {
+			userRecipeBook = recipeBook;
 		});
 	};
 });
