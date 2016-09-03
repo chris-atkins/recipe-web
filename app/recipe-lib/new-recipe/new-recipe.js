@@ -4,7 +4,7 @@ angular.module('recipe.newRecipe', ['ngRoute'])
 
 .config(['$routeProvider', function ($routeProvider) {
 	$routeProvider.when('/new-recipe', {
-		templateUrl: 'new-recipe/new-recipe.html',
+		templateUrl: 'recipe-lib/new-recipe/new-recipe.html',
 		controller: 'NewRecipeCtrl'
 	});
 }])

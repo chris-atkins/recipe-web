@@ -4,7 +4,7 @@ angular.module('recipe.recipeBook', ['ngRoute'])
 
 .config(['$routeProvider', function ($routeProvider) {
 	$routeProvider.when('/user/:userId/recipe-book', {
-		templateUrl: 'recipe-book/recipe-book.html',
+		templateUrl: 'recipe-lib/recipe-book/recipe-book.html',
 		controller: 'RecipeBookCtrl'
 	});
 }])

@@ -42,7 +42,7 @@
     "test-single-run": "karma start karma.conf.js  --single-run",
     "pretest-headless": "npm install",
     "test-headless": "karma start karma-headless.conf.js --single-run",
-    "lint": "jshint app/*.js app/**/*.js e2e-tests/*.js node-app.js",
+    "lint": "jshint app/**/*.js e2e-tests/*.js node-app.js",
     "posttest-headless": "npm run lint",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
