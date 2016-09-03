@@ -9,7 +9,7 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 	});
 }])
 
-.controller('SearchRecipesCtrl', function ($scope, $http, $routeParams, $location, userService, recipeBookService, _) {
+.controller('SearchRecipesCtrl', function ($scope, $http, $routeParams, $location, userService, recipeBookService, recipeService, _) {
 
 	$scope.recipeList = [];
 	$scope.searchString = '';
@@ -54,14 +54,13 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 	};
 
 	function performSearchAndDisplayResults(searchString) {
-		var queryParams = searchString ? '?searchString=' + searchString : '';
-		$http.get('/api/recipe' + queryParams)
-		.success(function (data) {
+		recipeService.searchRecipes(searchString)
+		.then(function (data) {
 			$scope.recipeList = data;
 			$scope.searchHasOccurred = true;
 			$scope.resultInfoMessage = searchString === undefined ? 'Showing all recipes' : 'Showing recipes that match "' + searchString + '"';
 		})
-		.error(function (error) {
+		.catch(function (error) {
 			console.log('Error getting recipes:', error);
 		});
 	}
