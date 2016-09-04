@@ -2,7 +2,7 @@
 
 angular.module('recipe.recipe.service', [])
 
-.factory('recipeService', function ($http, $q) {
+.factory('recipeService', function ($http) {
 
 	var saveRecipe = function (recipeToSave) {
 		return $http.post('/api/recipe', recipeToSave)
@@ -15,16 +15,12 @@ angular.module('recipe.recipe.service', [])
 	};
 
 	var searchRecipes = function (searchString) {
-		var recipesPromise = $q.defer();
 		var queryParams = searchString ? '?searchString=' + searchString : '';
-		$http.get('/api/recipe' + queryParams)
-		.success(function(recipes) {
-			recipesPromise.resolve(recipes);
-		})
-		.error(function(error) {
-			recipesPromise.reject(error);
+
+		return $http.get('/api/recipe' + queryParams)
+		.then(function(response) {
+			return response.data;
 		});
-		return recipesPromise.promise;
 	};
 
 	return {

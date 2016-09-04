@@ -1,4 +1,4 @@
-fdescribe('the recipeService', function () {
+describe('the recipeService', function () {
 
 	beforeEach(angular.mock.module('recipe.recipe.service'));
 
@@ -31,7 +31,23 @@ fdescribe('the recipeService', function () {
 
 				response.then(function (data) {
 					expect(data).toEqual(expectedResponse);
-					console.log('finished expecting things');
+					done();
+				});
+
+				$httpBackend.flush();
+			});
+		});
+
+		it('when an error is raised during recipe call, it can be caught', function(done) {
+			angular.mock.inject(function (recipeService, $httpBackend) {
+				$httpBackend.expect('GET', '/api/recipe').respond(500, {message: 'error'});
+
+				var response = recipeService.searchRecipes();
+
+				response.then(function() {
+					done.fail('error should have occurred');
+				}).catch(function (error) {
+					expect(error.data.message).toEqual('error');
 					done();
 				});
 
