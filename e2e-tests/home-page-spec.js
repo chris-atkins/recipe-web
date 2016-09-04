@@ -27,6 +27,17 @@ describe('the home page', function() {
 		  var greetingMessage = element(by.id('greeting-message'));
 		  expect(greetingMessage.getText()).toBe('What would you like to do?');
 	  });
+
+	  it('has a footer with version number and icon message', function() {
+		  var footer = element(by.className('footer'));
+		  var version = footer.element(by.className('version'));
+		  var versionMessage = footer.element(by.className('version-message'));
+		  var iconTMInfo = footer.element(by.className('icon-trademark-info'));
+
+		  expect(versionMessage.getText()).toMatch(/^Recipe Connection v.*/);
+		  expect(version.getAttribute('app-version')).toBe('show');
+		  expect(iconTMInfo.isDisplayed()).toBe(true);
+	  });
   });
   
   describe('has navigation buttons:', function() {

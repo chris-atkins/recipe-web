@@ -1,20 +1,30 @@
 <div ng-include="'recipe-lib/user/user.html'"></div>
 <div class="container">
-	<h1><span id="page-title">Recipe Connection</span></h1>
+	<div>
+		<h1><span id="page-title">Recipe Connection</span></h1>
+	</div>
+
+	<div>
+		<p class="lead">
+			<span id="greeting-message">What would you like to do?</span>
+		</p>
+	</div>
+
+	<div>
+		<a id="search-button" class="btn btn-default" href="#/search-recipes" role="button">Browse Recipes</a>
+		<a id="save-button" class="btn btn-default" href="#/new-recipe" role="button">Save New Recipe</a>
+		<a id="recipe-book-button" class="btn btn-default" ng-click="navigateToRecipeBook()" role="button">My Recipe Book</a>
+	</div>
+
+	<div ng-show="shouldShowErrorMessage()">
+		<p id="recipe-book-error-message" class="recipe-error-message alert alert-danger">In order to see your own recipe book you must be logged in. Click the 'Log In' link in the top right
+			corner and enter your email address.</p>
+	</div>
 </div>
 
-<div class="container">
-	<p class="lead">
-		<span id="greeting-message">What would you like to do?</span>
-	</p>
-</div>
-
-<div class="container">
-	<a id="search-button" class="btn btn-default" href="#/search-recipes" role="button">Browse Recipes</a>
-	<a id="save-button" class="btn btn-default" href="#/new-recipe" role="button">Save New Recipe</a>
-	<a id="recipe-book-button" class="btn btn-default" ng-click="navigateToRecipeBook()" role="button">My Recipe Book</a>
-</div>
-
-<div class="container" ng-show="shouldShowErrorMessage()">
-	<p id="recipe-book-error-message" class="recipe-error-message alert alert-danger">In order to see your own recipe book you must be logged in. Click the 'Log In' link in the top right corner and enter your email address.</p>
+<div class="footer">
+	<div class="version-message">Recipe Connection v<span class="version" app-version="show"></span></div>
+	<div class="icon-trademark-info">
+		Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+	</div>
 </div>
