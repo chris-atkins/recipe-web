@@ -80,9 +80,13 @@ describe('the search recipes page', function() {
 			expect(homeButton.getText()).toBe('Home');
 		});
 		
-		it('no table (of recipes) is shown on the page when first navigated to', function() {
+		it('all recipes are shown on the page when first navigated to', function() {
 			var recipeTable = element(by.css('table'));
-			expect(recipeTable.isDisplayed()).toBe(false);
+			expect(recipeTable.isDisplayed()).toBe(true);
+
+			var recipeListHolder = element(by.id('recipe-list'));
+			var recipeList = recipeListHolder.all(by.className('recipe'));
+			expect(recipeList.count()).toBe(3);
 		});
 	});
 	

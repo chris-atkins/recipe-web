@@ -21,14 +21,12 @@ angular.module('recipe.searchRecipes', ['ngRoute'])
 	function initializePage() {
 		var queryParamSearchString = $routeParams.searchFor;
 
-		if (queryParamSearchString) {
-			if (queryParamSearchString == 'all') {
-				$scope.searchString = '';
-				performSearchAndDisplayResults();
-			} else {
-				$scope.searchString = queryParamSearchString;
-				performSearchAndDisplayResults(queryParamSearchString);
-			}
+		if (!queryParamSearchString || queryParamSearchString == 'all') {
+			$scope.searchString = '';
+			performSearchAndDisplayResults();
+		} else {
+			$scope.searchString = queryParamSearchString;
+			performSearchAndDisplayResults(queryParamSearchString);
 		}
 
 		retrieveUserRecipeBook();
