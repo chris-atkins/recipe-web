@@ -4,6 +4,7 @@ angular.module('recipe', [
 	'ngRoute',
 	'ngCookies',
 	'underscore',
+	'angularTrix',
 	'recipe.user',
 	'recipe.home',
 	'recipe.recipe.service',

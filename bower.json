@@ -15,7 +15,8 @@
     "angular-cookies": "^1.4.11",
     "bluebird": "^3.4.1",
     "underscore": "^1.8.3",
-    "angular-underscore-module": "^1.0.3"
+    "angular-underscore-module": "^1.0.3",
+    "angular-trix": "^1.0.2"
   },
   "resolutions": {
     "angular": "~1.4.11"

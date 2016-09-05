@@ -159,7 +159,7 @@ describe('the vew recipe page', function() {
 	var cancelEditButton = element(by.id('cancel-edit-button'));
 	var updateRecipeButton = element(by.id('update-recipe-button'));
 	var recipeNameInput = element(by.css('input#recipe-name-input'));
-	var recipeContentInput = element(by.css('textarea#recipe-content-input'));
+	var recipeContentInput = element(by.css('trix-editor'));
 	var editRecipeTitle = element(by.id('edit-recipe-page-title'));
 
 	describe('when a user is logged who is the owner of the recipe', function() {
@@ -209,7 +209,7 @@ describe('the vew recipe page', function() {
 			expect(recipeNameInput.getAttribute('value')).toBe('Recipe Being Tested - Name');
 
 			expect(recipeContentInput.isDisplayed()).toBe(true);
-			expect(recipeContentInput.getAttribute('value')).toBe('Recipe Being Tested - Content');
+			expect(recipeContentInput.getAttribute('value')).toContain('Recipe Being Tested - Content');
 		});
 
 		it('editing can be cancelled without altering the recipe contents or title', function() {
@@ -236,7 +236,9 @@ describe('the vew recipe page', function() {
 			browser.get('/#/view-recipe/' + recipeId);
 			editRecipeButton.click();
 
+			recipeNameInput.sendKeys(protractor.Key.END);
 			recipeNameInput.sendKeys('edited');
+			recipeContentInput.sendKeys(protractor.Key.END);
 			recipeContentInput.sendKeys('moreedited');
 
 			updateRecipeButton.click();

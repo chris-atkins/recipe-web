@@ -2,7 +2,7 @@
 
 <div class="container" ng-hide="inEditMode()">
 	<h2><span id="recipe-name">{{recipe.recipeName}}</span></h2>
-	<p><span id="recipe-content" class="show-line-breaks">{{recipe.recipeContent}}</span></p>
+	<p><span id="recipe-content" class="show-line-breaks" ng-bind-html="recipe.recipeContent"></span></p>
 </div>
 
 <div class="container" ng-show="inEditMode()">
@@ -13,7 +13,8 @@
 		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="nameBeingEdited"/>
 	</div>
 	<div class="form-group">
-		<textarea id="recipe-content-input" class="form-control" rows="10" placeholder="Recipe Content" type="text" ng-model="contentBeingEdited"></textarea>
+		<trix-editor id="hi" angular-trix ng-model="contentBeingEdited" toolbar="trix-toolbar"></trix-editor>
+		<trix-toolbar id="trix-toolbar"></trix-toolbar>
 	</div>
 </div>
 
