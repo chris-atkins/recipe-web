@@ -130,3 +130,8 @@ trix-toolbar .button_group button:hover {
 trix-toolbar .button_group button:not(:first-child), trix-toolbar .button_group input[type=button]:not(:first-child) {
   border-left: 0 none;
 }
+
+trix-editor:empty:not(:focus)::before {
+  content: attr(placeholder);
+  color: #999;
+}

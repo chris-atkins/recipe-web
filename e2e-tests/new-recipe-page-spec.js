@@ -6,7 +6,7 @@ describe('the new recipe page,', function () {
 
     var email;
     var recipeNameInput = element(by.css('input#recipe-name-input'));
-    var recipeContentInput = element(by.css('textarea#recipe-content-input'));
+    var recipeContentInput = element(by.css('trix-editor'));
     var saveButton = element(by.className('save-button'));
     var errorMessage = element(by.className('save-error-message'));
     var allRecipesOnBrowsePage = element.all(by.className('recipe'));

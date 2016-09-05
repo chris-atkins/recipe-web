@@ -10,7 +10,8 @@
 		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="newRecipeName"/>
 	</div>
 	<div class="form-group">
-		<textarea id="recipe-content-input" class="form-control" rows="10" placeholder="Recipe Content" type="text" ng-model="newRecipeContent"></textarea>
+		<trix-editor id="hi" angular-trix ng-model="newRecipeContent" placeholder="Recipe Content" toolbar="trix-toolbar"></trix-editor>
+		<trix-toolbar id="trix-toolbar"></trix-toolbar>
 	</div>
 </div>
 
