@@ -9,7 +9,7 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 	});
 }])
 
-.controller('ViewRecipeCtrl', function($scope, $http, $routeParams, $location, routeHistory, recipeBookService, userService, _, $sce, $document) {
+.controller('ViewRecipeCtrl', function($scope, $http, $routeParams, $location, routeHistory, recipeBookService, userService, _, $sce) {
 
 	var inEditMode = false;
 	var userRecipeBook = [];
@@ -89,7 +89,7 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 	};
 
 	$scope.canAddToRecipeBook = function() {
-		return userService.isLoggedIn() && !$scope.inRecipeBook();
+		return userService.isLoggedIn() && !$scope.inRecipeBook() && !inEditMode;
 	};
 
 	$scope.addToRecipeBook = function() {
