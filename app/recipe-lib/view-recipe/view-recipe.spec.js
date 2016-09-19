@@ -1,5 +1,16 @@
 'use strict';
 
+function buildMockPromiseFunction(valueToResolveTo) {
+	var valuePromise = undefined;
+	inject(function ($q) {
+		var valueDeferred = $q.defer();
+		valuePromise = valueDeferred.promise;
+		valueDeferred.resolve(valueToResolveTo);
+	});
+
+	return jasmine.createSpy('').and.returnValue(valuePromise);;
+}
+
 describe('the view recipe controller', function () {
 
 	beforeEach(module('recipe'));
@@ -9,18 +20,16 @@ describe('the view recipe controller', function () {
 		var compile;
 		var recipeBookService;
 		var recipeBook = [{recipeId: 12}, {recipeId: 13}];
-		var recipeBookPromise;
 
 		function buildControllerForRecipeId(options) {
 			inject(function ($controller, $rootScope, $compile, $q) {
 				var recipeIdToUse = options.withRecipeInRecipeBook ? 12 : 42;
 				scope = $rootScope.$new();
 				compile = $compile;
+
 				recipeBookService = {};
-				var recipeBookDeferred = $q.defer();
-				recipeBookPromise = recipeBookDeferred.promise;
-				recipeBookDeferred.resolve(recipeBook);
-				recipeBookService.getRecipeBook = jasmine.createSpy('getRecipeBook').and.returnValue(recipeBookPromise);
+				recipeBookService.getRecipeBook = buildMockPromiseFunction(recipeBook);
+
 				$controller('ViewRecipeCtrl', {
 					$scope: scope,
 					$routeParams: {recipeId: recipeIdToUse},
@@ -38,7 +47,7 @@ describe('the view recipe controller', function () {
 			});
 		}
 
-		it('will return false if no user is logged in', function (done) {
+		it('will return false if no user is logged in', function () {
 			angular.mock.inject(function (userService) {
 				var options = {withRecipeInRecipeBook: false};
 				spyOn(userService, 'isLoggedIn').and.returnValue(false);
@@ -46,16 +55,12 @@ describe('the view recipe controller', function () {
 				buildControllerForRecipeId(options)
 				initializeController(options);
 
-				recipeBookPromise.then(function () {
-					var result = scope.canAddToRecipeBook();
-					expect(result).toBe(false);
-				}).then(done, done.fail);
-
-				scope.$digest();
+				var result = scope.canAddToRecipeBook();
+				expect(result).toBe(false);
 			});
 		});
 
-		it('will return false if the current recipe is in the logged in users recipe book', function (done) {
+		it('will return false if the current recipe is in the logged in users recipe book', function () {
 			angular.mock.inject(function (userService) {
 				var options = {withRecipeInRecipeBook: true};
 				spyOn(userService, 'isLoggedIn').and.returnValue(true);
@@ -63,16 +68,12 @@ describe('the view recipe controller', function () {
 				buildControllerForRecipeId(options)
 				initializeController(options);
 
-				recipeBookPromise.then(function () {
-					var result = scope.canAddToRecipeBook();
-					expect(result).toBe(false);
-				}).then(done, done.fail);
-
-				scope.$digest();
+				var result = scope.canAddToRecipeBook();
+				expect(result).toBe(false);
 			});
 		});
 
-		it('will return false if in editMode', function (done) {
+		it('will return false if in editMode', function () {
 			angular.mock.inject(function (userService) {
 				var options = {withRecipeInRecipeBook: false};
 				spyOn(userService, 'isLoggedIn').and.returnValue(true);
@@ -82,16 +83,12 @@ describe('the view recipe controller', function () {
 
 				scope.editClicked();
 
-				recipeBookPromise.then(function () {
-					var result = scope.canAddToRecipeBook();
-					expect(result).toBe(false);
-				}).then(done, done.fail);
-
-				scope.$digest();
+				var result = scope.canAddToRecipeBook();
+				expect(result).toBe(false);
 			});
 		});
 
-		it('will return true if the user is logged in and the page is not in edit mode and the recipe is in the users recipe book', function (done) {
+		it('will return true if the user is logged in and the page is not in edit mode and the recipe is in the users recipe book', function () {
 			angular.mock.inject(function (userService) {
 				var options = {withRecipeInRecipeBook: false};
 				spyOn(userService, 'isLoggedIn').and.returnValue(true);
@@ -99,12 +96,8 @@ describe('the view recipe controller', function () {
 				buildControllerForRecipeId(options)
 				initializeController(options);
 
-				recipeBookPromise.then(function () {
-					var result = scope.canAddToRecipeBook();
-					expect(result).toBe(true);
-				}).then(done, done.fail);
-
-				scope.$digest();
+				var result = scope.canAddToRecipeBook();
+				expect(result).toBe(true);
 			});
 		});
 	});
@@ -114,7 +107,7 @@ describe('the view recipe controller', function () {
 		var scope;
 		var compile;
 
-		beforeEach(inject(function ($controller, $rootScope, $compile, $q) {
+		beforeEach(inject(function ($controller, $rootScope, $compile) {
 			scope = $rootScope.$new();
 			compile = $compile;
 			$controller('ViewRecipeCtrl', {
