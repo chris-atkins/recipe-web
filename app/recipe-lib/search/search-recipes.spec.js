@@ -11,21 +11,16 @@ describe('The searchRecipes controller', function () {
 		$controller = _$controller_;
 	}));
 
-	it('when no query parameters exist on the url, it defaults to showing all recipes', function (done) {
+	it('when no query parameters exist on the url, it defaults to showing all recipes', function () {
 		angular.mock.inject(function ($q, $rootScope) {
 			var $scope = $rootScope.$new();
-
 			var recipes = [{id: '1'}, {id: '2'}];
-			var recipesDefferred = $q.defer();
-			var recipesPromise = recipesDefferred.promise;
-			recipesDefferred.resolve(recipes);
-			var recipeService = {};
-			recipeService.searchRecipes = jasmine.createSpy('searchRecipes').and.returnValue(recipesPromise);
 
-			var recipeBookDeferred = $q.defer();
-			recipeBookDeferred.resolve([]);
+			var recipeService = {};
+			recipeService.searchRecipes = SpecUtils.buildMockPromiseFunction(recipes);
+
 			var recipeBookService = {};
-			recipeBookService.getRecipeBook = jasmine.createSpy('getRecipeBook').and.returnValue(recipeBookDeferred.promise);
+			recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([])
 
 			$controller('SearchRecipesCtrl',
 				{
@@ -39,11 +34,8 @@ describe('The searchRecipes controller', function () {
 
 			expect(recipeService.searchRecipes).toHaveBeenCalledWith(undefined);
 
-			recipesPromise.then(function() {
-				expect($scope.recipeList).toBe(recipes);
-			}).then(done, done.fail);
-
 			$scope.$digest();
+			expect($scope.recipeList).toBe(recipes);
 		});
 	});
 });

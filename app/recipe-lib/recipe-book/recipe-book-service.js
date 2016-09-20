@@ -40,7 +40,6 @@ angular.module('recipe.recipeBook.service', [])
 		var resultPromise = $q.defer();
 		$http.delete(url)
 		.success(function() {
-			console.log("finished deleting, calling get recipe book");
 			resultPromise.resolve(getRecipeBook());
 		})
 		.error(function(error) {
