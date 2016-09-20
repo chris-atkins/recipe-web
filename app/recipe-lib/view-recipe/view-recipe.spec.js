@@ -1,16 +1,5 @@
 'use strict';
 
-function buildMockPromiseFunction(valueToResolveTo) {
-	var valuePromise = undefined;
-	inject(function ($q) {
-		var valueDeferred = $q.defer();
-		valuePromise = valueDeferred.promise;
-		valueDeferred.resolve(valueToResolveTo);
-	});
-
-	return jasmine.createSpy('').and.returnValue(valuePromise);;
-}
-
 describe('the view recipe controller', function () {
 
 	beforeEach(module('recipe'));
@@ -22,13 +11,13 @@ describe('the view recipe controller', function () {
 		var recipeBook = [{recipeId: 12}, {recipeId: 13}];
 
 		function buildControllerForRecipeId(options) {
-			inject(function ($controller, $rootScope, $compile, $q) {
+			inject(function ($controller, $rootScope, $compile) {
 				var recipeIdToUse = options.withRecipeInRecipeBook ? 12 : 42;
 				scope = $rootScope.$new();
 				compile = $compile;
 
 				recipeBookService = {};
-				recipeBookService.getRecipeBook = buildMockPromiseFunction(recipeBook);
+				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction(recipeBook);
 
 				$controller('ViewRecipeCtrl', {
 					$scope: scope,
