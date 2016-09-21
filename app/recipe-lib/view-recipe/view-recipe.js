@@ -105,4 +105,8 @@ angular.module('recipe.viewRecipe', ['ngRoute'])
 			userRecipeBook = recipeBook;
 		});
 	};
+
+	$scope.canRemoveFromRecipeBook = function() {
+		return !inEditMode && $scope.inRecipeBook();
+	};
 });

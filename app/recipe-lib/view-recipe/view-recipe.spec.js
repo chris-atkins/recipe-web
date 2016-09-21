@@ -6,15 +6,13 @@ describe('the view recipe controller', function () {
 
 	describe('the scope canAddToRecipeBook function', function () {
 		var scope;
-		var compile;
 		var recipeBookService;
 		var recipeBook = [{recipeId: 12}, {recipeId: 13}];
 
 		function buildControllerForRecipeId(options) {
-			inject(function ($controller, $rootScope, $compile) {
+			inject(function ($controller, $rootScope) {
 				var recipeIdToUse = options.withRecipeInRecipeBook ? 12 : 42;
 				scope = $rootScope.$new();
-				compile = $compile;
 
 				recipeBookService = {};
 				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction(recipeBook);
@@ -91,6 +89,69 @@ describe('the view recipe controller', function () {
 		});
 	});
 
+	describe('the scope canRemoveFromRecipeBook function', function () {
+
+		describe('when the current recipe is in the recipe book', function () {
+			var scope;
+
+			beforeEach(inject(function($controller, $rootScope, $httpBackend) {
+				scope = $rootScope.$new();
+				var recipeBookService = {};
+				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([{recipeId: 5}])
+
+				$httpBackend.expect('GET', 'api/recipe/recipeIdNotInRecipeBook').respond({recipeId: 5});
+
+				$controller('ViewRecipeCtrl', {
+					$scope: scope,
+					$routeParams: {recipeId: 'recipeIdNotInRecipeBook'},
+					recipeBookService: recipeBookService
+				});
+				$httpBackend.flush();
+			}));
+
+			it('when in edit mode, returns false', function () {
+				scope.editClicked();
+				var result = scope.canRemoveFromRecipeBook();
+				expect(result).toBe(false);
+			});
+
+			it('when not in edit mode, returns true', function() {
+				var result = scope.canRemoveFromRecipeBook();
+				expect(result).toBe(true);
+			});
+		});
+
+		describe('when the current recipe is not in the recipe book', function () {
+			var scope;
+
+			beforeEach(inject(function($controller, $rootScope, $httpBackend) {
+				scope = $rootScope.$new();
+				var recipeBookService = {};
+				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([{recipeId: 5}])
+
+				$httpBackend.expect('GET', 'api/recipe/recipeIdNotInRecipeBook').respond({recipeId: 'recipeNotInRecipeBook'});
+
+				$controller('ViewRecipeCtrl', {
+					$scope: scope,
+					$routeParams: {recipeId: 'recipeIdNotInRecipeBook'},
+					recipeBookService: recipeBookService
+				});
+				$httpBackend.flush();
+			}));
+
+			it('when in edit mode, returns false', function () {
+				scope.editClicked();
+				var result = scope.canRemoveFromRecipeBook();
+				expect(result).toBe(false);
+			});
+
+			it('when not in edit mode, returns false', function() {
+				var result = scope.canRemoveFromRecipeBook();
+				expect(result).toBe(false);
+			});
+		});
+	});
+
 	describe('when given the html used in the application for the /view-recipe/:recipeId route', function () {
 
 		var scope;
@@ -137,6 +198,26 @@ describe('the view recipe controller', function () {
 
 				var addToRecipeBookButton = $('.add-to-recipe-book-button');
 				expect(addToRecipeBookButton).not.toBeVisible();
+			});
+		});
+
+		it('the remove from recipe book button is visible when scope returns true for canAddToRecipeBook', function () {
+			angular.mock.inject(function ($httpBackend) {
+				spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(true);
+				loadPage($httpBackend);
+
+				var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
+				expect(removeFromRecipeBookButton).toBeVisible();
+			});
+		});
+
+		it('the remove from recipe book button is not visible when scope returns true for canAddToRecipeBook', function () {
+			angular.mock.inject(function ($httpBackend) {
+				spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(false);
+				loadPage($httpBackend);
+
+				var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
+				expect(removeFromRecipeBookButton).not.toBeVisible();
 			});
 		});
 	});
