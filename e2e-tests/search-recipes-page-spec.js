@@ -1,11 +1,12 @@
 'use strict';
 var dataUtils = require('./utils/data-utils');
 var pageUtils = require('./utils/page-utils');
+var searchPage = require('./page-objects/search-page');
 
 describe('the search recipes page', function() {
 
-	var searchInput = element(by.id('search-input'));
-	var searchButton = element(by.id('search-button'));
+	var searchInput = searchPage.searchInput;
+	var searchButton = searchPage.searchButton;
 		
 	var recipe1 = {
 		recipeName: 'First Recipe Name', 
@@ -60,13 +61,11 @@ describe('the search recipes page', function() {
 		});
 		
 		it('has a search input field', function() {
-			var searchInput = element(by.css('input#search-input'));
 			expect(searchInput.isPresent()).toBe(true);
 			expect(searchInput.getAttribute('placeholder')).toBe('Search for...');
 		});
 		
 		it('has a search button', function() {
-			var searchButton = element(by.css('button#search-button'));
 			expect(searchButton.getText()).toBe('Search Recipes');
 		});
 
@@ -248,7 +247,6 @@ describe('the search recipes page', function() {
 			browser.get('/#/user/' + userId + '/recipe-book');
 			var recipeOnRecipeBookPage = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
 			expect(recipeOnRecipeBookPage.isDisplayed()).toBe(true);
-
 
 			browser.get('/#/search-recipes?searchFor=findMe');
 			expect(inRecipeBookIndicator.isDisplayed()).toBe(true);
