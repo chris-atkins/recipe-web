@@ -1,27 +1,29 @@
 'use strict';
 exports.config = {
-  allScriptsTimeout: 11000,
+	allScriptsTimeout: 11000,
 
-  specs: [
-    '*.js'
-  ],
+	chromeDriver: '../node_modules/chromedriver/lib/chromedriver/chromedriver',
 
-  capabilities: {
-    'browserName': 'chrome'
-  },
+	specs: [
+		'*spec.js','endpoint-tests/*spec.js'
+	],
 
-  baseUrl: 'http://localhost:8000/',
-  
-  params: {
-	  apiHostname: '127.0.0.1',
-	  apiPort: 5555,
-	  apiBasePath: '/api',
-	  apiBaseUrl: 'http://127.0.0.1:5555/api'
-  },
-  
-  framework: 'jasmine2',
+	capabilities: {
+		'browserName': 'chrome'
+	},
 
-  jasmineNodeOpts: {
-    defaultTimeoutInterval: 10000
-  }
+	baseUrl: 'http://localhost:8000/',
+
+	params: {
+		apiHostname: '127.0.0.1',
+		apiPort: 5555,
+		apiBasePath: '/api',
+		apiBaseUrl: 'http://127.0.0.1:5555/api'
+	},
+
+	framework: 'jasmine2',
+
+	jasmineNodeOpts: {
+		defaultTimeoutInterval: 10000
+	}
 };

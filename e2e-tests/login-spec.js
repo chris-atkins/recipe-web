@@ -1,6 +1,6 @@
 'use strict';
 
-var dataUtils = require('./data-utils');
+var dataUtils = require('./utils/data-utils');
 
 describe('Login functionality from the home page', function() {
 	

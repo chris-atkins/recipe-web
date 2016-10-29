@@ -1,7 +1,7 @@
 'use strict';
 
 var rs = require('request-promise');
-var dataUtils = require('./data-utils');
+var dataUtils = require('./../utils/data-utils');
 var config = browser.params;
 
 describe('The User endpoints', function() {

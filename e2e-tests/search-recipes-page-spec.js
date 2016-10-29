@@ -1,6 +1,6 @@
 'use strict';
-var dataUtils = require('./data-utils');
-var pageUtils = require('./page-utils');
+var dataUtils = require('./utils/data-utils');
+var pageUtils = require('./utils/page-utils');
 
 describe('the search recipes page', function() {
 

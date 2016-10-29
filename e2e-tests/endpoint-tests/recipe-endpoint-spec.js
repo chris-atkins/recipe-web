@@ -3,7 +3,7 @@
 var rs = require('request-promise');
 var Promise = require('bluebird');
 var config = browser.params;
-var dataUtils = require('./data-utils');
+var dataUtils = require('./../utils/data-utils');
 
 describe('the endpoint', function() {
 

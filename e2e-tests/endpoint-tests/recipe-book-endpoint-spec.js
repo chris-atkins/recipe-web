@@ -1,5 +1,5 @@
 'use strict';
-var dataUtils = require('./data-utils');
+var dataUtils = require('./../utils/data-utils');
 var config = browser.params;
 var rs = require('request-promise');
 
