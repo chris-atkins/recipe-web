@@ -4,8 +4,7 @@ describe('The searchRecipes controller', function () {
 
 	var $controller;
 
-	beforeEach(angular.mock.module('recipe.searchRecipes'));
-	beforeEach(angular.mock.module('recipe.recipe.service'));
+	beforeEach(angular.mock.module('recipe'));
 
 	beforeEach(inject(function (_$controller_) {
 		$controller = _$controller_;

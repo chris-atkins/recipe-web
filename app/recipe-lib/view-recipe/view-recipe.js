@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('recipe.viewRecipe', ['ngRoute'])
+angular.module('recipe')
 
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/view-recipe/:recipeId', {

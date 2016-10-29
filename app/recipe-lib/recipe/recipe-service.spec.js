@@ -1,6 +1,6 @@
 describe('the recipeService', function () {
 
-	beforeEach(angular.mock.module('recipe.recipe.service'));
+	beforeEach(angular.mock.module('recipe'));
 
 	describe('the searchRecipe function', function () {
 

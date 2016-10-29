@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('recipe.recipeBook', ['ngRoute'])
+angular.module('recipe')
 
 .config(['$routeProvider', function ($routeProvider) {
 	$routeProvider.when('/user/:userId/recipe-book', {

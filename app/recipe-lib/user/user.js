@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('recipe.user', [])
+angular.module('recipe')
 
 .controller('UserCtrl', function($scope, $http, userService) {
 	

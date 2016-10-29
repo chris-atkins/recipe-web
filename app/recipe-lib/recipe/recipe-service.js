@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('recipe.recipe.service', [])
+angular.module('recipe')
 
 .factory('recipeService', function ($http) {
 

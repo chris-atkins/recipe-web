@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('recipe.searchRecipes', ['ngRoute'])
+angular.module('recipe')
 
 .config(['$routeProvider', function ($routeProvider) {
 	$routeProvider.when('/search-recipes', {
