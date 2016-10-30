@@ -3,6 +3,10 @@ module.exports = function (config) {
 
 		basePath: './',
 
+		preprocessors: {
+			"app/recipe-lib/**/*.html": ["ng-html2js"]
+		},
+
 		files: [
 			'app/recipe-lib/spec-utils.spec.js',
 			'app/bower_components/angular/angular.js',
@@ -18,6 +22,16 @@ module.exports = function (config) {
 			'app/recipe-lib/**/*.html'
 		],
 
+		ngHtml2JsPreprocessor: {
+			// If your build process changes the path to your templates,
+			// use stripPrefix and prependPrefix to adjust it.
+			stripPrefix: "app/",
+			// prependPrefix: "base/app/recipe-lib",
+
+			// the name of the Angular module to create
+			moduleName: "my.templates"
+		},
+
 		autoWatch: true,
 
 		frameworks: ['jasmine'],
@@ -28,7 +42,8 @@ module.exports = function (config) {
 			'karma-chrome-launcher',
 			'karma-firefox-launcher',
 			'karma-jasmine',
-			'karma-junit-reporter'
+			'karma-junit-reporter',
+			'karma-ng-html2js-preprocessor'
 		],
 
 		junitReporter: {

@@ -2,7 +2,7 @@
 
 describe('the view recipe controller', function () {
 
-	beforeEach(module('recipe'));
+	beforeEach(module('recipe', 'my.templates'));
 
 	describe('the scope canAddToRecipeBook function', function () {
 		var scope;
@@ -94,7 +94,7 @@ describe('the view recipe controller', function () {
 		describe('when the current recipe is in the recipe book', function () {
 			var scope;
 
-			beforeEach(inject(function($controller, $rootScope, $httpBackend) {
+			beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
 				scope = $rootScope.$new();
 				var recipeBookService = {};
 				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([{recipeId: 5}])
@@ -115,7 +115,7 @@ describe('the view recipe controller', function () {
 				expect(result).toBe(false);
 			});
 
-			it('when not in edit mode, returns true', function() {
+			it('when not in edit mode, returns true', function () {
 				var result = scope.canRemoveFromRecipeBook();
 				expect(result).toBe(true);
 			});
@@ -124,7 +124,7 @@ describe('the view recipe controller', function () {
 		describe('when the current recipe is not in the recipe book', function () {
 			var scope;
 
-			beforeEach(inject(function($controller, $rootScope, $httpBackend) {
+			beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
 				scope = $rootScope.$new();
 				var recipeBookService = {};
 				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([{recipeId: 5}])
@@ -145,7 +145,7 @@ describe('the view recipe controller', function () {
 				expect(result).toBe(false);
 			});
 
-			it('when not in edit mode, returns false', function() {
+			it('when not in edit mode, returns false', function () {
 				var result = scope.canRemoveFromRecipeBook();
 				expect(result).toBe(false);
 			});
@@ -165,60 +165,53 @@ describe('the view recipe controller', function () {
 			});
 		}));
 
-		function loadPage($httpBackend) {
-			$httpBackend.expect('GET', 'api/recipe/undefined').respond({});
-			$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond({});
-			$httpBackend.expect('GET', 'recipe-lib/user/user.html').respond('<div></div>');
+		function loadPage() {
+			angular.mock.inject(function ($httpBackend, $templateCache) {
+				$httpBackend.expect('GET', 'api/recipe/undefined').respond({});
+				$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond({});
+				$httpBackend.expect('GET', 'recipe-lib/user/user.html').respond('<div></div>');
 
-			jasmine.getFixtures().fixturesPath = 'base/app/recipe-lib/view-recipe';
-			loadFixtures('view-recipe.html');
+				setFixtures($templateCache.get('recipe-lib/view-recipe/view-recipe.html'));
 
-			var doc = angular.element(document);
-			var fixture = doc.find('div');
+				var doc = angular.element(document);
+				var fixture = doc.find('div');
 
-			var elem = angular.element(fixture);
-			compile(elem)(scope);
-			scope.$digest();
+				var elem = angular.element(fixture);
+				compile(elem)(scope);
+				scope.$digest();
+			});
 		}
 
 		it('the add to recipe book button is visible when scope returns true for canAddToRecipeBook', function () {
-			angular.mock.inject(function ($httpBackend) {
-				spyOn(scope, 'canAddToRecipeBook').and.returnValue(true);
-				loadPage($httpBackend);
+			spyOn(scope, 'canAddToRecipeBook').and.returnValue(true);
+			loadPage();
 
-				var addToRecipeBookButton = $('.add-to-recipe-book-button');
-				expect(addToRecipeBookButton).toBeVisible();
-			});
+			var addToRecipeBookButton = $('.add-to-recipe-book-button');
+			expect(addToRecipeBookButton).toBeVisible();
 		});
 
 		it('the add to recipe book button is not visible when scope returns true for canAddToRecipeBook', function () {
-			angular.mock.inject(function ($httpBackend) {
-				spyOn(scope, 'canAddToRecipeBook').and.returnValue(false);
-				loadPage($httpBackend);
+			spyOn(scope, 'canAddToRecipeBook').and.returnValue(false);
+			loadPage();
 
-				var addToRecipeBookButton = $('.add-to-recipe-book-button');
-				expect(addToRecipeBookButton).not.toBeVisible();
-			});
+			var addToRecipeBookButton = $('.add-to-recipe-book-button');
+			expect(addToRecipeBookButton).not.toBeVisible();
 		});
 
 		it('the remove from recipe book button is visible when scope returns true for canAddToRecipeBook', function () {
-			angular.mock.inject(function ($httpBackend) {
-				spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(true);
-				loadPage($httpBackend);
+			spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(true);
+			loadPage();
 
-				var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
-				expect(removeFromRecipeBookButton).toBeVisible();
-			});
+			var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
+			expect(removeFromRecipeBookButton).toBeVisible();
 		});
 
 		it('the remove from recipe book button is not visible when scope returns true for canAddToRecipeBook', function () {
-			angular.mock.inject(function ($httpBackend) {
-				spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(false);
-				loadPage($httpBackend);
+			spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(false);
+			loadPage();
 
-				var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
-				expect(removeFromRecipeBookButton).not.toBeVisible();
-			});
+			var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
+			expect(removeFromRecipeBookButton).not.toBeVisible();
 		});
 	});
 });
