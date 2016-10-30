@@ -1,18 +1,19 @@
-module.exports = function(config){
-  var baseProjectConfig = require('./karma.conf.js');
+module.exports = function (config) {
+	var baseProjectConfig = require('./karma.conf.js');
 
-  baseProjectConfig(config)
-  
-  config.set({
+	baseProjectConfig(config)
 
-    autoWatch : false,
+	config.set({
 
-    browsers : ['PhantomJS'],
+		autoWatch: false,
 
-    plugins : [
-            'karma-phantomjs-launcher',
-            'karma-jasmine',
-            'karma-junit-reporter'
-            ],
-  });
+		browsers: ['PhantomJS'],
+
+		plugins: [
+			'karma-phantomjs-launcher',
+			'karma-jasmine',
+			'karma-junit-reporter',
+			'karma-ng-html2js-preprocessor'
+		]
+	});
 };
