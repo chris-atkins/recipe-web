@@ -1,0 +1,5 @@
+<div class="recipe" ng-click="navigateToRecipePage()">
+	<span class="recipe-name">{{recipe.recipeName}}</span>
+	<span ng-if="recipeInRecipeBook" class="in-recipe-book-indicator">In Recipe Book</span>
+	<span ng-if="canAddToRecipeBook" class="add-to-recipe-book-button" ng-click="addToRecipeBook($event)">Add to Recipe Book</span>
+</div>
