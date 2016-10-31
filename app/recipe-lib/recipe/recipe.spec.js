@@ -83,8 +83,8 @@ describe('the recipe directive', function () {
 			expect(recipeHolder).toBeVisible();
 			expect(recipeHolder.children().length).toBe(1);
 
-			var recipeElement = recipeHolder.children()[0];
-			recipeElement.click();
+			var recipeElement = $(recipeHolder.children()[0]);
+			SpecUtils.clickElement(recipeElement);
 			expect(location.url).toHaveBeenCalledWith('/view-recipe/theId');
 		});
 	});
@@ -157,7 +157,7 @@ describe('the recipe directive', function () {
 			spyOn(recipeBookService, 'addToRecipeBook').and.returnValue(SpecUtils.resolvedPromise([]));
 
 			var addToRecipeBookButton = $('.add-to-recipe-book-button');
-			addToRecipeBookButton.click();
+			SpecUtils.clickElement(addToRecipeBookButton);
 			expect(recipeBookService.addToRecipeBook).toHaveBeenCalledWith('notInBook');
 		});
 
@@ -166,13 +166,13 @@ describe('the recipe directive', function () {
 			spyOn(location, 'url');
 
 			var addToRecipeBookButton = $('.add-to-recipe-book-button');
-			addToRecipeBookButton.click();
+			SpecUtils.clickElement(addToRecipeBookButton);
 			expect(location.url).not.toHaveBeenCalled();
 		});
 
 		it('when the Add to Recipe Book button is clicked, the recipe is updated to show that it is now in the book', function () {
 			spyOn(recipeBookService, 'addToRecipeBook').and.returnValue(SpecUtils.resolvedPromise([{recipeId: 'idInRecipeBook'}, {recipeId: 'someOtherId'}, {recipeId: 'notInBook'}]));
-			$('.add-to-recipe-book-button').click();
+			SpecUtils.clickElement($('.add-to-recipe-book-button'));
 
 			expect($('.add-to-recipe-book-button')).not.toExist();
 			expect($('.in-recipe-book-indicator')).toBeVisible();
