@@ -2,17 +2,27 @@
 
 describe('the recipe directive', function () {
 
-	var scope, location, userService, recipeBookService;
+	var scope, location, userService, recipeBookService, parentScope;
+
+	var recipeHolder_Selector = '.recipeHolder';
+	var recipeName_Selector = '.recipe-name';
+	var inRecipeBookIndicator_Selector = '.in-recipe-book-indicator';
+	var addToRecipeBookButton_Selector = '.add-to-recipe-book-button';
 
 	beforeEach(angular.mock.module('recipe', 'my.templates'));
 
-	function buildControllerWithRecipeAndBook(recipe, recipeBook, controllerName) {
+	function buildControllerWithRecipeAndBook(recipe, recipeBook) {
 		angular.module('recipe')
-		.controller(controllerName, function ($scope) {
+		.controller("singleRecipeTestController", function ($scope) {
 			$scope.recipe = recipe;
 			$scope.recipeBook = recipeBook;
 		});
 	}
+
+	var fixture =
+		'<div ngController="singleRecipeTestController">' +
+		'     <div recipe-element recipe="recipe" recipe-book="recipeBook" class="recipeHolder"></div>' +
+		'</div>';
 
 	function setupRecipeController() {
 		angular.mock.inject(function ($controller, $rootScope, $compile, $location, _userService_, _recipeBookService_) {
@@ -29,17 +39,17 @@ describe('the recipe directive', function () {
 		});
 	}
 
-	function renderFixture(controllerName) {
+	function renderFixture() {
 		angular.mock.inject(function ($controller, $rootScope, $compile) {
-			var outerScope = $rootScope.$new();
-			$controller(controllerName, {
-				$scope: outerScope
+			parentScope = $rootScope.$new();
+			$controller("singleRecipeTestController", {
+				$scope: parentScope
 			});
 			var fixture = angular.element(document).find('div');
 			var elem = angular.element(fixture);
 
-			$compile(elem)(outerScope);
-			outerScope.$digest();
+			$compile(elem)(parentScope);
+			parentScope.$digest();
 		});
 	}
 
@@ -57,22 +67,18 @@ describe('the recipe directive', function () {
 		beforeEach(function () {
 			buildControllerWithRecipeAndBook(recipe, recipeBook, 'singleRecipeTestController');
 			setupRecipeController();
-			setFixtures(
-				'<div ngController="singleRecipeTestController">' +
-				'     <div recipe item="recipe" book="recipeBook" class="recipeHolder"></div>' +
-				'</div>'
-			);
+			setFixtures(fixture);
 			renderFixture('singleRecipeTestController');
 		});
 
 		it('elements inside the div that uses the recipe directive while keeping the declaring div', function () {
-			var recipeHolder = $('.recipeHolder');
+			var recipeHolder = $(recipeHolder_Selector);
 			expect(recipeHolder).toBeVisible();
 			expect(recipeHolder.children().length).toBeGreaterThan(0);
 		});
 
 		it('the name from the recipe it is built with', function () {
-			var recipeName = $('.recipe-name');
+			var recipeName = $(recipeName_Selector);
 			expect(recipeName.text()).toBe('theBestName');
 		});
 
@@ -101,23 +107,19 @@ describe('the recipe directive', function () {
 		var recipeBook = [{recipeId: 'idInRecipeBook'}, {recipeId: 'someOtherId'}];
 
 		beforeEach(function () {
-			buildControllerWithRecipeAndBook(recipe, recipeBook, 'singleRecipeTestController');
+			buildControllerWithRecipeAndBook(recipe, recipeBook);
 			setupRecipeController();
-
-			setFixtures(
-				'<div ngController="singleRecipeTestController">' +
-				'     <div recipe item="recipe" book="recipeBook" class="recipeHolder"></div>' +
-				'</div>'
-			);
-			renderFixture('singleRecipeTestController');
+			setFixtures(fixture);
+			renderFixture();
 		});
 
 		it('a label is shown that indicates the recipe is in the recipe book', function () {
-			var recipeBookLabel = $('.in-recipe-book-indicator');
+			var recipeBookLabel = $(inRecipeBookIndicator_Selector);
 			expect(recipeBookLabel).toBeVisible();
 			expect(recipeBookLabel.text()).toBe('In Recipe Book');
 		});
 	});
+
 
 	describe('when the recipe being rendered does not belong to a users recipe book', function () {
 
@@ -131,24 +133,19 @@ describe('the recipe directive', function () {
 		var recipeBook = [{recipeId: 'idInRecipeBook'}, {recipeId: 'someOtherId'}];
 
 		beforeEach(function () {
-			buildControllerWithRecipeAndBook(recipe, recipeBook, 'singleRecipeTestController');
+			buildControllerWithRecipeAndBook(recipe, recipeBook);
 			setupRecipeController();
-
-			setFixtures(
-				'<div ngController="singleRecipeTestController">' +
-				'     <div recipe item="recipe" book="recipeBook" class="recipeHolder"></div>' +
-				'</div>'
-			);
-			renderFixture('singleRecipeTestController');
+			setFixtures(fixture);
+			renderFixture();
 		});
 
 		it('no label is shown that indicates the recipe is in the recipe book', function () {
-			var recipeBookLabel = $('.in-recipe-book-indicator');
+			var recipeBookLabel = $(inRecipeBookIndicator_Selector);
 			expect(recipeBookLabel).not.toExist();
 		});
 
 		it('a button is shown that for allowing a recipe to be added to the recipe book', function () {
-			var addToRecipeBookButton = $('.add-to-recipe-book-button');
+			var addToRecipeBookButton = $(addToRecipeBookButton_Selector);
 			expect(addToRecipeBookButton).toBeVisible();
 			expect(addToRecipeBookButton.text()).toBe('Add to Recipe Book');
 		});
@@ -156,7 +153,7 @@ describe('the recipe directive', function () {
 		it('when the Add to Recipe Book button is clicked, the recipe is added', function () {
 			spyOn(recipeBookService, 'addToRecipeBook').and.returnValue(SpecUtils.resolvedPromise([]));
 
-			var addToRecipeBookButton = $('.add-to-recipe-book-button');
+			var addToRecipeBookButton = $(addToRecipeBookButton_Selector);
 			SpecUtils.clickElement(addToRecipeBookButton);
 			expect(recipeBookService.addToRecipeBook).toHaveBeenCalledWith('notInBook');
 		});
@@ -165,17 +162,28 @@ describe('the recipe directive', function () {
 			spyOn(recipeBookService, 'addToRecipeBook').and.returnValue(SpecUtils.resolvedPromise([]));
 			spyOn(location, 'url');
 
-			var addToRecipeBookButton = $('.add-to-recipe-book-button');
+			var addToRecipeBookButton = $(addToRecipeBookButton_Selector);
 			SpecUtils.clickElement(addToRecipeBookButton);
 			expect(location.url).not.toHaveBeenCalled();
 		});
 
 		it('when the Add to Recipe Book button is clicked, the recipe is updated to show that it is now in the book', function () {
 			spyOn(recipeBookService, 'addToRecipeBook').and.returnValue(SpecUtils.resolvedPromise([{recipeId: 'idInRecipeBook'}, {recipeId: 'someOtherId'}, {recipeId: 'notInBook'}]));
-			SpecUtils.clickElement($('.add-to-recipe-book-button'));
+			SpecUtils.clickElement($(addToRecipeBookButton_Selector));
 
-			expect($('.add-to-recipe-book-button')).not.toExist();
-			expect($('.in-recipe-book-indicator')).toBeVisible();
+			expect($(addToRecipeBookButton_Selector)).not.toExist();
+			expect($(inRecipeBookIndicator_Selector)).toBeVisible();
+		});
+
+		it('when the parent controller changes its recipe book after the child has been rendered (but before the child has changed), the In Recipe Book label is updated', function () {
+			expect($(addToRecipeBookButton_Selector)).toBeVisible();
+			expect($(inRecipeBookIndicator_Selector)).not.toExist();
+
+			parentScope.recipeBook = [{recipeId: 'notInBook'}];
+			scope.$apply();
+
+			expect($(addToRecipeBookButton_Selector)).not.toExist();
+			expect($(inRecipeBookIndicator_Selector)).toBeVisible();
 		});
 	});
 });

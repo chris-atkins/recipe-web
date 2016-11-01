@@ -2,14 +2,32 @@
 
 angular.module('recipe')
 
+.directive('recipeElement', function () {
+	return {
+		replace: false,
+		restrict: 'A',
+		templateUrl: 'recipe-lib/recipe/recipe.html',
+		controller: 'recipeCtrl',
+		scope: {
+			recipe: '=',
+			recipeBook: '='
+		}
+	}
+})
+
 .controller('recipeCtrl', function ($scope, $location, recipeBookService, userService, _) {
 
-	$scope.recipe = $scope.item;
-	$scope.recipeBook = $scope.book;
+	// $scope.recipe
+	// $scope.recipeBook
 	$scope.recipeInRecipeBook = false;
 	$scope.canAddToRecipeBook = false;
 
 	updateRecipeBookFlags();
+
+	$scope.$watch('recipeBook', function(newValue) {
+		$scope.recipeBook = newValue;
+		updateRecipeBookFlags();
+	});
 
 	function updateRecipeBookFlags() {
 		var inRecipeBook = isRecipeInBook();
@@ -40,20 +58,6 @@ angular.module('recipe')
 		recipeBookService.addToRecipeBook($scope.recipe.recipeId)
 		.then(function(recipeBook) {
 			$scope.recipeBook = recipeBook;
-			updateRecipeBookFlags();
 		});
-	}
-})
-
-.directive('recipe', function () {
-	return {
-		replace: false,
-		restrict: 'A',
-		templateUrl: 'recipe-lib/recipe/recipe.html',
-		controller: 'recipeCtrl',
-		scope: {
-			item: '=',
-			book: '='
-		}
 	}
 });

@@ -23,23 +23,33 @@
 	</p>
 </div>
 
-<div id="recipe-list" class="container">
-	<table class="table" ng-show="recipeList.length > 0">
-		<thead>
-			<tr>
-				<th>Recipe Name</th><th>Recipe Link</th><th>Personal Recipe Book</th>
-			</tr>
-		</thead>
+<div class="container">
+	<table class="table table-hover">
 		<tbody>
-			<tr id="{{recipe.recipeId}}" class="recipe" ng-repeat="recipe in recipeList">
-				<td><span class="recipe-name">{{recipe.recipeName}}</span></td>
-				<td><a class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>
-				<td ng-if="canBeAddedToRecipeBook(recipe)"><a class="add-to-recipe-book-button btn btn-default btn-xs" ng-click="addToRecipeBook(recipe)" role="button">Add to Recipe Book</a></td>
-				<td ng-if="alreadyInRecipeBook(recipe)"><span class="in-recipe-book-indicator">In Recipe Book</span></td>
+			<tr ng-repeat="recipe in recipeList">
+				<td recipe-element recipe="recipeList[$index]" recipe-book="usersRecipeBook"></td>
 			</tr>
 		</tbody>
 	</table>
 </div>
+
+<!--<div id="recipe-list" class="container">-->
+	<!--<table class="table" ng-show="recipeList.length > 0">-->
+		<!--<thead>-->
+			<!--<tr>-->
+				<!--<th>Recipe Name</th><th>Recipe Link</th><th>Personal Recipe Book</th>-->
+			<!--</tr>-->
+		<!--</thead>-->
+		<!--<tbody>-->
+			<!--<tr id="{{recipe.recipeId}}" class="recipe" ng-repeat="recipe in recipeList">-->
+				<!--<td><span class="recipe-name">{{recipe.recipeName}}</span></td>-->
+				<!--<td><a class="view-recipe-link btn btn-default btn-xs" href="#/view-recipe/{{recipe.recipeId}}" role="button">View</a></td>-->
+				<!--<td ng-if="canBeAddedToRecipeBook(recipe)"><a class="add-to-recipe-book-button btn btn-default btn-xs" ng-click="addToRecipeBook(recipe)" role="button">Add to Recipe Book</a></td>-->
+				<!--<td ng-if="alreadyInRecipeBook(recipe)"><span class="in-recipe-book-indicator">In Recipe Book</span></td>-->
+			<!--</tr>-->
+		<!--</tbody>-->
+	<!--</table>-->
+<!--</div>-->
 
 <div class="container">
 	<a id="home-button" class="btn btn-default" href="#/home" role="button">Home</a>
