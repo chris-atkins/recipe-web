@@ -13,7 +13,6 @@ describe('the search recipes page', function() {
 	var homeButton = searchPage.homeButton;
 	var recipeTable = searchPage.recipeTable;
 	var recipeList = searchPage.recipeList;
-	var recipeLinks = searchPage.recipeLinks;
 	var resultInfoMessage = searchPage.resultInfoMessage;
 	var noSearchResultsMessage = searchPage.noSearchResultsMessage;
 	var backButton = searchPage.backButton;
@@ -110,7 +109,7 @@ describe('the search recipes page', function() {
 			expect(resultInfoMessage.getText()).toBe('Showing recipes that match "findMe"');
 		});
 		
-		it('found recipes have a name and view button', function() {
+		it('found recipes have a name', function() {
 			searchInput.sendKeys('findMe');
 			searchButton.click();
 			
@@ -118,9 +117,6 @@ describe('the search recipes page', function() {
 			
 			var recipeName = firstRecipe.element(by.className('recipe-name'));
 			expect(recipeName.getText()).toBe('First Recipe Name');
-			
-			var viewRecipeLink = firstRecipe.element(by.css('a.view-recipe-link'));
-			expect(viewRecipeLink.getText()).toBe('View');
 		});
 		
 		it('searches for recipes when enter is typed in the input field', function() {
@@ -160,10 +156,6 @@ describe('the search recipes page', function() {
 			expect(resultInfoMessage.getText()).toBe('Showing all recipes');
 		});
 
-		it('has a link for each recipe', function() {
-			expect(recipeList.count()).toBe(recipeLinks.count());
-		});
-
 		function assertRecipeIsInList(recipe, list) {
 			var foundRecipes = list.filter(function(item) {
 				return item.element(by.className('recipe-name')).getText().then(function(text) {
@@ -185,16 +177,15 @@ describe('the search recipes page', function() {
 			expect(browser.getLocationAbsUrl()).toMatch('/home');
 		});
 		
-		it('for each recipe after searching, has view recipe buttons that navigate to the individual recipes', function() {
+		it('for each recipe after searching, clicking the recipe navigates to that recipes individual view page', function() {
 			searchInput.sendKeys('findMe');
 			searchButton.click();
 			
 			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', recipeList);
-			var recipeLink = firstRecipe.element(by.css('a.view-recipe-link'));
 			
 			firstRecipe.getAttribute('id').then(function(recipeId) {
-				recipeLink.click();
-				expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId);
+				firstRecipe.click();
+				expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId + '$');
 			});
 		});
 
@@ -203,9 +194,8 @@ describe('the search recipes page', function() {
 			searchButton.click();
 
 			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
-			var recipeLink = firstRecipe.element(by.css('a.view-recipe-link'));
 
-			recipeLink.click();
+			firstRecipe.click();
 			backButton.click();
 
 			expect(searchInput.getAttribute('value')).toBe('findMe');

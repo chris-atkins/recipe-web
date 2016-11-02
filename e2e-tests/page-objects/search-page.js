@@ -9,7 +9,6 @@ var homeButton = element(by.id('home-button'));
 var recipeTable = element(by.css('table'));
 var recipeListHolder = element(by.id('recipe-list'));
 var recipeList = recipeListHolder.all(by.className('recipe'));
-var recipeLinks = recipeListHolder.all(by.css('a.view-recipe-link'));
 var resultInfoMessage = element(by.className('result-info-message'));
 var noSearchResultsMessage = element(by.id('no-search-results-message'));
 var backButton = element(by.id('back-button'));
@@ -22,9 +21,7 @@ module.exports = {
 	showAllRecipesButton: showAllRecipesButton,
 	homeButton: homeButton,
 	recipeTable: recipeTable,
-	recipeListHolder: recipeListHolder,
 	recipeList: recipeList,
-	recipeLinks: recipeLinks,
 	resultInfoMessage: resultInfoMessage,
 	noSearchResultsMessage: noSearchResultsMessage,
 	backButton: backButton

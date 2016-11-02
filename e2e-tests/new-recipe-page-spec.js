@@ -108,7 +108,7 @@ describe('the new recipe page,', function () {
                 saveButton.click();
 
                 browser.get('/#/search-recipes?searchFor=all');
-                var savedRecipeLink = pageUtils.findRecipeWithName(newRecipeName, allRecipesOnBrowsePage).element(by.css('a.view-recipe-link'));
+                var savedRecipeLink = pageUtils.findRecipeWithName(newRecipeName, allRecipesOnBrowsePage);
                 savedRecipeLink.click();
 
                 expect(element(by.id('recipe-name')).getText()).toBe(newRecipeName);
