@@ -81,18 +81,6 @@ describe('the recipe directive', function () {
 			var recipeName = $(recipeName_Selector);
 			expect(recipeName.text()).toBe('theBestName');
 		});
-
-		it('a single dom element at the root that navigates to the recipe page when clicked', function () {
-			spyOn(location, 'url');
-
-			var recipeHolder = $('.recipeHolder');
-			expect(recipeHolder).toBeVisible();
-			expect(recipeHolder.children().length).toBe(1);
-
-			var recipeElement = $(recipeHolder.children()[0]);
-			SpecUtils.clickElement(recipeElement);
-			expect(location.url).toHaveBeenCalledWith('/view-recipe/theId');
-		});
 	});
 
 	describe('when the recipe being rendered belongs to a users recipe book', function () {

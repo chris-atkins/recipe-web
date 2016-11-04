@@ -48,10 +48,6 @@ angular.module('recipe')
 		return foundRecipe !== undefined;
 	}
 
-	$scope.navigateToRecipePage = function () {
-		$location.url('/view-recipe/' + $scope.recipe.recipeId);
-	};
-
 	$scope.addToRecipeBook = function($event) {
 		$event.stopImmediatePropagation();
 

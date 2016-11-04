@@ -2,39 +2,75 @@
 
 describe('The searchRecipes controller', function () {
 
-	var $controller;
+	beforeEach(angular.mock.module('recipe', 'my.templates'));
 
-	beforeEach(angular.mock.module('recipe'));
+	var scope, compile, location, recipeService, recipeBookService;
 
-	beforeEach(inject(function (_$controller_) {
-		$controller = _$controller_;
+	var recipes = [{recipeId: '1', recipeName: 'recipe 1', recipeContent: ''}, {recipeId: '2', recipeName: 'recipe 2', recipeContent: ''}];
+
+	beforeEach(angular.mock.inject(function ($q, $rootScope, _$location_, $controller, $compile) {
+		scope = $rootScope.$new();
+		compile = $compile;
+		location = _$location_;
+
+		recipeService = {};
+		recipeService.searchRecipes = SpecUtils.buildMockPromiseFunction(recipes);
+
+		recipeBookService = {};
+		recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([])
+
+		$controller('SearchRecipesCtrl',
+			{
+				$scope: scope,
+				$routeParams: {},
+				userService: {},
+				recipeService: recipeService,
+				recipeBookService: recipeBookService,
+				_: {},
+				$location: location
+			});
 	}));
 
 	it('when no query parameters exist on the url, it defaults to showing all recipes', function () {
-		angular.mock.inject(function ($q, $rootScope) {
-			var $scope = $rootScope.$new();
-			var recipes = [{id: '1'}, {id: '2'}];
+			expect(recipeService.searchRecipes).toHaveBeenCalledWith(undefined);  //on initialize
+			scope.$digest();
+			expect(scope.recipeList).toBe(recipes);
+	});
 
-			var recipeService = {};
-			recipeService.searchRecipes = SpecUtils.buildMockPromiseFunction(recipes);
+	describe('has links on the page for each recipe that takes the user to that recipes view page', function () {
 
-			var recipeBookService = {};
-			recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([])
+		beforeEach(angular.mock.inject(function ($httpBackend, $templateCache) {
+			setFixtures($templateCache.get('recipe-lib/search/search-recipes.html'));
 
-			$controller('SearchRecipesCtrl',
-				{
-					$scope: $scope,
-					$routeParams: {},
-					userService: {},
-					recipeService: recipeService,
-					recipeBookService: recipeBookService,
-					_: {}
-				});
+			var doc = angular.element(document);
+			var fixture = doc.find('div');
 
-			expect(recipeService.searchRecipes).toHaveBeenCalledWith(undefined);
+			var elem = angular.element(fixture);
+			compile(elem)(scope);
+			scope.$digest();
+		}));
 
-			$scope.$digest();
-			expect($scope.recipeList).toBe(recipes);
+		it('for recipe 1', function () {
+			spyOn(location, 'url');
+
+			var recipeRows = $('.recipe-row');
+			expect(recipeRows.length).toBe(2);
+
+			var recipeElement = $(recipeRows[0]);
+			SpecUtils.clickElement(recipeElement);
+			expect(location.url).toHaveBeenCalledWith('/view-recipe/1');
+		});
+
+		it('for recipe 2', function () {
+			spyOn(location, 'url');
+
+			var recipeRow = $('.recipe-row');
+			expect(recipeRow.length).toBe(2);
+
+			var recipeElement = $(recipeRow[1]);
+			SpecUtils.clickElement(recipeElement);
+			expect(location.url).toHaveBeenCalledWith('/view-recipe/2');
 		});
 	});
+
 });

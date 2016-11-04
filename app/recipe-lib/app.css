@@ -46,6 +46,10 @@
   white-space: pre-line;
 }
 
+.recipe-table-body {
+    border-top: 2px solid #ddd;
+    border-bottom: 2px solid #ddd;
+}
 
 /** THIS IS HERE FOR THE FOOTER **/
 html {

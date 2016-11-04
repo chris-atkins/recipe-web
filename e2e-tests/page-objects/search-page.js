@@ -12,6 +12,9 @@ var recipeList = recipeListHolder.all(by.className('recipe'));
 var resultInfoMessage = element(by.className('result-info-message'));
 var noSearchResultsMessage = element(by.id('no-search-results-message'));
 var backButton = element(by.id('back-button'));
+var findRecipeLink = function(recipeElement) {
+	return recipeElement;
+};
 
 module.exports = {
 	searchInput: searchInput,
@@ -24,5 +27,6 @@ module.exports = {
 	recipeList: recipeList,
 	resultInfoMessage: resultInfoMessage,
 	noSearchResultsMessage: noSearchResultsMessage,
-	backButton: backButton
+	backButton: backButton,
+	findRecipeLink: findRecipeLink
 };

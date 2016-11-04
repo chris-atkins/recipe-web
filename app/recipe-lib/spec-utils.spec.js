@@ -2,12 +2,12 @@
 
 var SpecUtils = {};
 
-SpecUtils.buildMockPromiseFunction = function(valueToResolveTo) {
+SpecUtils.buildMockPromiseFunction = function (valueToResolveTo) {
 	var valuePromise = SpecUtils.resolvedPromise(valueToResolveTo);
 	return jasmine.createSpy('').and.returnValue(valuePromise);
 };
 
-SpecUtils.resolvedPromise = function(valueToResolveTo) {
+SpecUtils.resolvedPromise = function (valueToResolveTo) {
 	var valuePromise = {};
 	inject(function ($q) {
 		var valueDeferred = $q.defer();
@@ -17,7 +17,7 @@ SpecUtils.resolvedPromise = function(valueToResolveTo) {
 	return valuePromise;
 };
 
-SpecUtils.clickElement = function (jqueryObject){
+SpecUtils.clickElement = function (jqueryObject) {
 	/* jshint ignore:start */
 	var ev = document.createEvent("MouseEvent");
 	ev.initMouseEvent(
@@ -28,6 +28,10 @@ SpecUtils.clickElement = function (jqueryObject){
 		false, false, false, false, /* modifier keys */
 		0 /*left*/, null
 	);
-	jqueryObject[0].dispatchEvent(ev);
+	if (jqueryObject[0]) {
+		jqueryObject[0].dispatchEvent(ev);
+	} else if (jqueryObject.dispatchEvent) {
+		$(jqueryObject).dispatchEvent(ev);
+	}
 	/* jshint ignore:end */
 };

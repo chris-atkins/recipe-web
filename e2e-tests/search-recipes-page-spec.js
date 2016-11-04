@@ -16,6 +16,7 @@ describe('the search recipes page', function() {
 	var resultInfoMessage = searchPage.resultInfoMessage;
 	var noSearchResultsMessage = searchPage.noSearchResultsMessage;
 	var backButton = searchPage.backButton;
+	var findRecipeLink = searchPage.findRecipeLink;
 		
 	var recipe1 = {
 		recipeName: 'First Recipe Name', 
@@ -184,7 +185,7 @@ describe('the search recipes page', function() {
 			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', recipeList);
 			
 			firstRecipe.getAttribute('id').then(function(recipeId) {
-				firstRecipe.click();
+				findRecipeLink(firstRecipe).click();
 				expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId + '$');
 			});
 		});
@@ -195,7 +196,7 @@ describe('the search recipes page', function() {
 
 			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
 
-			firstRecipe.click();
+			findRecipeLink(firstRecipe).click();
 			backButton.click();
 
 			expect(searchInput.getAttribute('value')).toBe('findMe');
