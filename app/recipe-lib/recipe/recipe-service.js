@@ -23,8 +23,16 @@ angular.module('recipe')
 		});
 	};
 
+	var allRecipesInUserBook = function(userId) {
+		return $http.get('/api/recipe?recipeBook=' + userId)
+			.then(function(response){
+				return response.data;
+			});
+	};
+
 	return {
 		saveRecipe: saveRecipe,
-		searchRecipes: searchRecipes
+		searchRecipes: searchRecipes,
+		allRecipesInUserBook: allRecipesInUserBook
 	};
 });

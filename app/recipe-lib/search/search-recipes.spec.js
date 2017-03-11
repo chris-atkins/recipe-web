@@ -1,6 +1,6 @@
 'use strict';
 
-describe('The searchRecipes controller', function () {
+describe('The searchRecipes module', function () {
 
 	beforeEach(angular.mock.module('recipe', 'my.templates'));
 
@@ -39,7 +39,7 @@ describe('The searchRecipes controller', function () {
 
 	describe('has links on the page for each recipe that takes the user to that recipes view page', function () {
 
-		beforeEach(angular.mock.inject(function ($httpBackend, $templateCache) {
+		beforeEach(angular.mock.inject(function ($templateCache) {
 			setFixtures($templateCache.get('recipe-lib/search/search-recipes.html'));
 
 			var doc = angular.element(document);

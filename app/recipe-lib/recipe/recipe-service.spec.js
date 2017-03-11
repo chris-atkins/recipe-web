@@ -55,4 +55,49 @@ describe('the recipeService', function () {
 			});
 		});
 	});
+
+	describe('the find all recipes in user recipe book', function() {
+
+		var userId = 'theBestUser';
+
+		it('calls the correct endpoint', function() {
+			angular.mock.inject(function(recipeService, $httpBackend) {
+				$httpBackend.expect('GET', '/api/recipe?recipeBook=' + userId).respond({});
+				recipeService.allRecipesInUserBook(userId);
+				$httpBackend.verifyNoOutstandingExpectation();
+			});
+		});
+
+		it('returns a promise with the result of the GET call', function(done) {
+			angular.mock.inject(function(recipeService, $httpBackend) {
+				var expectedResponse = [{recipeId: '1'}];
+				$httpBackend.expect('GET', '/api/recipe?recipeBook=' + userId).respond(expectedResponse);
+
+				recipeService.allRecipesInUserBook(userId)
+					.then(function(response){
+						expect(response).toEqual(expectedResponse);
+					})
+					.then(done, done.fail);
+
+				$httpBackend.flush();
+			});
+		});
+
+		it('returns a catchable error if an error occurs during the GET request', function(done) {
+			angular.mock.inject(function(recipeService, $httpBackend) {
+				$httpBackend.expect('GET', '/api/recipe?recipeBook=' + userId).respond(500, {message: 'uh-oh'});
+
+				recipeService.allRecipesInUserBook(userId)
+					.then(function(){
+						done.fail('expected error')
+					})
+					.catch(function(error) {
+						expect(error.data.message).toBe('uh-oh');
+						done();
+					});
+
+				$httpBackend.flush();
+			});
+		});
+	});
 });

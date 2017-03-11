@@ -9,7 +9,7 @@ angular.module('recipe')
 	});
 }])
 
-.controller('RecipeBookCtrl', function ($scope, $routeParams, $http, recipeBookService, userService) {
+.controller('RecipeBookCtrl', function ($scope, $routeParams, $http, recipeBookService, userService, recipeService, $location) {
 
 	$scope.user = {};
 	$scope.recipeList = [];
@@ -31,8 +31,8 @@ angular.module('recipe')
 
 	function getRecipeBook() {
 		var userId = $routeParams.userId;
-		$http.get('api/recipe?recipeBook=' + userId)
-		.success(function(recipeList) {
+		recipeService.allRecipesInUserBook(userId)
+		.then(function(recipeList) {
 			$scope.recipeList = recipeList;
 		})
 		.catch(function (error) {
@@ -57,4 +57,12 @@ angular.module('recipe')
 	$scope.actionsNotAllowed = function () {
 		return !$scope.actionsAllowed();
 	};
+
+	$scope.navigateHome = function() {
+		$location.url('/home');
+	};
+
+	$scope.navigateToRecipe = function(recipeId){
+		$location.url('/view-recipe/'+ recipeId);
+	}
 });

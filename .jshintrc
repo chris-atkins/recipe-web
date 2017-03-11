@@ -17,7 +17,8 @@
     "console": false,
     "exports": false,
     "process": false,
-    "__dirname": false
+    "__dirname": false,
+    "document": false
   },
   "jasmine": true
   
