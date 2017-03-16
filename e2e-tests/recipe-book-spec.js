@@ -166,12 +166,9 @@ describe('the recipe book system', function() {
 				expect(firstRecipeName.getText()).toBe('First Recipe Name');
 			});
 
-			it('has a link to take the user to the view recipe page, where the back button will return to the recipe book page', function() {
+			it('clicking the recipe will take the user to the view recipe page, where the back button will return to the recipe book page', function() {
 				var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', allRecipesOnThePage);
-				var recipeLink = firstRecipe.element(by.css('a.view-recipe-link'));
-				expect(recipeLink.isDisplayed()).toBe(true);
-				expect(recipeLink.getText()).toBe('View');
-				recipeLink.click();
+				firstRecipe.click();
 
 				expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + firstRecipeId);
 				element(by.id('back-button')).click();
@@ -190,7 +187,6 @@ describe('the recipe book system', function() {
 
 					var removeRecipeFromBookButton = firstRecipe.element(by.className('remove-recipe-from-book-button'));
 					expect(removeRecipeFromBookButton.isPresent()).toBe(false);
-					expect(firstRecipe.element(by.className('no-actions-possible-label')).getText()).toBe('N/A');
 				});
 			});
 
@@ -210,7 +206,6 @@ describe('the recipe book system', function() {
 
 					var removeRecipeFromBookButton = firstRecipe.element(by.className('remove-recipe-from-book-button'));
 					expect(removeRecipeFromBookButton.isPresent()).toBe(false);
-					expect(firstRecipe.element(by.className('no-actions-possible-label')).getText()).toBe('N/A');
 				});
 			});
 

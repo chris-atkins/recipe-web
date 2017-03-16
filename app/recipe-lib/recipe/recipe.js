@@ -10,7 +10,10 @@ angular.module('recipe')
 		controller: 'recipeCtrl',
 		scope: {
 			recipe: '=',
-			recipeBook: '='
+			recipeBook: '=',
+			recipeBookMode: '@',
+			owningUserId: '@',
+			recipeRemovalCallback: '='
 		}
 	}
 })
@@ -21,8 +24,19 @@ angular.module('recipe')
 	// $scope.recipeBook
 	$scope.recipeInRecipeBook = false;
 	$scope.canAddToRecipeBook = false;
+	$scope.bookMode = $scope.recipeBookMode === 'true';
 
 	updateRecipeBookFlags();
+
+	$scope.removeAllowed = function () {
+		var loggedInUserId = userService.getLoggedInUser().userId;
+		return loggedInUserId === $scope.owningUserId;
+	};
+
+	$scope.removeRecipe = function($event, recipe) {
+		$event.stopImmediatePropagation();
+		$scope.recipeRemovalCallback(recipe);
+	};
 
 	$scope.$watch('recipeBook', function(newValue) {
 		$scope.recipeBook = newValue;
@@ -30,6 +44,10 @@ angular.module('recipe')
 	});
 
 	function updateRecipeBookFlags() {
+		if ($scope.bookMode) {
+			return;
+		}
+
 		var inRecipeBook = isRecipeInBook();
 		if (inRecipeBook) {
 			$scope.recipeInRecipeBook = true;

@@ -18,10 +18,11 @@ describe('the recipe book module', function () {
 
 	beforeEach(angular.mock.module('my.templates', 'recipe'));
 
-	beforeEach(angular.mock.inject(function ($rootScope, $httpBackend, _$location_, $controller) {
+	beforeEach(angular.mock.inject(function ($rootScope, $httpBackend, _$location_, $controller, _userService_) {
 		scope = $rootScope;
 		httpBackend = $httpBackend;
 		location = _$location_;
+		userService = _userService_;
 
 		routeParams = {userId: 'userId1'};
 
@@ -29,7 +30,6 @@ describe('the recipe book module', function () {
 		recipeBookService.removeRecipeFromBook = SpecUtils.buildMockPromiseFunction([]);
 		recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([]);
 
-		userService = {};
 		userService.getLoggedInUser = jasmine.createSpy('').and.returnValue(recipeBookOwner);
 
 		recipeService = {};
@@ -96,7 +96,7 @@ describe('the recipe book module', function () {
 			spyOn(location, 'url');
 			SpecUtils.loadPage('recipe-lib/recipe-book/recipe-book.html', scope);
 
-			var recipe = $('#1 .view-recipe-link');
+			var recipe = $('#1');
 			SpecUtils.clickElement(recipe);
 
 			expect(location.url).toHaveBeenCalledWith('/view-recipe/1');
@@ -106,7 +106,7 @@ describe('the recipe book module', function () {
 			spyOn(location, 'url');
 			SpecUtils.loadPage('recipe-lib/recipe-book/recipe-book.html', scope);
 
-			var recipe = $('#2 .view-recipe-link');
+			var recipe = $('#2');
 			SpecUtils.clickElement(recipe);
 
 			expect(location.url).toHaveBeenCalledWith('/view-recipe/2');
@@ -131,14 +131,5 @@ describe('the recipe book module', function () {
 		var removeLink = $('#2 .remove-recipe-from-book-button');
 
 		expect(removeLink.length).toBe(0);
-	});
-
-	it('if user is not the recipe book owner a N/A message is given for actions', function () {
-		userService.getLoggedInUser = jasmine.createSpy('').and.returnValue(userThatIsNotOwner);
-
-		SpecUtils.loadPage('recipe-lib/recipe-book/recipe-book.html', scope);
-		var actionLabel = $('#2 .no-actions-possible-label');
-
-		expect(actionLabel.text()).toBe('N/A');
 	});
 });
