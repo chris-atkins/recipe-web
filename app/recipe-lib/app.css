@@ -31,6 +31,39 @@
 
 .user-section {
 	/* background-color: #5EE896; */
+  margin-bottom: 23px;
+  padding: 5px 27px;
+  color: #595959;
+}
+
+.user-section .login-fields {
+  padding-top: 1em;
+}
+
+/*.user-section .navbar-link a{*/
+  /*transition: all .25s ease;*/
+/*}*/
+/*.user-section .navbar-link  a:hover {*/
+  /*color: #0275d8 !important;*/
+  /*!*text-decoration: underline;*!*/
+  /*!*transition-delay: .15s;*!*/
+  /*!*-webkit-transition-delay: .15s;*!*/
+/*}*/
+
+.form-control::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: lightgray;
+}
+.form-control::-moz-placeholder { /* Firefox 19+ */
+  color: lightgray;
+}
+.form-control:-ms-input-placeholder { /* IE 10+ */
+  color: lightgray;
+}
+.form-control:-moz-placeholder { /* Firefox 18- */
+  color: lightgray;
+}
+#recipe-editor::before { /* Chrome/Opera/Safari */
+  color: lightgray;
 }
 
 .recipe-error-message {
@@ -51,7 +84,7 @@
     border-bottom: 2px solid #ddd;
 }
 
-/** THIS IS HERE FOR THE FOOTER **/
+/** FOOTER SECTION **/
 html {
   position: relative;
   min-height: 100%;
@@ -77,8 +110,9 @@ body {
   color: lightgray;
   font-size: xx-small;
 }
-/** END OF THE FOOTER SECTION**/
+/** END OF THE FOOTER SECTION **/
 
+/** TEXT EDITOR SECTION **/
 
 trix-toolbar .dialogs .dialog {
   border: 1px solid #d6d6d6;
@@ -139,3 +173,4 @@ trix-editor:empty:not(:focus)::before {
   content: attr(placeholder);
   color: #999;
 }
+/** END TEXT EDITOR **/

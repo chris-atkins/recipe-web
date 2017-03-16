@@ -13,14 +13,14 @@
 			<tbody>
 				<tr id="{{recipe.recipeId}}" class="recipe" ng-repeat="recipe in recipeList">
 					<td><span class="recipe-name">{{recipe.recipeName}}</span></td>
-					<td><a class="view-recipe-link btn btn-default btn-xs" ng-click="navigateToRecipe(recipe.recipeId)" role="button">View</a></td>
-					<td ng-if="actionsAllowed()"><a class="remove-recipe-from-book-button btn btn-default btn-xs" ng-click="removeRecipeFromBook(recipe)" role="button">Remove from Recipe Book</a></td>
+					<td><a class="view-recipe-link btn btn-secondary btn-sm" ng-click="navigateToRecipe(recipe.recipeId)" role="button">View</a></td>
+					<td ng-if="actionsAllowed()"><a class="remove-recipe-from-book-button btn btn-secondary btn-sm" ng-click="removeRecipeFromBook(recipe)" role="button">Remove from Recipe Book</a></td>
 					<td ng-if="actionsNotAllowed()"><span class="no-actions-possible-label">N/A</span></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 
-	<a id="home-button" class="btn btn-default" ng-click="navigateHome()" role="button">Home</a>
+	<a id="home-button" class="btn btn-secondary" ng-click="navigateHome()" role="button">Home</a>
 
 </div>

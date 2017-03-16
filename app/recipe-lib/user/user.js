@@ -59,6 +59,14 @@ angular.module('recipe')
 		$scope.logoutVisible = false;
 		loginHasBeenAttempted = false;
 	}
+
+	$scope.expanded = function() {
+		return $scope.loginVisible;
+	};
+
+	$scope.shrunk = function() {
+		return !$scope.loginVisible;
+	};
 })
 
 .factory('userService', function($http, $cookies) {

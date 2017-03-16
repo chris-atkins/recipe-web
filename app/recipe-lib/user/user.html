@@ -1,59 +1,49 @@
-<nav class="user-section navbar-default hidden-print" ng-controller="UserCtrl">
+<nav class="user-section navbar navbar-light bg-faded hidden-print" ng-controller="UserCtrl">
 
-	<div class="container-fluid">
-	
-		<ul class="nav navbar-nav navbar-right navbar-link" ng-hide="isLoggedIn">
-			<li>
-				<a class="login-link" ng-click="toggleLogin()">Log In</a>
-			</li>
-		</ul>
+		<div class="navbar-nav ml-auto" ng-hide="isLoggedIn">
+			<a class="login-link nav-link" ng-click="toggleLogin()"><small>Log In </small>
+				<i id="expand-login-section-icon" class="fa fa-angle-down fa-lg" ng-show="shrunk()"></i>
+				<i id="shrink-login-section-icon" class="fa fa-angle-up fa-lg" ng-show="expanded()"></i>
+			</a>
+		</div>
 		
-		<ul class="nav navbar-nav navbar-right navbar-link" ng-show="isLoggedIn">
-			<li>
-				<a id="logged-in-user-message" ng-click="toggleLogout()">Welcome, {{user.userName}}</a>
-			</li>
-		</ul>
-		
-	</div>
+		<div class="navbar-nav ml-auto" ng-show="isLoggedIn">
+			<a id="logged-in-user-message" class=" nav-link" ng-click="toggleLogout()"><small>Welcome, {{user.userName}} </small>
+				<i id="expand-logout-section-icon" class="fa fa-angle-down fa-lg" ng-hide="logoutVisible"></i>
+				<i id="shrink-logout-section-icon" class="fa fa-angle-up fa-lg" ng-show="logoutVisible"></i>
+			</a>
+		</div>
 
-	<div class="container-fluid" ng-hide="isLoggedIn">
 
-		<ul class="login-fields nav navbar-form navbar-right" ng-show="shouldShowLogIn()">
+	<div class="ml-auto" ng-hide="isLoggedIn">
 
-			<li class="user-login-message">Please enter your email address to log in or sign up.</li>
+		<div class="login-fields nav-item" ng-show="shouldShowLogIn()">
 
-			<li class="form-group">
-				<label for="sign-up-user-email">Email</label>
+			<div class="user-login-message"><small>Please enter your email address to log in or sign up.</small></div>
+
+			<div class="form-inline input-group input-group-sm">
 				<input id="sign-up-user-email" class="form-control input-sm" ng-model="email" placeholder="jane.doe@example.com"></input>
-			</li>
-			
-			<li class="form-group">
-				<button id="log-in-user-button" class="btn btn-default btn-sm" ng-click="logIn()">Log In</button>
-			</li>
-		</ul>
+				<button id="log-in-user-button" class="btn btn-secondary btn-sm" ng-click="logIn()">Log In</button>
+			</div>
+
+		</div>
 		
-		<ul class="login-fields nav navbar-form navbar-right" ng-show="shouldShowSignUp()">
+		<div class="login-fields nav-item" ng-show="shouldShowSignUp()">
 
-			<li class="user-sign-up-message">What name would you like to use?</li>
+			<div class="user-sign-up-message"><small>What name would you like to use?</small></div>
 
-			<li class="form-group">
-				<label for="sign-up-user-name">Name</label>
+			<div class="form-inline input-group input-group-sm">
 				<input id="sign-up-user-name" class="form-control input-sm" ng-model="name" placeholder="Jane"></input>
-			</li>
-			
-			<li class="form-group">
-				<button id="sign-up-user-button" class="btn btn-default btn-sm" ng-click="signUp()">Sign Up</button>
-			</li>
-		</ul>
+				<button id="sign-up-user-button" class="btn btn-secondary btn-sm" ng-click="signUp()">Sign Up</button>
+			</div>
+
+		</div>
+
 	</div>
 	
-	<div class="container-fluid" ng-show="isLoggedIn">
-		
-		<ul class="logout-section nav navbar-form navbar-right" ng-show="logoutVisible">
-			<li class="form-group">
-				<button id="log-out-button" class="btn btn-default btn-sm" ng-click="logOut()">Log Out</button>
-			</li>
-		</ul>
-		
+	<div class="ml-auto" ng-show="isLoggedIn">
+		<div class="logout-section nav navbar-form login-fields" ng-show="logoutVisible">
+			<button id="log-out-button" class="btn btn-secondary btn-sm" ng-click="logOut()">Log Out</button>
+		</div>
 	</div>
 </nav>

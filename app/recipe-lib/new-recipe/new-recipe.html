@@ -10,14 +10,14 @@
 		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="newRecipeName"/>
 	</div>
 	<div class="form-group">
-		<trix-editor id="hi" angular-trix ng-model="newRecipeContent" placeholder="Recipe Content" toolbar="trix-toolbar"></trix-editor>
+		<trix-editor id="recipe-editor" angular-trix ng-model="newRecipeContent" placeholder="Recipe Content" toolbar="trix-toolbar"></trix-editor>
 		<trix-toolbar id="trix-toolbar"></trix-toolbar>
 	</div>
 </div>
 
 <div class="container">
-	<a id="home-button" class="btn btn-default" href="#/home" role="button">Home</a>
-	<a class="save-button btn btn-default" role="button" ng-click="saveRecipeAndNavigate()">Save Recipe</a>
+	<a id="home-button" class="btn btn-secondary" href="#/home" role="button">Home</a>
+	<a class="save-button btn btn-secondary" role="button" ng-click="saveRecipeAndNavigate()">Save Recipe</a>
 </div>
 
 <div class="container" ng-show="shouldShowErrorMessage()">
