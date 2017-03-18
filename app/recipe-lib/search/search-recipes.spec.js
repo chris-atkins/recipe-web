@@ -53,7 +53,7 @@ describe('The searchRecipes module', function () {
 		it('for recipe 1', function () {
 			spyOn(location, 'url');
 
-			var recipeRows = $('.recipe-row');
+			var recipeRows = $('.recipe');
 			expect(recipeRows.length).toBe(2);
 
 			var recipeElement = $(recipeRows[0]);
@@ -64,7 +64,7 @@ describe('The searchRecipes module', function () {
 		it('for recipe 2', function () {
 			spyOn(location, 'url');
 
-			var recipeRow = $('.recipe-row');
+			var recipeRow = $('.recipe');
 			expect(recipeRow.length).toBe(2);
 
 			var recipeElement = $(recipeRow[1]);

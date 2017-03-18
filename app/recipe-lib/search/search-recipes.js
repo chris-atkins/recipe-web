@@ -62,10 +62,6 @@ angular.module('recipe')
 			console.log('Error getting recipes:', error);
 		});
 	}
-
-	$scope.navigateToRecipePage = function (recipe) {
-		$location.url('/view-recipe/' + recipe.recipeId);
-	};
 })
 
 .directive('focus', function ($timeout) {

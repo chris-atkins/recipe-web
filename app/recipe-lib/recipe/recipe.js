@@ -20,8 +20,12 @@ angular.module('recipe')
 
 .controller('recipeCtrl', function ($scope, $location, recipeBookService, userService, _) {
 
-	// $scope.recipe
-	// $scope.recipeBook
+	//$scope.recipe: '=',
+	//$scope.recipeBook: '=',
+	//$scope.recipeBookMode: '@',
+	//$scope.owningUserId: '@',
+	//$scope.recipeRemovalCallback: '='
+
 	$scope.recipeInRecipeBook = false;
 	$scope.canAddToRecipeBook = false;
 	$scope.bookMode = $scope.recipeBookMode === 'true';
@@ -73,5 +77,9 @@ angular.module('recipe')
 		.then(function(recipeBook) {
 			$scope.recipeBook = recipeBook;
 		});
-	}
+	};
+
+	$scope.navigateToRecipePage = function (recipe) {
+		$location.url('/view-recipe/' + recipe.recipeId);
+	};
 });

@@ -10,8 +10,8 @@ describe('the recipe book module', function () {
 	var httpBackend;
 	var location;
 
-	var recipe1 = {'recipeId':'1','recipeName':'recipe1Name','recipeContent':'recipe1Content','editable':false};
-	var recipe2 = {'recipeId':'2','recipeName':'recipe2Name','recipeContent':'recipe2Content','editable':true};
+	var recipe1 = {'recipeId': '1', 'recipeName': 'recipe1Name', 'recipeContent': 'recipe1Content', 'editable': false};
+	var recipe2 = {'recipeId': '2', 'recipeName': 'recipe2Name', 'recipeContent': 'recipe2Content', 'editable': true};
 
 	var recipeBookOwner = {'userId': 'userId1', 'userName': 'Me', 'userEmail': 'i'};
 	var userThatIsNotOwner = {'userId': 'userId2', 'userName': 'someoneElse', 'userEmail': 'a@b.com'};
@@ -19,7 +19,7 @@ describe('the recipe book module', function () {
 	beforeEach(angular.mock.module('my.templates', 'recipe'));
 
 	beforeEach(angular.mock.inject(function ($rootScope, $httpBackend, _$location_, $controller, _userService_) {
-		scope = $rootScope;
+		scope = $rootScope.$new();
 		httpBackend = $httpBackend;
 		location = _$location_;
 		userService = _userService_;

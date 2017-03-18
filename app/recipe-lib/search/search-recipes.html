@@ -23,15 +23,7 @@
 	</p>
 </div>
 
-<div id="recipe-list" class="container">
-	<table class="table table-hover recipe-table">
-		<tbody class="recipe-table-body">
-			<tr class="recipe-row" ng-repeat="recipe in recipeList"  ng-click="navigateToRecipePage(recipe)">
-				<td recipe-element recipe="recipeList[$index]" recipe-book="usersRecipeBook"></td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+<div recipe-card-wall recipe-list="recipeList" recipe-book="usersRecipeBook"  class="recipe-card-wall"></div>
 
 <div class="container">
 	<a id="home-button" class="btn btn-secondary" href="#/home" role="button">Home</a>

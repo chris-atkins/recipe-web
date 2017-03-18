@@ -3,15 +3,7 @@
 <div class="container">
 	<h1><span id="page-title">Recipe Book: {{user.userName}}</span></h1>
 
-	<div id="recipe-list" class="container">
-		<table class="table table-hover recipe-table">
-			<tbody class="recipe-table-body">
-			<tr id="{{recipe.recipeId}}" class="recipe-row" ng-repeat="recipe in recipeList"  ng-click="navigateToRecipe(recipe.recipeId)">
-				<td recipe-element recipe="recipeList[$index]" recipe-book-mode="true" owning-user-id="{{user.userId}}" recipe-removal-callback="removeRecipeFromBook"></td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
+	<div recipe-card-wall recipe-list="recipeList" recipe-book-mode="true" owning-user-id="{{user.userId}}" recipe-removal-callback="removeRecipeFromBook" class="recipe-card-wall"></div>
 
 	<a id="home-button" class="btn btn-secondary" ng-click="navigateHome()" role="button">Home</a>
 
