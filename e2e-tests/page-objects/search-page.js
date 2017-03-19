@@ -6,7 +6,6 @@ var pageTitle = element(by.id('search-recipes-page-title'));
 var userSection = element(by.className('user-section'));
 var showAllRecipesButton = element(by.css('button#show-all-recipes-button'));
 var homeButton = element(by.id('home-button'));
-var recipeTable = element(by.css('table'));
 var recipeListHolder = element(by.id('recipe-list'));
 var recipeList = recipeListHolder.all(by.className('recipe'));
 var resultInfoMessage = element(by.className('result-info-message'));
@@ -23,7 +22,7 @@ module.exports = {
 	userSection: userSection,
 	showAllRecipesButton: showAllRecipesButton,
 	homeButton: homeButton,
-	recipeTable: recipeTable,
+	recipeListHolder: recipeListHolder,
 	recipeList: recipeList,
 	resultInfoMessage: resultInfoMessage,
 	noSearchResultsMessage: noSearchResultsMessage,

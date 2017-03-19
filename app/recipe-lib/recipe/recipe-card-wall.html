@@ -1,9 +1,11 @@
-<div id="recipe-list" class="container">
-	<table class="table table-hover recipe-table">
-		<tbody class="recipe-table-body">
-		<tr class="recipe-row" ng-repeat="recipe in recipeList">
-			<td recipe-element recipe="recipeList[$index]" recipe-book="recipeBook" recipe-book-mode="{{recipeBookMode}}" owning-user-id="{{owningUserId}}" recipe-removal-callback="recipeRemovalCallback"></td>
-		</tr>
-		</tbody>
-	</table>
+<div class="container">
+	<div id="recipe-list" class="card-columns recipe-card-holder">
+		<div recipe-element ng-repeat="recipe in recipeList"
+			 recipe="recipeList[$index]"
+			 recipe-book="recipeBook"
+			 recipe-book-mode="{{recipeBookMode}}"
+			 owning-user-id="{{owningUserId}}"
+			 recipe-removal-callback="recipeRemovalCallback">
+		</div>
+	</div>
 </div>

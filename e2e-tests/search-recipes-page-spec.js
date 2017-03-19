@@ -11,7 +11,7 @@ describe('the search recipes page', function() {
 	var userSection = searchPage.userSection;
 	var showAllRecipesButton = searchPage.showAllRecipesButton;
 	var homeButton = searchPage.homeButton;
-	var recipeTable = searchPage.recipeTable;
+	var recipeListHolder = searchPage.recipeListHolder;
 	var recipeList = searchPage.recipeList;
 	var resultInfoMessage = searchPage.resultInfoMessage;
 	var noSearchResultsMessage = searchPage.noSearchResultsMessage;
@@ -86,7 +86,7 @@ describe('the search recipes page', function() {
 		});
 		
 		it('all recipes are shown on the page when first navigated to', function() {
-			expect(recipeTable.isDisplayed()).toBe(true);
+			expect(recipeListHolder.isDisplayed()).toBe(true);
 			expect(recipeList.count()).toBe(3);
 		});
 	});

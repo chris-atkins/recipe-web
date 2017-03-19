@@ -1,5 +1,23 @@
-<div ng-include="'recipe-lib/user/user.html'"></div>
 
+<!--<nav class="navbar navbar-toggleable navbar-light bg-faded hidden-print user-section">-->
+<!--<nav class="navbar navbar-toggleable navbar-inverse bg-inverse hidden-print user-section">-->
+<!--<nav class="navbar navbar-toggleable navbar-inverse bg-maroon hidden-print user-section">-->
+<nav class="navbar navbar-toggleable navbar-inverse bg-navy hidden-print user-section">
+<!--<nav class="navbar navbar-toggleable navbar-inverse bg-teal hidden-print user-section">-->
+	<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+		<div class="navbar-nav">
+			<a class="nav-item nav-link" href="#/home">Home Page</a>
+			<a class="nav-item nav-link" href="#/search-recipes">Browse Recipes</a>
+			<a class="nav-item nav-link" href="#/user/58c8b2bda957106e48de608d/recipe-book">Recipe Book</a>
+		</div>
+		<div class="navbar-nav ml-auto">
+			<a id="logged-in-user-message" class="nav-item nav-link" ng-click="toggleLogout()">
+				<small>Welcome, Chris</small>
+				<i id="expand-logout-section-icon" class="fa fa-angle-down fa-lg"></i>
+			</a>
+		</div>
+	</div>
+</nav>
 
 <div class="container">
 	<h1 class="display-4"><span id="page-title">Recipe Book: Chris</span></h1>
@@ -8,47 +26,45 @@
 	<br/>
 
 	<div class="card-columns recipe-card-holder">
-		<div class="recipe card view overlay hm-red-strong hoverable"  id="58cdc736a9571086cfcd111b" ng-click="navigateToRecipePage(recipe)">
+		<div class="recipe card view overlay hm-red-strong hoverable" id="58cdc736a9571086cfcd111b" ng-click="navigateToRecipePage(recipe)">
 			<div class="card-block">
-				<h4 class="recipe-name card-title ng-binding">a recipe</h4>
+				<h5 class="recipe-name card-title ng-binding">a recipe</h5>
 				<p class="card-text"></p>
 			</div>
 			<div class="card-footer text-right">
-				<span class="ng-scope"><a class="remove-recipe-from-book-button btn btn-secondary btn-sm " role="button">Remove from Recipe Book</a></span>
+				<a class="remove-recipe-from-book-button btn btn-outline-secondary btn-sm " role="button">Remove from Recipe Book</a>
 			</div>
 		</div>
-		<div class="recipe card"  id="58cdc740a9571086cfcd111c" ng-click="navigateToRecipePage(recipe)">
+		<div class="recipe card" id="58cdc740a9571086cfcd111c" ng-click="navigateToRecipePage(recipe)">
 			<div class="card-block">
-				<h4 class="recipe-name card-title ng-binding">another recipe</h4>
+				<h5 class="recipe-name card-title ng-binding">another recipe</h5>
 				<p class="card-text">
 					Hi this is the recipe text <br/>
 					Whoa so awesome
 				</p>
 			</div>
 			<div class="card-footer text-right">
-				<span class="ng-scope"><a class="remove-recipe-from-book-button btn btn-secondary btn-sm" role="button">Remove from Recipe Book</a></span>
+				<a class="remove-recipe-from-book-button btn btn-outline-secondary btn-sm" role="button">Remove from Recipe Book</a>
 			</div>
 		</div>
-		<div class="recipe card"  id="58cdc74ea9571086cfcd111d" ng-click="navigateToRecipePage(recipe)">
+		<div class="recipe card" id="58cdc74ea9571086cfcd111d" ng-click="navigateToRecipePage(recipe)">
 			<div class="card-block">
-				<h4 class="recipe-name card-title ng-binding">Pumpkin Stuffed With Everything Good and a few less good things too</h4>
+				<h5 class="recipe-name card-title ng-binding">Pumpkin Stuffed With Everything Good and a few less good things too</h5>
 				<p class="card-text"></p>
 			</div>
 			<div class="card-footer text-right">
-				<span class="ng-scope"><a class="remove-recipe-from-book-button btn btn-secondary btn-sm" role="button">Remove from Recipe Book</a></span>
+				<a class="remove-recipe-from-book-button btn btn-outline-secondary btn-sm" role="button">Remove from Recipe Book</a>
 			</div>
 		</div>
-		<div class="recipe card"  id="58cdc754a9571086cfcd111e" ng-click="navigateToRecipePage(recipe)">
+		<div class="recipe card" id="58cdc754a9571086cfcd111e" ng-click="navigateToRecipePage(recipe)">
 			<div class="card-block">
-				<h4 class="recipe-name card-title ng-binding">asdfas;dkfjn</h4>
+				<h5 class="recipe-name card-title ng-binding">asdfas;dkfjn</h5>
 				<p class="card-text"></p>
 			</div>
 			<div class="card-footer text-right">
-				<span class="ng-scope"><a class="remove-recipe-from-book-button btn btn-secondary btn-sm" role="button">Remove from Recipe Book</a></span>
+				<a class="remove-recipe-from-book-button btn btn-outline-secondary btn-sm" role="button">Remove from Recipe Book</a>
 			</div>
 		</div>
 	</div>
-
-	<a id="home-button" class="btn btn-secondary" ng-click="navigateHome()" role="button">Home</a>
 
 </div>

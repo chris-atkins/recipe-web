@@ -118,7 +118,7 @@ describe('the recipe directive', function () {
 			it('a label is shown that indicates the recipe is in the recipe book', function () {
 				var recipeBookLabel = $(inRecipeBookIndicator_Selector);
 				expect(recipeBookLabel).toBeVisible();
-				expect(recipeBookLabel.text()).toBe('In Recipe Book');
+				expect(recipeBookLabel.text()).toBe(' In Recipe Book');
 			});
 		});
 
