@@ -66,6 +66,29 @@
   color: lightgray;
 }
 
+.recipe-card-holder {
+  column-count: 2;
+}
+.recipe-card-holder .recipe{
+
+  display: inline-block;
+  -webkit-transform: scale(.95);
+  -moz-transform:    scale(.95);
+  -o-transform:      scale(.95);
+  -ms-transform:     scale(.95);
+}
+.recipe-card-holder .recipe:hover{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -webkit-transform: scale(.97);
+  -moz-transform:    scale(.97);
+  -o-transform:      scale(.97);
+  -ms-transform:     scale(.97);
+
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+}
+
 .recipe-error-message {
   margin-top: 15px;
 }
