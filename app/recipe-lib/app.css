@@ -129,6 +129,13 @@ body {
 /** END OF THE FOOTER SECTION **/
 
 /** TEXT EDITOR SECTION **/
+trix-editor {
+  background-color: white;
+}
+
+trix-toolbar {
+  background-color: white;
+}
 
 trix-toolbar .dialogs .dialog {
   border: 1px solid #d6d6d6;
