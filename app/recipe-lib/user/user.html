@@ -1,49 +1,41 @@
-<nav class="user-section navbar navbar-light bg-faded hidden-print" ng-controller="UserCtrl">
+<nav class="user-section navbar navbar-toggleable navbar-inverse bg-navy hidden-print" ng-controller="UserCtrl">
 
-		<div class="navbar-nav ml-auto" ng-hide="isLoggedIn">
-			<a class="login-link nav-link" ng-click="toggleLogin()"><small>Log In </small>
-				<i id="expand-login-section-icon" class="fa fa-angle-down fa-lg" ng-show="shrunk()"></i>
-				<i id="shrink-login-section-icon" class="fa fa-angle-up fa-lg" ng-show="expanded()"></i>
-			</a>
-		</div>
-		
-		<div class="navbar-nav ml-auto" ng-show="isLoggedIn">
-			<a id="logged-in-user-message" class=" nav-link" ng-click="toggleLogout()"><small>Welcome, {{user.userName}} </small>
-				<i id="expand-logout-section-icon" class="fa fa-angle-down fa-lg" ng-hide="logoutVisible"></i>
-				<i id="shrink-logout-section-icon" class="fa fa-angle-up fa-lg" ng-show="logoutVisible"></i>
-			</a>
-		</div>
-
-
-	<div class="ml-auto" ng-hide="isLoggedIn">
-
-		<div class="login-fields nav-item" ng-show="shouldShowLogIn()">
-
-			<div class="user-login-message"><small>Please enter your email address to log in or sign up.</small></div>
-
-			<div class="form-inline input-group input-group-sm">
-				<input id="sign-up-user-email" class="form-control input-sm" ng-model="email" placeholder="jane.doe@example.com"></input>
-				<button id="log-in-user-button" class="btn btn-secondary btn-sm" ng-click="logIn()">Log In</button>
-			</div>
-
-		</div>
-		
-		<div class="login-fields nav-item" ng-show="shouldShowSignUp()">
-
-			<div class="user-sign-up-message"><small>What name would you like to use?</small></div>
-
-			<div class="form-inline input-group input-group-sm">
-				<input id="sign-up-user-name" class="form-control input-sm" ng-model="name" placeholder="Jane"></input>
-				<button id="sign-up-user-button" class="btn btn-secondary btn-sm" ng-click="signUp()">Sign Up</button>
-			</div>
-
-		</div>
-
+	<!--<div class="collapse navbar-collapse">-->
+	<div class="navbar-nav">
+		<a class="nav-item nav-link" href="#/home">Home Page</a>
+		<a class="nav-item nav-link" href="#/search-recipes">Browse Recipes</a>
+		<a class="nav-item nav-link" href="#/user/{{user.userId}}/recipe-book">Recipe Book</a>
 	</div>
-	
-	<div class="ml-auto" ng-show="isLoggedIn">
-		<div class="logout-section nav navbar-form login-fields" ng-show="logoutVisible">
-			<button id="log-out-button" class="btn btn-secondary btn-sm" ng-click="logOut()">Log Out</button>
+
+	<div class="navbar-nav ml-auto">
+		<div class="nav-item dropdown">
+			<a class="nav-link dropdown-toggle login-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<small>{{loginMessage}}</small>
+			</a>
+			<div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="logoutLink">
+				<div class="login-fields nav-item" ng-show="shouldShowLogIn()">
+					<div class="user-login-message">
+						<small>Enter your email address to log in or sign up.</small>
+					</div>
+					<div class="form-inline input-group input-group-sm">
+						<input id="sign-up-user-email" class="form-control input-sm" ng-model="email" placeholder="jane.doe@example.com"></input>
+						<button id="log-in-user-button" class="btn btn-secondary btn-sm" ng-click="logIn($event)">Log In</button>
+					</div>
+				</div>
+				<div class="login-fields nav-item" ng-show="shouldShowSignUp()">
+					<div class="user-sign-up-message">
+						<small>What name would you like to use?</small>
+					</div>
+					<div class="form-inline input-group input-group-sm">
+						<input id="sign-up-user-name" class="form-control input-sm" ng-model="name" placeholder="Jane"></input>
+						<button id="sign-up-user-button" class="btn btn-secondary btn-sm" ng-click="signUp()">Sign Up</button>
+					</div>
+				</div>
+				<div class="logout-section nav navbar-form login-fields" ng-show="isLoggedIn">
+					<button id="log-out-button" class="btn btn-outline-secondary btn-sm mx-auto" ng-click="logOut()">Log Out</button>
+				</div>
+			</div>
 		</div>
 	</div>
+	<!--</div>-->
 </nav>

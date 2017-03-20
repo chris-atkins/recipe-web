@@ -8,24 +8,26 @@ angular.module('recipe')
 	
 	$scope.user = userService.getLoggedInUser();
 	$scope.isLoggedIn = userService.isLoggedIn();
-	
+	$scope.loginMessage = buildLoginMessage();
+
 	$scope.loginVisible = false;
 	$scope.logoutVisible = false;
 	$scope.name = '';
 	$scope.email = '';
-	
+
 	$scope.toggleLogin = function() {
 		$scope.loginVisible = !$scope.loginVisible;
 	};
 	
-	$scope.toggleLogout = function() {
-		$scope.logoutVisible = !$scope.logoutVisible;
-	};
-	
-	$scope.logIn = function() {
+	$scope.logIn = function($event) {
+		$event.stopImmediatePropagation();
+		var target = $event.target;
 		loginHasBeenAttempted = true;
 		userService.logIn($scope.email).then(function() {
 			updateUserStatus();
+			if($scope.isLoggedIn) {
+				target.parentElement.click();
+			}
 		});
 	};
 	
@@ -40,18 +42,27 @@ angular.module('recipe')
 		updateUserStatus();
 		resetLogin();
 	};
-	
+
 	$scope.shouldShowLogIn = function() {
-		return $scope.loginVisible && !loginHasBeenAttempted;
+		return !$scope.isLoggedIn && !loginHasBeenAttempted;
 	};
 	
 	$scope.shouldShowSignUp = function() {
-		return $scope.loginVisible && loginHasBeenAttempted;
+		return !$scope.isLoggedIn && loginHasBeenAttempted;
 	};
-	
+
+	function buildLoginMessage() {
+		if ($scope.user  && $scope.user.userId) {
+			return 'Welcome, ' + $scope.user.userName;
+		} else {
+			return 'Log In';
+		}
+	}
+
 	function updateUserStatus() {
 		$scope.user = userService.getLoggedInUser();
 		$scope.isLoggedIn = userService.isLoggedIn();
+		$scope.loginMessage = buildLoginMessage();
 	}
 	
 	function resetLogin() {
@@ -122,10 +133,10 @@ angular.module('recipe')
 		var userFromCookie = $cookies.getObject(userCookieKey);
 		if (userFromCookie === undefined) {
 			loggedIn = false;
-			loggedInUser = {}; 
+			loggedInUser = {};
 		} else {
 			loggedIn = true;
-			loggedInUser = userFromCookie; 
+			loggedInUser = userFromCookie;
 		}
 	}
 	

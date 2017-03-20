@@ -12,12 +12,8 @@ describe('Login functionality from the home page', function() {
 	var signupButton = element(by.id('sign-up-user-button'));
 	var signupNameField = element(by.id('sign-up-user-name'));
 	var loginEmailField = element(by.id('sign-up-user-email'));
-	var loggedInUserLink = element(by.id('logged-in-user-message'));
+	var loggedInUserLink = userSection.element(by.className('login-link'));
 	var logoutButton = element(by.id('log-out-button'));
-	var loginExpandedIcon = element(by.id('shrink-login-section-icon'));
-	var loginShrunkIcon = element(by.id('expand-login-section-icon'));
-	var userExpandedIcon = element(by.id('shrink-logout-section-icon'));
-	var userShrunkIcon = element(by.id('expand-logout-section-icon'));
 
 	beforeAll(function() {
 		browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser');
@@ -49,15 +45,11 @@ describe('Login functionality from the home page', function() {
 				expect(userLoginMessage.isDisplayed()).toBe(true);
 				expect(loginEmailField.isDisplayed()).toBe(true);
 				expect(loginButton.isDisplayed()).toBe(true);
-				expect(loginExpandedIcon.isDisplayed()).toBe(true);
-				expect(loginShrunkIcon.isDisplayed()).toBe(false);
 
 				loginLink.click();
 				expect(signupNameField.isDisplayed()).toBe(false);
 				expect(loginEmailField.isDisplayed()).toBe(false);
 				expect(userLoginMessage.isDisplayed()).toBe(false);
-				expect(loginExpandedIcon.isDisplayed()).toBe(false);
-				expect(loginShrunkIcon.isDisplayed()).toBe(true);
 			});
 		});
 		
@@ -105,7 +97,7 @@ describe('Login functionality from the home page', function() {
 	function expectLoginFieldsAreDisplayed() {
 		expect(userSignUpMessage.isDisplayed()).toBe(false);
 		expect(userLoginMessage.isDisplayed()).toBe(true);
-		expect(userLoginMessage.getText()).toBe("Please enter your email address to log in or sign up.");
+		expect(userLoginMessage.getText()).toBe("Enter your email address to log in or sign up.");
 		expect(signupNameField.isDisplayed()).toBe(false);
 		expect(loginEmailField.isDisplayed()).toBe(true);
 		expect(loginButton.isDisplayed()).toBe(true);
@@ -202,12 +194,8 @@ describe('Login functionality from the home page', function() {
 			signupNameField.sendKeys('OhaiOneMoreTime');
 			signupButton.click();			
 			expectLoggedInUserLinkToBe('Welcome, OhaiOneMoreTime');
-			expect(userExpandedIcon.isDisplayed()).toBe(false);
-			expect(userShrunkIcon.isDisplayed()).toBe(true);
-			
+
 			loggedInUserLink.click();
-			expect(userExpandedIcon.isDisplayed()).toBe(true);
-			expect(userShrunkIcon.isDisplayed()).toBe(false);
 			expect(logoutButton.isDisplayed()).toBe(true);
 			expect(logoutButton.getText()).toBe('Log Out');
 			

@@ -1,9 +1,8 @@
-
 <!--<nav class="navbar navbar-toggleable navbar-light bg-faded hidden-print user-section">-->
 <!--<nav class="navbar navbar-toggleable navbar-inverse bg-inverse hidden-print user-section">-->
 <!--<nav class="navbar navbar-toggleable navbar-inverse bg-maroon hidden-print user-section">-->
 <nav class="navbar navbar-toggleable navbar-inverse bg-navy hidden-print user-section">
-<!--<nav class="navbar navbar-toggleable navbar-inverse bg-teal hidden-print user-section">-->
+	<!--<nav class="navbar navbar-toggleable navbar-inverse bg-teal hidden-print user-section">-->
 	<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 		<div class="navbar-nav">
 			<a class="nav-item nav-link" href="#/home">Home Page</a>
@@ -15,6 +14,19 @@
 				<small>Welcome, Chris</small>
 				<i id="expand-logout-section-icon" class="fa fa-angle-down fa-lg"></i>
 			</a>
+		</div>
+		<div class="navbar-nav ml-auto">
+			<div class="nav-item dropdown">
+				<a id="logoutLink" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<small>Welcome, Chris</small>
+					<!--<i id="expand-logout-section-icon" class="fa fa-angle-down fa-lg"></i>-->
+				</a>
+				<div class="dropdown-menu" aria-labelledby="logoutLink">
+					<div class="logout-section nav navbar-form login-fields">
+						<button id="log-out-button" class="btn btn-secondary btn-sm">Log Out</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </nav>

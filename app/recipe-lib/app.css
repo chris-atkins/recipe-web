@@ -12,8 +12,25 @@
   color: #595959;
 }
 
-.user-section .login-fields {
-  padding-top: 1em;
+.user-dropdown-menu {
+  padding-left: 8px;
+  padding-right: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: #001f3f;
+  min-width: 4.5rem;
+}
+.user-dropdown-menu .login-fields{
+  width: 300px;
+}
+.user-dropdown-menu .logout-section {
+  width: 4.5rem;
+  margin-right: 0px;
+}
+.user-dropdown-menu .user-login-message {
+  margin-bottom: 5px;
+}
+.user-dropdown-menu .user-sign-up-message {
+  margin-bottom: 5px;
 }
 
 /*.user-section .navbar-link a{*/
