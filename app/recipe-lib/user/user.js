@@ -2,103 +2,25 @@
 
 angular.module('recipe')
 
-.controller('UserCtrl', function($scope, $http, userService) {
-	
-	var loginHasBeenAttempted = false;
-	
-	$scope.user = userService.getLoggedInUser();
-	$scope.isLoggedIn = userService.isLoggedIn();
-	$scope.loginMessage = buildLoginMessage();
-
-	$scope.loginVisible = false;
-	$scope.logoutVisible = false;
-	$scope.name = '';
-	$scope.email = '';
-
-	$scope.toggleLogin = function() {
-		$scope.loginVisible = !$scope.loginVisible;
-	};
-	
-	$scope.logIn = function($event) {
-		$event.stopImmediatePropagation();
-		var target = $event.target;
-		loginHasBeenAttempted = true;
-		userService.logIn($scope.email).then(function() {
-			updateUserStatus();
-			if($scope.isLoggedIn) {
-				target.parentElement.click();
-			}
-		});
-	};
-	
-	$scope.signUp = function() {
-		userService.signUp($scope.name, $scope.email).then(function() {
-			updateUserStatus();
-		});
-	};
-	
-	$scope.logOut = function() {
-		userService.logOut();
-		updateUserStatus();
-		resetLogin();
-	};
-
-	$scope.shouldShowLogIn = function() {
-		return !$scope.isLoggedIn && !loginHasBeenAttempted;
-	};
-	
-	$scope.shouldShowSignUp = function() {
-		return !$scope.isLoggedIn && loginHasBeenAttempted;
-	};
-
-	function buildLoginMessage() {
-		if ($scope.user  && $scope.user.userId) {
-			return 'Welcome, ' + $scope.user.userName;
-		} else {
-			return 'Log In';
-		}
-	}
-
-	function updateUserStatus() {
-		$scope.user = userService.getLoggedInUser();
-		$scope.isLoggedIn = userService.isLoggedIn();
-		$scope.loginMessage = buildLoginMessage();
-	}
-	
-	function resetLogin() {
-		$scope.loginVisible = false;
-		$scope.logoutVisible = false;
-		loginHasBeenAttempted = false;
-	}
-
-	$scope.expanded = function() {
-		return $scope.loginVisible;
-	};
-
-	$scope.shrunk = function() {
-		return !$scope.loginVisible;
-	};
-})
-
 .factory('userService', function($http, $cookies) {
-	
+
 	var userCookieKey = 'myrecipeconnection.com.usersLoggedInFromThisBrowser';
 	var now = new Date();
-    var cookieExpires = new Date(now.getFullYear() + 100, now.getMonth(), now.getDate());
-	
+	var cookieExpires = new Date(now.getFullYear() + 100, now.getMonth(), now.getDate());
+
 	var loggedIn;
 	var loggedInUser;
-	
+
 	initializeUserAndLoggedInStatus();
-	
+
 	var isLoggedIn = function() {
 		return loggedIn;
 	};
-	
+
 	var getLoggedInUser = function() {
 		return loggedInUser;
 	};
-		
+
 	var logIn = function(email) {
 		return $http.get('api/user?email=' + email)
 		.success(function(user) {
@@ -109,10 +31,10 @@ angular.module('recipe')
 			return {};
 		});
 	};
-	
+
 	var signUp = function(name, email) {
 		var userToSave = {userName: name, userEmail: email};
-		
+
 		return $http.post('/api/user', userToSave)
 		.success(function(user) {
 			handleNewlyLoggedInUser(user);
@@ -122,13 +44,13 @@ angular.module('recipe')
 			return {};
 		});
 	};
-	
+
 	var logOut = function() {
 		$cookies.remove(userCookieKey);
 		loggedInUser = {};
 		loggedIn = false;
 	};
-	
+
 	function initializeUserAndLoggedInStatus() {
 		var userFromCookie = $cookies.getObject(userCookieKey);
 		if (userFromCookie === undefined) {
@@ -139,17 +61,17 @@ angular.module('recipe')
 			loggedInUser = userFromCookie;
 		}
 	}
-	
+
 	function handleNewlyLoggedInUser(user) {
 		loggedInUser = user;
 		loggedIn = true;
 		saveUserToCookie(user);
 	}
-	
+
 	function saveUserToCookie(user) {
 		$cookies.putObject(userCookieKey, user, {expires:cookieExpires});
 	}
-	
+
 	return {
 		getLoggedInUser: getLoggedInUser,
 		isLoggedIn: isLoggedIn,

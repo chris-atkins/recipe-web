@@ -169,7 +169,7 @@ describe('the view recipe controller', function () {
 			angular.mock.inject(function ($httpBackend, $templateCache) {
 				$httpBackend.expect('GET', 'api/recipe/undefined').respond({});
 				$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond({});
-				$httpBackend.expect('GET', 'recipe-lib/user/user.html').respond('<div></div>');
+				$httpBackend.expect('GET', 'recipe-lib/navbar/navbar.html').respond('<div></div>');
 
 				setFixtures($templateCache.get('recipe-lib/view-recipe/view-recipe.html'));
 
