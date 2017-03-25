@@ -17,9 +17,13 @@
 }
 .user-section {
 	/* background-color: #5EE896; */
-  margin-bottom: 23px;
+  /*margin-bottom: 23px;*/
   padding: 5px 27px;
   color: #595959;
+}
+
+.navbar-spacer {
+  height: 73px;
 }
 
 .user-dropdown-menu {
