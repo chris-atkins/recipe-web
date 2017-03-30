@@ -27,4 +27,12 @@ angular.module('recipe')
 	$scope.shouldShowErrorMessage = function() {
 		return userHasClickedRecipeBook && !userService.isLoggedIn();
 	};
+
+	$scope.navigateToBrowseRecipes = function() {
+		$location.url('/search-recipes');
+	};
+
+	$scope.navigateToSaveNewRecipe = function() {
+		$location.url('/new-recipe');
+	};
 });

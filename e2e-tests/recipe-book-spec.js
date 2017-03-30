@@ -38,7 +38,7 @@ describe('the recipe book system', function() {
 			browser.get('/#/home');
 
 			expect(recipeBookButton.isDisplayed()).toBe(true);
-			expect(recipeBookButton.getText()).toBe('My Recipe Book');
+			expect(recipeBookButton.getText()).toMatch(/^My Recipe Book.*/);
 			expect(errorMessage.isDisplayed()).toBe(false);
 		});
 

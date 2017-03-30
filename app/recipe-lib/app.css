@@ -76,8 +76,15 @@
 .recipe-card-holder {
   column-count: 2;
 }
-.recipe-card-holder .recipe{
 
+.home-nav-button-holder {
+  column-count: 3;
+  margin-top: 3.5rem;
+  margin-bottom: 5rem;
+}
+
+
+.recipe-card-holder .recipe{
   display: inline-block;
   -webkit-transform: scale(.95);
   -moz-transform:    scale(.95);

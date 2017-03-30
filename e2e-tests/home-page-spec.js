@@ -48,14 +48,14 @@ describe('the home page', function() {
 
 	  it('has a Search Recipes button that navigates to the search screen', function() {
 		  var searchButton = element(by.id('search-button'));
-		  expect(searchButton.getText()).toBe('Browse Recipes');
+		  expect(searchButton.getText()).toMatch(/^Browse Recipes.*/);
 		  searchButton.click();
 		  expect(browser.getLocationAbsUrl()).toMatch('/search-recipes');
 	  });
 
 	  it('has a Save Recipe button that navigates to the save screen', function() {
 		  var saveButton = element(by.id('save-button'));
-		  expect(saveButton.getText()).toBe('Save New Recipe');
+		  expect(saveButton.getText()).toMatch(/^Save New Recipe.*/);
 		  saveButton.click();
 		  expect(browser.getLocationAbsUrl()).toMatch('/new-recipe');
 	  });
