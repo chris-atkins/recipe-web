@@ -2,9 +2,5 @@
 
 <div class="container">
 	<h2><span id="page-title">Recipe Book: {{user.userName}}</span></h2>
-
 	<div recipe-card-wall recipe-list="recipeList" recipe-book-mode="true" owning-user-id="{{user.userId}}" recipe-removal-callback="removeRecipeFromBook" class="recipe-card-wall"></div>
-
-	<a id="home-button" class="btn btn-secondary" ng-click="navigateHome()" role="button">Home</a>
-
 </div>

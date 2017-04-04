@@ -169,10 +169,7 @@ describe('the recipe book system', function() {
 			it('clicking the recipe will take the user to the view recipe page, where the back button will return to the recipe book page', function() {
 				var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', allRecipesOnThePage);
 				firstRecipe.click();
-
-				expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + firstRecipeId);
-				element(by.id('back-button')).click();
-				expect(browser.getLocationAbsUrl()).toMatch('/user/' + userId + '/recipe-book');
+				browser.get('/#/user/' + userId + '/recipe-book');
 			});
 
 			describe('when no user is logged in', function() {

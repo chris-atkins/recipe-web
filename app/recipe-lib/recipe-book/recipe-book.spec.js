@@ -73,21 +73,11 @@ describe('the recipe book module', function () {
 		return false;
 	}
 
-	it('has a user section', function () {
+	it('has a navbar section', function () {
 		SpecUtils.loadPage('recipe-lib/recipe-book/recipe-book.html', scope);
 		var navbarSection = $('.navbar-section');
 
 		expect(navbarSection.length).toBe(1);
-	});
-
-	it('can navigate to the home screen', function () {
-		spyOn(location, 'url');
-		SpecUtils.loadPage('recipe-lib/recipe-book/recipe-book.html', scope);
-
-		var homeButton = $('#home-button');
-		SpecUtils.clickElement(homeButton);
-
-		expect(location.url).toHaveBeenCalledWith('/home');
 	});
 
 	describe('clicking on a recipe will navigate to that recipes page', function () {

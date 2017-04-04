@@ -65,13 +65,6 @@ describe('the new recipe page,', function () {
             it('does not show the error message', function () {
                 expect(errorMessage.isDisplayed()).toBe(false);
             });
-
-            it('has a home button that navigates back to the home page', function () {
-                var homeButton = element(by.id('home-button'));
-                expect(homeButton.getText()).toBe('Home');
-                homeButton.click();
-                expect(browser.getLocationAbsUrl()).toMatch('/home');
-            });
         });
 
         describe('the save button', function () {

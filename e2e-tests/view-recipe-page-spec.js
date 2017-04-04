@@ -85,75 +85,9 @@ describe('the vew recipe page', function() {
 				expect(recipeContentElement.getText()).toBe('First Line\nSecond Line');
 			});
 		});
-
-		describe('navigation', function () {
-
-			beforeEach(function () {
-				browser.get('/#/view-recipe/' + recipeId);
-			});
-
-			it('has a home button that navigates to the home page', function () {
-				var homeButton = element(by.id('home-button'));
-				expect(homeButton.getText()).toBe('Home');
-				homeButton.click();
-				expect(browser.getLocationAbsUrl()).toMatch('/home');
-			});
-
-		});
 	});
-
-	describe('the back button', function() {
-
-		var backButton = element(by.id('back-button'));
-
-		it('navigates back to the browse screen if it was the path used to get to the view page', function() {
-			browser.get('/#/search-recipes?searchFor=all');
-
-			var allRecipes = element.all(by.className('recipe'));
-			var recipe = pageUtils.findRecipeWithName('Recipe Being Tested - Name', allRecipes);
-
-			recipe.click();
-			expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId);
-
-			expect(backButton.isPresent()).toBe(true);
-			expect(backButton.isDisplayed()).toBe(true);
-			backButton.click();
-
-			expect(browser.getLocationAbsUrl()).toBe('/search-recipes?searchFor=all');
-		});
-
-		it('navigates back to the browse screen if it was the path used to get to the view page', function() {
-			browser.get("/#/search-recipes");
-
-			var searchInput = element(by.id('search-input'));
-			var searchButton = element(by.id('search-button'));
-			searchInput.sendKeys('Recipe');
-			searchButton.click();
-
-			var recipe = pageUtils.findRecipeWithName('Recipe Being Tested - Name', element.all(by.className('recipe')));
-
-			recipe.click();
-			expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId);
-
-			expect(backButton.isPresent()).toBe(true);
-			expect(backButton.isDisplayed()).toBe(true);
-			backButton.click();
-
-			expect(browser.getLocationAbsUrl()).toMatch('/search-recipes');
-		});
-
-		it('does not show up if there was no previous screen (like if it was navigated to with a bookmark)', function() {
-			browser.get('/#/view-recipe/' + recipeId);
-			browser.refresh();
-
-			expect(backButton.isPresent()).toBe(false);
-		});
-	});
-
 
 	var editRecipeButton = element(by.id('edit-recipe-button'));
-	var homeButton = element(by.id('home-button'));
-	var backButton = element(by.id('back-button'));
 	var cancelEditButton = element(by.id('cancel-edit-button'));
 	var updateRecipeButton = element(by.id('update-recipe-button'));
 	var recipeNameInput = element(by.css('input#recipe-name-input'));
@@ -190,8 +124,6 @@ describe('the vew recipe page', function() {
 			editRecipeButton.click();
 
 			expect(editRecipeButton.isDisplayed()).toBe(false);
-			expect(homeButton.isDisplayed()).toBe(false);
-			expect(backButton.isDisplayed()).toBe(false);
 
 			expect(cancelEditButton.isDisplayed()).toBe(true);
 			expect(cancelEditButton.getText()).toBe('Cancel');

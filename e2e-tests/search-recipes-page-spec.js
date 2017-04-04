@@ -81,10 +81,6 @@ describe('the search recipes page', function() {
 			expect(showAllRecipesButton.getText()).toBe('Show All Recipes');
 		});
 		
-		it('has a home button', function() {
-			expect(homeButton.getText()).toBe('Home');
-		});
-		
 		it('all recipes are shown on the page when first navigated to', function() {
 			expect(recipeListHolder.isDisplayed()).toBe(true);
 			expect(recipeList.count()).toBe(3);
@@ -173,11 +169,6 @@ describe('the search recipes page', function() {
 			browser.get("/#/search-recipes");
 		});
 		
-		it('the home button navigates to the home page', function() {
-			homeButton.click();
-			expect(browser.getLocationAbsUrl()).toMatch('/home');
-		});
-		
 		it('for each recipe after searching, clicking the recipe navigates to that recipes individual view page', function() {
 			searchInput.sendKeys('findMe');
 			searchButton.click();
@@ -197,7 +188,7 @@ describe('the search recipes page', function() {
 			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
 
 			findRecipeLink(firstRecipe).click();
-			backButton.click();
+			browser.navigate().back();
 
 			expect(searchInput.getAttribute('value')).toBe('findMe');
 			var foundRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
