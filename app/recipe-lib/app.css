@@ -26,6 +26,16 @@
   height: 73px;
 }
 
+.login-required-alert {
+  position: absolute;
+  top: 79%;
+  left: 33%;
+}
+
+.login-required-alert .message {
+  margin-right: 18px;
+}
+
 .user-dropdown-menu {
   padding-left: 8px;
   padding-right: 8px;

@@ -2,7 +2,7 @@
 
 angular.module('recipe')
 
-.controller('NavbarCtrl', function($scope, $http, userService) {
+.controller('NavbarCtrl', function($scope, $http, userService, $location) {
 	
 	var loginHasBeenAttempted = false;
 	
@@ -14,7 +14,44 @@ angular.module('recipe')
 	$scope.logoutVisible = false;
 	$scope.name = '';
 	$scope.email = '';
-	
+
+	$scope.alertVisible = false;
+	$scope.isAlertVisible = function() {
+		return $scope.alertVisible;
+	};
+	$scope.setAlertVisible = function(value) {
+		$scope.alertVisible = value;
+		// $scope.$digest();
+	};
+
+	$scope.navigateHome = function() {
+		$location.url('/home');
+	};
+
+	$scope.navigateBrowse = function() {
+		$location.url('/search-recipes');
+	};
+
+	$scope.navigateSave = function() {
+		if (userService.isLoggedIn()) {
+			$location.url('/new-recipe');
+		} else {
+			$scope.setAlertVisible(true);
+		}
+	};
+
+	$scope.navigateRecipeBook = function() {
+		if (userService.isLoggedIn()) {
+			$location.url('/user/' + userService.getLoggedInUser().userId + '/recipe-book');
+		} else {
+			$scope.setAlertVisible(true);
+		}
+	};
+
+	$scope.loginClicked = function() {
+		$scope.setAlertVisible(false);
+	};
+
 	$scope.logIn = function($event) {
 		$event.stopImmediatePropagation();
 		var target = $event.target;

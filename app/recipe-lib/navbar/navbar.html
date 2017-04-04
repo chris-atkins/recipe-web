@@ -1,15 +1,15 @@
 <nav class="user-section navbar fixed-top navbar-toggleable navbar-inverse bg-navy hidden-print" ng-controller="NavbarCtrl">
 
-	<!--<div class="collapse navbar-collapse">-->
 	<div class="navbar-nav">
-		<a class="nav-item nav-link" href="#/home">Home Page</a>
-		<a class="nav-item nav-link" href="#/search-recipes">Browse Recipes</a>
-		<a class="nav-item nav-link" href="#/user/{{user.userId}}/recipe-book">Recipe Book</a>
+		<a class="nav-item nav-link nav-home-page-link" ng-click="navigateHome()">Home Page</a>
+		<a class="nav-item nav-link nav-browse-page-link" ng-click="navigateBrowse()">Browse Recipes</a>
+		<a class="nav-item nav-link nav-save-page-link" ng-click="navigateSave()">Save Recipe</a>
+		<a class="nav-item nav-link nav-recipe-book-page-link" ng-click="navigateRecipeBook()">Recipe Book</a>
 	</div>
 
 	<div class="navbar-nav ml-auto">
 		<div class="nav-item dropdown">
-			<a class="nav-link dropdown-toggle login-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<a class="nav-link dropdown-toggle login-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="loginClicked()">
 				<small>{{loginMessage}}</small>
 			</a>
 			<div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="logoutLink">
@@ -37,6 +37,15 @@
 			</div>
 		</div>
 	</div>
-	<!--</div>-->
+
+	<div class="alert alert-danger login-required-alert" ng-show="isAlertVisible()">
+		<button type="button" class="close" aria-label="Close" ng-click="setAlertVisible(false)">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<span class="message">You must be logged in to perform this action.</span>
+	</div>
 </nav>
-<div class="navbar-spacer"/>
+
+
+<div class="navbar-spacer"></div>
+
