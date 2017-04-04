@@ -15,7 +15,7 @@
 .recipe-name.card-title {
   color: #555555;
 }
-.user-section {
+.navbar-section {
 	/* background-color: #5EE896; */
   /*margin-bottom: 23px;*/
   padding: 5px 27px;
@@ -57,10 +57,10 @@
   margin-bottom: 5px;
 }
 
-/*.user-section .navbar-link a{*/
+/*.navbar-section .navbar-link a{*/
   /*transition: all .25s ease;*/
 /*}*/
-/*.user-section .navbar-link  a:hover {*/
+/*.navbar-section .navbar-link  a:hover {*/
   /*color: #0275d8 !important;*/
   /*!*text-decoration: underline;*!*/
   /*!*transition-delay: .15s;*!*/

@@ -75,9 +75,9 @@ describe('the recipe book module', function () {
 
 	it('has a user section', function () {
 		SpecUtils.loadPage('recipe-lib/recipe-book/recipe-book.html', scope);
-		var userSection = $('.user-section');
+		var navbarSection = $('.navbar-section');
 
-		expect(userSection.length).toBe(1);
+		expect(navbarSection.length).toBe(1);
 	});
 
 	it('can navigate to the home screen', function () {

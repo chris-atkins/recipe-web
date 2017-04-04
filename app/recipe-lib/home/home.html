@@ -49,9 +49,11 @@
 		</div>
 	</div>
 
-	<div ng-show="shouldShowErrorMessage()">
-		<p id="recipe-book-error-message" class="recipe-error-message alert alert-danger">In order to see your own recipe book you must be logged in. Click the 'Log In' link in the top right
-			corner and enter your email address.</p>
+	<div class="alert alert-danger login-required-alert" ng-show="shouldShowErrorMessage()">
+		<button id="close-alert" type="button" class="close" aria-label="Close" ng-click="hideErrorMessage()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<span id="alert-message" class="message">You must be logged in to perform this action.</span>
 	</div>
 </div>
 

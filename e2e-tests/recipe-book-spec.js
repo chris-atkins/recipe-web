@@ -9,7 +9,7 @@ describe('the recipe book system', function() {
 	var userId;
 
 	var recipeBookButton = element(by.id('recipe-book-button'));
-	var errorMessage = element(by.id('recipe-book-error-message'));
+		var errorMessage = element(by.id('alert-message'));
 	var allRecipesOnThePage = element.all(by.className('recipe'));
 
 	beforeAll(function(done) {
@@ -132,8 +132,8 @@ describe('the recipe book system', function() {
 		});
 
 		it('shows a user section', function () {
-			var userSection = element(by.className('user-section'));
-			expect(userSection.isPresent()).toBe(true);
+			var navbarSection = element(by.className('navbar-section'));
+			expect(navbarSection.isPresent()).toBe(true);
 		});
 
 		it('shows a title', function () {

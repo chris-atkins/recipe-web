@@ -11,10 +11,10 @@ angular.module('recipe')
 
 .controller('HomeCtrl', function($scope, $location, userService) {
 
-	var userHasClickedRecipeBook = false;
+	var userHasClickedLoginSensitiveButton = false;
 
 	$scope.navigateToRecipeBook = function() {
-		userHasClickedRecipeBook = true;
+		userHasClickedLoginSensitiveButton = true;
 		if (!userService.isLoggedIn()) {
 			return;
 		}
@@ -24,8 +24,12 @@ angular.module('recipe')
 		$location.url(recipeBookUrl);
 	};
 
+	$scope.hideErrorMessage = function() {
+		userHasClickedLoginSensitiveButton = false;
+	};
+
 	$scope.shouldShowErrorMessage = function() {
-		return userHasClickedRecipeBook && !userService.isLoggedIn();
+		return userHasClickedLoginSensitiveButton && !userService.isLoggedIn();
 	};
 
 	$scope.navigateToBrowseRecipes = function() {
@@ -33,6 +37,11 @@ angular.module('recipe')
 	};
 
 	$scope.navigateToSaveNewRecipe = function() {
+		userHasClickedLoginSensitiveButton = true;
+		if (!userService.isLoggedIn()) {
+			return;
+		}
+
 		$location.url('/new-recipe');
 	};
 });

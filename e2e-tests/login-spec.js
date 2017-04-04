@@ -4,15 +4,15 @@ var dataUtils = require('./utils/data-utils');
 
 describe('Login functionality from the home page', function() {
 	
-	var userSection = element(by.className('user-section'));
-	var loginLink = userSection.element(by.className('login-link'));
-	var userLoginMessage = userSection.element(by.className('user-login-message'));
+	var navbarSection = element(by.className('navbar-section'));
+	var loginLink = navbarSection.element(by.className('login-link'));
+	var userLoginMessage = navbarSection.element(by.className('user-login-message'));
 	var loginButton = element(by.id('log-in-user-button'));
-	var userSignUpMessage = userSection.element(by.className('user-sign-up-message'));
+	var userSignUpMessage = navbarSection.element(by.className('user-sign-up-message'));
 	var signupButton = element(by.id('sign-up-user-button'));
 	var signupNameField = element(by.id('sign-up-user-name'));
 	var loginEmailField = element(by.id('sign-up-user-email'));
-	var loggedInUserLink = userSection.element(by.className('login-link'));
+	var loggedInUserLink = navbarSection.element(by.className('login-link'));
 	var logoutButton = element(by.id('log-out-button'));
 
 	beforeAll(function() {

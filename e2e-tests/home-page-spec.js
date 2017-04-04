@@ -14,8 +14,8 @@ describe('the home page', function() {
 	  });
 		
 		it('has a user section', function() {
-			var userSection = element(by.className('user-section'));
-			expect(userSection.isPresent()).toBe(true);
+			var navbarSection = element(by.className('navbar-section'));
+			expect(navbarSection.isPresent()).toBe(true);
 		});
 	  
 	  it('has a title', function() {
@@ -51,13 +51,6 @@ describe('the home page', function() {
 		  expect(searchButton.getText()).toMatch(/^Browse Recipes.*/);
 		  searchButton.click();
 		  expect(browser.getLocationAbsUrl()).toMatch('/search-recipes');
-	  });
-
-	  it('has a Save Recipe button that navigates to the save screen', function() {
-		  var saveButton = element(by.id('save-button'));
-		  expect(saveButton.getText()).toMatch(/^Save New Recipe.*/);
-		  saveButton.click();
-		  expect(browser.getLocationAbsUrl()).toMatch('/new-recipe');
 	  });
   });
 });

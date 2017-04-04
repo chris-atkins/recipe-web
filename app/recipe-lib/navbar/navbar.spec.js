@@ -1,6 +1,6 @@
 'use strict';
 
-fdescribe('the navbar module', function () {
+describe('the navbar module', function () {
 
 	var scope, location, http, userService;
 	var loggedInUser = {'userId': 'userId1', 'userName': 'Me', 'userEmail': 'i'};

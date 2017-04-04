@@ -3,7 +3,7 @@
 var searchInput = element(by.id('search-input'));
 var searchButton = element(by.id('search-button'));
 var pageTitle = element(by.id('search-recipes-page-title'));
-var userSection = element(by.className('user-section'));
+var navbarSection = element(by.className('navbar-section'));
 var showAllRecipesButton = element(by.css('button#show-all-recipes-button'));
 var homeButton = element(by.id('home-button'));
 var recipeListHolder = element(by.id('recipe-list'));
@@ -19,7 +19,7 @@ module.exports = {
 	searchInput: searchInput,
 	searchButton: searchButton,
 	pageTitle: pageTitle,
-	userSection: userSection,
+	userSection: navbarSection,
 	showAllRecipesButton: showAllRecipesButton,
 	homeButton: homeButton,
 	recipeListHolder: recipeListHolder,

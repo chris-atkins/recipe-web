@@ -39,8 +39,8 @@ describe('the new recipe page,', function () {
             });
 
             it('has a user section', function () {
-                var userSection = element(by.className('user-section'));
-                expect(userSection.isPresent()).toBe(true);
+                var navbarSection = element(by.className('navbar-section'));
+                expect(navbarSection.isPresent()).toBe(true);
             });
 
             it('has a title', function () {
