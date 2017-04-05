@@ -7,7 +7,9 @@ angular.module('recipe', [
 	'angularTrix',
 	'myApp.view1',
 	'myApp.view2',
-	'myApp.version'
+	'myApp.version',
+	'ngFileUpload',
+	'ngImgCrop'
 ])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.otherwise({redirectTo: '/home'});
