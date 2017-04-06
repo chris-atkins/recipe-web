@@ -18,6 +18,8 @@ module.exports = function (config) {
 			'app/bower_components/underscore/underscore.js',
 			'app/bower_components/jquery/dist/jquery.js',
 			'app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+			'app/bower_components/ng-file-upload/ng-file-upload-all.js',
+			'app/bower_components/ng-img-crop/compile/unminified/ng-img-crop.js',
 			'app/recipe-lib/**/*.js',
 			'app/recipe-lib/**/*.html'
 		],
