@@ -16,7 +16,7 @@ angular.module('recipe')
 
 	$scope.upload = function (dataUrl, name) {
 		Upload.upload({
-			url: 'somewhere',
+			url: 'http://localhost:8000/api/recipe/1234/image',
 			data: {
 				file: Upload.dataUrltoBlob(dataUrl, name)
 			}

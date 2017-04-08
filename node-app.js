@@ -3,6 +3,8 @@ var express = require('express');
 
 var http = require('http');
 var path = require('path');
+var multiparty = require('multiparty');
+var FormData = require('form-data');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var rs = require('request-promise');
@@ -262,6 +264,38 @@ app.put('/api/recipe/:recipeId', function(request, response, next) {
 	.catch(function(error) {
 		console.log('Error putting a new recipe:', recipe, 'Error:', error);
 	});
+});
+
+app.post('/api/recipe/:recipeId/image', function(request, response, next) {
+	var recipeId =  request.params.recipeId;
+	var form = new multiparty.Form();
+
+	form.on("part", function(part){
+		if(part.filename)
+		{
+			var form = new FormData();
+			form.append("file", part, {filename: part.filename,contentType: part["content-type"]});
+
+			var url = serviceRoot + '/recipe/' + recipeId + '/image';
+			var r = rs.post(
+				url,
+				{ "headers":
+					{"transfer-encoding": "chunked"}
+				},
+				function(err, res, body){
+					response.send(res);
+				});
+
+			r._form = form;
+		}
+	});
+
+	form.on("error", function(error){
+		console.log(error);
+		// response.send(error);
+	});
+
+	form.parse(request);
 });
 
 app.post('/api/user', function(request, response, next) {
