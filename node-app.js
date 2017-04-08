@@ -283,8 +283,9 @@ app.post('/api/recipe/:recipeId/image', function(request, response, next) {
 					{"transfer-encoding": "chunked"}
 				},
 				function(err, res, body){
+					response.statusCode = res.statusCode;
 					response.send(res);
-				});
+			});
 
 			r._form = form;
 		}
@@ -292,7 +293,6 @@ app.post('/api/recipe/:recipeId/image', function(request, response, next) {
 
 	form.on("error", function(error){
 		console.log(error);
-		// response.send(error);
 	});
 
 	form.parse(request);
