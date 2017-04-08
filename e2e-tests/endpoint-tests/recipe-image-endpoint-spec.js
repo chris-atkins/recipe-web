@@ -34,24 +34,6 @@ describe('the Recipe Image endpoints', function () {
 	});
 
 	function performRecipeImagePOST(options) {
-		// var postOptions = {
-		// 	uri : config.apiBaseUrl + '/recipe/' + recipeId + '/image',
-		// 	headers : {
-		// 		'Content-Type' : 'multipart/form-data; boundary=----WebKitFormBoundary6kNHU5Tc5TWXmnHV',
-		// 		'Content-Length' : 1234,
-		// 		'RequestingUser' : userId,
-		// 		'Accept': 'application/json'
-		// 	},
-		// 	body: '------WebKitFormBoundary6kNHU5Tc5TWXmnHV\n' +
-		// 	'Content-Disposition: form-data; name="file"; filename="/Users/chrisatkins/git/recipe-web/e2e-tests/endpoint-tests/pexels-photo-48726.jpeg"\n' +
-		// 	'Content-Type: image/png\n\n' +
-		// 	'------WebKitFormBoundary6kNHU5Tc5TWXmnHV--',
-		//
-		// 	simple: false //https://github.com/request/request-promise
-		// };
-		var stats = fs.statSync('/Users/chrisatkins/git/recipe-web/e2e-tests/endpoint-tests/pexels-photo-48726.jpeg');
-		var fileSizeInBytes = stats.size;
-
 		var postOptions = {
 			uri: config.apiBaseUrl + '/recipe/' + recipeId + '/image',
 			headers: {
@@ -114,7 +96,6 @@ describe('the Recipe Image endpoints', function () {
 		performRecipeImagePOST({responseType: 'full'})
 		.then(function (response) {
 			var body = JSON.parse(response.body);
-
 			expect(response.statusCode).toBe(200);
 			expect(body.imageId).toBeTruthy();
 			expect(body.imageUrl).toBeTruthy();
@@ -124,14 +105,6 @@ describe('the Recipe Image endpoints', function () {
 			expect(response.statusCode).toBe(200);
 		})
 		.then(done, done.fail);
-
-		// var recipeIdToPost = {recipeId: listOfRecipeIds[0]};
-		// performRecipeBookPOSTRecipe(recipeIdToPost, {responseType: 'full'})
-		// .then(function(response) {
-		// 	expect(response.statusCode).toBe(200);
-		// 	expect(response.body).toEqual(recipeIdToPost);
-		// })
-		// .then(done, done.fail);
 	});
 
 	it('once posted, an image will have a link that is part of the recipe', function (done) {
@@ -153,7 +126,7 @@ describe('the Recipe Image endpoints', function () {
 		done();
 	});
 
-	it('the recipe image can be DELETED', function (done) {
+	it('the recipe image can be DELETED, which results in the url being removed from the recipe', function (done) {
 		// var sizeWithAllIds;
 		// var recipeIdToDelete = listOfRecipeIds[2];
 		//
