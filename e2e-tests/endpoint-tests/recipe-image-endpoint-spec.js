@@ -4,7 +4,7 @@ var config = browser.params;
 var rs = require('request-promise');
 var fs = require('fs');
 
-describe('the Recipe Image endpoints', function () {
+fdescribe('the Recipe Image endpoints', function () {
 
 	var recipeId;
 	var userId;
@@ -33,12 +33,13 @@ describe('the Recipe Image endpoints', function () {
 		dataUtils.cleanupData(done);
 	});
 
-	function performRecipeImagePOST(options) {
+	function performRecipeImagePOST(recipeId, options) {
 		var postOptions = {
 			uri: config.apiBaseUrl + '/recipe/' + recipeId + '/image',
 			headers: {
 				'RequestingUser': userId
 			},
+			json: true,
 			formData: {
 				'file': fs.createReadStream('/Users/chrisatkins/git/recipe-web/e2e-tests/endpoint-tests/pexels-photo-48726.jpeg')
 			}
@@ -59,6 +60,29 @@ describe('the Recipe Image endpoints', function () {
 		});
 	}
 
+	function performDELETEImage(recipeId, imageId, options) {
+		var deleteOptions = {
+			uri: config.apiBaseUrl + '/recipe/' + recipeId + '/image/' + imageId,
+			headers: {
+				'RequestingUser': userId
+			},
+			json: true,
+			simple: false
+		};
+
+		if (options && options.responseType && options.responseType === 'full') {
+			deleteOptions.resolveWithFullResponse = true;
+		}
+
+		if (options && options.userId && options.authUserId === 'none') {
+			delete deleteOptions.headers.RequestingUser;
+		} else if (options && options.authUserId) {
+			deleteOptions.headers.RequestingUser = options.authUserId;
+		}
+
+		return rs.delete(deleteOptions);
+	}
+
 	function performGETImage(url) {
 		var getOptions = {
 			uri: url,
@@ -68,91 +92,47 @@ describe('the Recipe Image endpoints', function () {
 		return rs.get(getOptions);
 	}
 
-	function performRecipeImageDELETE(userId, recipeId, options) {
-		// var deleteOptions = {
-		// 	uri : config.apiBaseUrl + '/user/' + userId + '/recipe-book/' + recipeId,
-		// 	headers : {
-		// 		'RequestingUser' : userId
-		// 	},
-		// 	json : true,
-		// 	simple: false //https://github.com/request/request-promise
-		// };
-		//
-		// if (options && options.responseType && options.responseType === 'full') {
-		// 	deleteOptions.resolveWithFullResponse = true;
-		// }
-		//
-		// if (options && options.userId && options.authUserId === 'none') {
-		// 	delete deleteOptions.headers.RequestingUser;
-		// } else if (options && options.authUserId) {
-		// 	deleteOptions.headers.RequestingUser = options.authUserId;
-		// }
-		//
-		// return rs.del(deleteOptions);
-	}
+	var imageUrl = "";
+	var imageId = "";
 
-	it('can POST a recipe image to a recipe and get a url where the image can be downloaded', function (done) {
-
-		performRecipeImagePOST({responseType: 'full'})
+	it('can POST a recipe image to a recipe and get a url where the image can be downloaded, which is referenced in the recipe object', function (done) {
+		performRecipeImagePOST(recipeId, {responseType: 'full'})
 		.then(function (response) {
-			var body = JSON.parse(response.body);
 			expect(response.statusCode).toBe(200);
-			expect(body.imageId).toBeTruthy();
-			expect(body.imageUrl).toBeTruthy();
-			return performGETImage(body.imageUrl);
+			expect(response.body.imageId).toBeTruthy();
+			expect(response.body.imageUrl).toBeTruthy();
+			imageUrl = response.body.imageUrl;
+			imageId = response.body.imageId;
+			return performGETImage(response.body.imageUrl);
 		})
 		.then(function (response) {
 			expect(response.statusCode).toBe(200);
+			return dataUtils.getRecipe(recipeId);
+		})
+		.then(function(recipeResponse) {
+			expect(recipeResponse.image.imageUrl).toBe(imageUrl);
+			expect(recipeResponse.image.imageId).toBe(imageId);
 		})
 		.then(done, done.fail);
 	});
 
-	it('once posted, an image will have a link that is part of the recipe', function (done) {
-		// performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[0]})
-		// .then(function() {
-		// 	return performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[1]});
-		// })
-		// .then(function() {
-		// 	return performRecipeBookGET({responseType: 'full'});
-		// })
-		// .then(function(response) {
-		// 	expect(response.statusCode).toBe(200);
-		// 	var body = response.body;
-		// 	expect(body.length).toBe(2);
-		// 	expect(body).toContain({recipeId: listOfRecipeIds[0]});
-		// 	expect(body).toContain({recipeId: listOfRecipeIds[1]});
-		// })
-		// .then(done, done.fail);
-		done();
-	});
-
 	it('the recipe image can be DELETED, which results in the url being removed from the recipe', function (done) {
-		// var sizeWithAllIds;
-		// var recipeIdToDelete = listOfRecipeIds[2];
-		//
-		// performRecipeBookPOSTRecipe({recipeId: recipeIdToDelete})
-		// .then(function() {
-		// 	return performRecipeListGETByUserRecipeBook(userId);
-		// })
-		// .then(function(response) {
-		// 	sizeWithAllIds = response.length;
-		// })
-		// .then(function() {
-		// 	return performRecipeBookDELETERecipe(userId, recipeIdToDelete, {responseType: 'full'});
-		// })
-		// .then(function(response) {
-		// 	expect(response.statusCode).toBe(204);
-		// 	return performRecipeListGETByUserRecipeBook(userId);
-		// })
-		// .then(function(response) {
-		// 	expect(response.length).toBe(sizeWithAllIds - 1);
-		//
-		// 	for (var i = 0; i < response.length; i++) {
-		// 		expect(response[i].recipeId).not.toBe(recipeIdToDelete);
-		// 	}
-		// })
-		// .then(done, done.fail);
-		done();
+		performGETImage(imageUrl)
+		.then(function(imageResponse){
+			expect(imageResponse.statusCode).toBe(200);
+			return performDELETEImage(recipeId, imageId);
+		})
+		.then(function(){
+			return dataUtils.getRecipe(recipeId);
+		})
+		.then(function(recipeResponse) {
+			expect(recipeResponse.image).toBe(null);
+			return performGETImage(imageUrl);
+		})
+		.then(function(imageResponse) {
+			expect(imageResponse.statusCode).toBe(404);
+		})
+		.then(done, done.fail);
 	});
 
 	describe('authorization', function () {

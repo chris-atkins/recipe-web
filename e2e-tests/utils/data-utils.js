@@ -88,6 +88,19 @@ var removeAllRecipeData = function(done) {
 	});
 };
 
+function getRecipe(recipeId, options) {
+	var getOptions = {
+		uri : config.apiBaseUrl + '/recipe/' + recipeId,
+		json : true,
+		simple: false //https://github.com/request/request-promise
+	};
+
+	if (options && options.responseType && options.responseType === 'full') {
+		getOptions.resolveWithFullResponse = true;
+	}
+	return rs.get(getOptions);
+}
+
 function performRecipeListGET(userId) {
 	var getOptions = {
 			uri : config.apiBaseUrl + '/recipe',
@@ -149,6 +162,7 @@ function randomEmail() {
 module.exports = {
 	addRecipe: postRecipe,
 	addRecipes: addRecipes,
+	getRecipe: getRecipe,
 	postUser: postUser,
 	cleanupData: cleanupData,
 	removeAllRecipeData: removeAllRecipeData,
