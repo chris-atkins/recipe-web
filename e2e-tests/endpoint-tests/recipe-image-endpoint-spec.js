@@ -4,7 +4,7 @@ var config = browser.params;
 var rs = require('request-promise');
 var fs = require('fs');
 
-fdescribe('the Recipe Image endpoints', function () {
+describe('the Recipe Image endpoints', function () {
 
 	var recipeId;
 	var userId;
@@ -42,7 +42,8 @@ fdescribe('the Recipe Image endpoints', function () {
 			json: true,
 			formData: {
 				'file': fs.createReadStream('/Users/chrisatkins/git/recipe-web/e2e-tests/endpoint-tests/pexels-photo-48726.jpeg')
-			}
+			},
+			simple: false //https://github.com/request/request-promise
 		};
 
 		if (options && options.responseType && options.responseType === 'full') {
@@ -109,7 +110,7 @@ fdescribe('the Recipe Image endpoints', function () {
 			expect(response.statusCode).toBe(200);
 			return dataUtils.getRecipe(recipeId);
 		})
-		.then(function(recipeResponse) {
+		.then(function (recipeResponse) {
 			expect(recipeResponse.image.imageUrl).toBe(imageUrl);
 			expect(recipeResponse.image.imageId).toBe(imageId);
 		})
@@ -118,18 +119,19 @@ fdescribe('the Recipe Image endpoints', function () {
 
 	it('the recipe image can be DELETED, which results in the url being removed from the recipe', function (done) {
 		performGETImage(imageUrl)
-		.then(function(imageResponse){
+		.then(function (imageResponse) {
 			expect(imageResponse.statusCode).toBe(200);
-			return performDELETEImage(recipeId, imageId);
+			return performDELETEImage(recipeId, imageId, {authUserId: userId, responseType: 'full'});
 		})
-		.then(function(){
+		.then(function (response) {
+			expect(response.statusCode).toBe(204);
 			return dataUtils.getRecipe(recipeId);
 		})
-		.then(function(recipeResponse) {
+		.then(function (recipeResponse) {
 			expect(recipeResponse.image).toBe(null);
 			return performGETImage(imageUrl);
 		})
-		.then(function(imageResponse) {
+		.then(function (imageResponse) {
 			expect(imageResponse.statusCode).toBe(404);
 		})
 		.then(done, done.fail);
@@ -138,88 +140,101 @@ fdescribe('the Recipe Image endpoints', function () {
 	describe('authorization', function () {
 
 		it('attempting to POST an image when you are not the owner of the recipe will cause a 401 and will not add the image to the recipe', function (done) {
-
-			// performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[2]}, {authUserId: '577d1a8e3dcc7d0c76cb72d0', responseType: 'full'})
-			// .then(function(response) {
-			// 	expect(response.statusCode).toBe(401);
-			// })
-			// .then(function() {
-			// 	return performRecipeBookGET();
-			// })
-			// .then(function(recipeBook) {
-			// 	expect(recipeBook).not.toContain({recipeId: listOfRecipeIds[2]});
-			// })
-			// .then(done, done.fail);
-			done();
+			performRecipeImagePOST(recipeId, {authUserId: '577d1a8e3dcc7d0c76cb72d0', responseType: 'full'})
+			.then(function (response) {
+				expect(response.statusCode).toBe(401);
+				return dataUtils.getRecipe(recipeId);
+			})
+			.then(function (recipe) {
+				expect(recipe.image).toBe(null);
+			})
+			.then(done, done.fail);
 		});
 
 		it('attempting to POST an image with no user will return 401 and will not add the image to the recipe', function (done) {
-
-			// performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[2]}, {authUserId: 'none', responseType: 'full'})
-			// .then(function(response) {
-			// 	expect(response.statusCode).toBe(401);
-			// })
-			// .then(function() {
-			// 	return performRecipeBookGET();
-			// })
-			// .then(function(recipeBook) {
-			// 	expect(recipeBook).not.toContain({recipeId: listOfRecipeIds[2]});
-			// })
-			// .then(done, done.fail);
-			done();
+			performRecipeImagePOST(recipeId, {authUserId: 'none', responseType: 'full'})
+			.then(function (response) {
+				expect(response.statusCode).toBe(401);
+				return dataUtils.getRecipe(recipeId);
+			})
+			.then(function (recipe) {
+				expect(recipe.image).toBe(null);
+			})
+			.then(done, done.fail);
 		});
 
-		it('attempting to DELETE an image, if the user does not own the recipe, will return 401 and will not delete the image', function (done) {
-			// performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[0]})
-			// .then(function() {
-			// 	return performRecipeBookDELETERecipe(userId, listOfRecipeIds[0], {authUserId: '577d1a8e3dcc7d0c76cb72d0', responseType: 'full'});
-			// })
-			// .then(function(response) {
-			// 	expect(response.statusCode).toBe(401);
-			// })
-			// .then(function() {
-			// 	return performRecipeBookGET();
-			// })
-			// .then(function(recipeBook) {
-			// 	expect(recipeBook).toContain({recipeId: listOfRecipeIds[0]});
-			// })
-			// .then(done, done.fail);
-			done();
-		});
 
-		it('attempting to DELETE an image, if no user is logged in, will return 401 and will not delete the image', function (done) {
-			// performRecipeBookPOSTRecipe({recipeId: listOfRecipeIds[0]})
-			// .then(function() {
-			// 	return performRecipeBookDELETERecipe(userId, listOfRecipeIds[0], {authUserId: 'none', responseType: 'full'});
-			// })
-			// .then(function(response) {
-			// 	expect(response.statusCode).toBe(401);
-			// })
-			// .then(function() {
-			// 	return performRecipeBookGET();
-			// })
-			// .then(function(recipeBook) {
-			// 	expect(recipeBook).toContain({recipeId: listOfRecipeIds[0]});
-			// })
-			// .then(done, done.fail);
-			done();
+		describe('with an existing image', function () {
+			var imageId;
+
+			beforeAll(function(done) {
+				performRecipeImagePOST(recipeId, {responseType: 'full'})
+				.then(function (response) {
+					expect(response.statusCode).toBe(200);
+					imageId = response.body.imageId;
+				})
+				.then(done, done.fail);
+			});
+
+			afterAll(function(done) {
+				performDELETEImage(recipeId, imageId, {responseType: 'full'})
+				.then(function (response) {
+					expect(response.statusCode).toBe(204);
+				})
+				.then(done, done.fail);
+			});
+
+			it('attempting to DELETE an image, if the user does not own the recipe, will return 401 and will not delete the image', function (done) {
+				 performDELETEImage(recipeId, imageId, {authUserId: '577d1a8e3dcc7d0c76cb72d0', responseType: 'full'})
+				.then(function (response) {
+					expect(response.statusCode).toBe(401);
+					return dataUtils.getRecipe(recipeId);
+				})
+				.then(function (recipe) {
+					expect(recipe.image.imageId).toBe(imageId);
+				})
+				.then(done, done.fail);
+			});
+
+			it('attempting to DELETE an image, if no user is logged in, will return 401 and will not delete the image', function (done) {
+				performDELETEImage(recipeId, imageId, {authUserId: 'none', responseType: 'full'})
+				.then(function (response) {
+					expect(response.statusCode).toBe(401);
+					return dataUtils.getRecipe(recipeId);
+				})
+				.then(function (recipe) {
+					expect(recipe.image.imageId).toBe(imageId);
+				})
+				.then(done, done.fail);
+			});
 		});
 	});
 
 	describe('edge cases', function () {
 
+		it('attempting to POST an image to a recipe that does not exist will return 404', function (done) {
+			performRecipeImagePOST("unknownId", {responseType: 'full'})
+			.then(function (response) {
+				expect(response.statusCode).toBe(404);
+				return dataUtils.getRecipe(recipeId);
+			})
+			.then(done, done.fail);
+		});
+
 		it('attempting to DELETE an image that does not exist in a recipe, will return 404', function (done) {
-			// var unknownRecipeId = '577d1a8e3dcc7d0c76cb72d1';
-			// performRecipeBookDELETERecipe(userId, unknownRecipeId, {responseType: 'full'})
-			// .then(function(response) {
-			// 	expect(response.statusCode).toBe(404);
-			// })
-			// .then(done, done.fail);
-			done();
+			performDELETEImage(recipeId, "unknownId", {responseType: 'full'})
+			.then(function (response) {
+				expect(response.statusCode).toBe(404);
+			})
+			.then(done, done.fail);
 		});
 
 		it('attempting to DELETE an image for a recipe that does not exist will return 404', function (done) {
-			done();
+			performDELETEImage("unknownId", imageId, {responseType: 'full'})
+			.then(function (response) {
+				expect(response.statusCode).toBe(404);
+			})
+			.then(done, done.fail);
 		});
 	});
 });
