@@ -100,4 +100,96 @@ describe('the recipeService', function () {
 			});
 		});
 	});
+
+	describe('the find recipe function', function() {
+
+		var recipeId = '1234567890';
+
+		it('calls the correct endpoint', function() {
+			angular.mock.inject(function(recipeService, $httpBackend) {
+				$httpBackend.expect('GET', '/api/recipe/' + recipeId).respond({});
+				recipeService.findRecipe(recipeId);
+				$httpBackend.verifyNoOutstandingExpectation();
+			});
+		});
+
+		it('returns a promise with the result of the GET call', function(done) {
+			angular.mock.inject(function(recipeService, $httpBackend) {
+				var expectedResponse = {recipeId: '1', recipeName: 'name', recipeContent: 'content'};
+				$httpBackend.expect('GET', '/api/recipe/' + recipeId).respond(expectedResponse);
+
+				recipeService.findRecipe(recipeId)
+				.then(function(response){
+					expect(response).toEqual(expectedResponse);
+				})
+				.then(done, done.fail);
+
+				$httpBackend.flush();
+			});
+		});
+
+		it('returns a catchable error if an error occurs during the GET request', function(done) {
+			angular.mock.inject(function(recipeService, $httpBackend) {
+				$httpBackend.expect('GET', '/api/recipe/' + recipeId).respond(500, {message: 'uh-oh'});
+
+				recipeService.findRecipe(recipeId)
+				.then(function(){
+					done.fail('expected error')
+				})
+				.catch(function(error) {
+					expect(error.data.message).toBe('uh-oh');
+					done();
+				});
+
+				$httpBackend.flush();
+			});
+		});
+	});
+
+	describe('the save recipe function', function() {
+
+		var recipe = {recipeName: 'name', recipeContent: 'content'};
+
+		it('calls the correct endpoint', function() {
+			angular.mock.inject(function(recipeService, $httpBackend) {
+				$httpBackend.expect('POST', '/api/recipe', recipe).respond(recipe);
+				recipeService.saveRecipe(recipe);
+				$httpBackend.verifyNoOutstandingExpectation();
+			});
+		});
+
+		it('returns a promise with the result of the GET call', function(done) {
+			angular.mock.inject(function(recipeService, $httpBackend) {
+				var expectedResponse = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: 'true'};
+				$httpBackend.expect('POST', '/api/recipe', recipe).respond(expectedResponse);
+
+				recipeService.saveRecipe(recipe)
+				.then(function(response){
+					expect(response).toEqual(expectedResponse);
+				})
+				.then(done, done.fail);
+
+				$httpBackend.flush();
+			});
+		});
+
+		it('returns a catchable error if an error occurs during the GET request', function(done) {
+			angular.mock.inject(function(recipeService, $httpBackend) {
+				$httpBackend.expect('POST', '/api/recipe', recipe).respond(500, {message: 'uh-oh'});
+
+				recipeService.saveRecipe(recipe)
+				.then(function(){
+					done.fail('expected error')
+				})
+				.catch(function(error) {
+					expect(error.data.message).toBe('uh-oh');
+					done();
+				});
+
+				$httpBackend.flush();
+			});
+		});
+	});
+
+
 });

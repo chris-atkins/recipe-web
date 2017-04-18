@@ -4,13 +4,17 @@ angular.module('recipe')
 
 .factory('recipeService', function ($http) {
 
+	var findRecipe = function(recipeId) {
+		return $http.get('/api/recipe/' + recipeId)
+		.then(function(response) {
+			return response.data;
+		});
+	};
+
 	var saveRecipe = function (recipeToSave) {
 		return $http.post('/api/recipe', recipeToSave)
-		.success(function (recipe) {
-			return recipe;
-		})
-		.error(function (error) {
-			console.log('failure saving recipe:', error);
+		.then(function (response) {
+			return response.data;
 		});
 	};
 
@@ -31,6 +35,7 @@ angular.module('recipe')
 	};
 
 	return {
+		findRecipe: findRecipe,
 		saveRecipe: saveRecipe,
 		searchRecipes: searchRecipes,
 		allRecipesInUserBook: allRecipesInUserBook

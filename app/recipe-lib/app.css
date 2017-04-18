@@ -12,6 +12,14 @@
   padding-left: 0px;
 }
 
+.cropArea {
+  border-color: grey;
+  background: #E4E4E4;
+  overflow: hidden;
+  width:500px;
+  height:350px;
+}
+
 .recipe-name.card-title {
   color: #555555;
 }

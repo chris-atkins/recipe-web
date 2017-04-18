@@ -21,8 +21,8 @@ angular.module('recipe')
 			return;
 		} else {
 			saveRecipe()
-			.then(function (response) {
-				$location.path('/view-recipe/' + response.data.recipeId);
+			.then(function (recipe) {
+				$location.path('/view-recipe/' + recipe.recipeId);
 			});
 		}
 	};

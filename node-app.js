@@ -280,7 +280,10 @@ app.post('/api/recipe/:recipeId/image', function(request, response, next) {
 			var r = rs.post(
 				url,
 				{ "headers":
-					{"transfer-encoding": "chunked"}
+					{
+						"transfer-encoding": "chunked",
+						"RequestingUser": request.headers.requestinguser
+					}
 				},
 				function(err, res, body){
 					response.statusCode = res.statusCode;

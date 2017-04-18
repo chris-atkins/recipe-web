@@ -1,5 +1,6 @@
 'use strict';
 
+
 describe('the recipe directive', function () {
 
 	var scope, location, userService, recipeBookService, parentScope;
@@ -11,6 +12,7 @@ describe('the recipe directive', function () {
 	var inRecipeBookIndicator_Selector = '.in-recipe-book-indicator';
 	var addToRecipeBookButton_Selector = '.add-to-recipe-book-button';
 	var removeRecipeButtonSelector = '.remove-recipe-from-book-button';
+	var recipeImage_Selector = '.recipe-image';
 
 	beforeEach(angular.mock.module('recipe', 'my.templates'));
 
@@ -269,6 +271,63 @@ describe('the recipe directive', function () {
 			it('does not show the add to recipe book button', function () {
 				var addToRecipeBookButton = $(addToRecipeBookButton_Selector);
 				expect(addToRecipeBookButton.length).toBe(0);
+			});
+		});
+	});
+
+	describe('images', function () {
+
+		describe('renders when the recipe has an image url', function () {
+
+			var recipe = {
+				recipeId: 'theId',
+				recipeName: 'theBestName',
+				recipeContent: 'content',
+				image: {
+					imageId: 'imageId',
+					imageUrl: 'http://imageUrl/'
+				},
+				editable: true
+			};
+
+			var recipeBook = [];
+
+			beforeEach(function () {
+				buildControllerWithRecipeAndBook(recipe, recipeBook, 'singleRecipeTestController');
+				setupRecipeController();
+				setFixtures(fixture);
+				renderFixture('singleRecipeTestController');
+			});
+
+			it('image is shown', function () {
+				var recipeImage = $(recipeImage_Selector);
+				expect(recipeImage).toBeVisible();
+				expect(recipeImage.prop('src')).toBe('http://imageurl/');
+			});
+		});
+
+		describe('renders when the recipe does not have an image url', function () {
+
+			var recipe = {
+				recipeId: 'theId',
+				recipeName: 'theBestName',
+				recipeContent: 'content',
+				image: null,
+				editable: true
+			};
+
+			var recipeBook = [];
+
+			beforeEach(function () {
+				buildControllerWithRecipeAndBook(recipe, recipeBook, 'singleRecipeTestController');
+				setupRecipeController();
+				setFixtures(fixture);
+				renderFixture('singleRecipeTestController');
+			});
+
+			it('image tag is not shown', function () {
+				var recipeImage = $(recipeImage_Selector);
+				expect(recipeImage.length).toBe(0);
 			});
 		});
 	});

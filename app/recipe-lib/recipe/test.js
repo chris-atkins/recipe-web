@@ -16,7 +16,7 @@ angular.module('recipe')
 
 	$scope.upload = function (dataUrl, name) {
 		Upload.upload({
-			url: 'http://localhost:8000/api/recipe/1234/image',
+			url: '/api/recipe/58f14c94ed2129bffec2a211/image',
 			data: {
 				file: Upload.dataUrltoBlob(dataUrl, name)
 			}
@@ -25,8 +25,8 @@ angular.module('recipe')
 				$scope.result = response.data;
 			});
 		}, function (response) {
-			if (response.status > 0) $scope.errorMsg = response.status
-				+ ': ' + response.data;
+			if (response.status > 0)
+				$scope.errorMsg = response.status + ': ' + response.data;
 		}, function (evt) {
 			$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
 		});

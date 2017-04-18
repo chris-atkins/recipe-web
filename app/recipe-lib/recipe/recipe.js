@@ -47,6 +47,10 @@ angular.module('recipe')
 		updateRecipeBookFlags();
 	});
 
+	$scope.imageExists = function(recipe) {
+		return recipe.image !== null;
+	};
+
 	function updateRecipeBookFlags() {
 		if ($scope.bookMode) {
 			return;

@@ -152,7 +152,70 @@ describe('the view recipe controller', function () {
 		});
 	});
 
-	describe('when given the html used in the application for the /view-recipe/:recipeId route', function () {
+	describe('the recipe book buttons', function () {
+
+		var scope;
+		var compile;
+
+		beforeEach(inject(function ($controller, $rootScope, $compile) {
+			scope = $rootScope.$new();
+			compile = $compile;
+			$controller('ViewRecipeCtrl', {
+				$scope: scope
+			});
+		}));
+
+		function loadPage() {
+			angular.mock.inject(function ($httpBackend, $templateCache) {
+				$httpBackend.expect('GET', 'api/recipe/undefined').respond({});
+				$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond({});
+				$httpBackend.expect('GET', 'recipe-lib/navbar/navbar.html').respond('<div></div>');
+
+				setFixtures($templateCache.get('recipe-lib/view-recipe/view-recipe.html'));
+
+				var doc = angular.element(document);
+				var fixture = doc.find('div');
+
+				var elem = angular.element(fixture);
+				compile(elem)(scope);
+				scope.$digest();
+			});
+		}
+
+		it('the add to recipe book button is visible when scope returns true for canAddToRecipeBook', function () {
+			spyOn(scope, 'canAddToRecipeBook').and.returnValue(true);
+			loadPage();
+
+			var addToRecipeBookButton = $('.add-to-recipe-book-button');
+			expect(addToRecipeBookButton).toBeVisible();
+		});
+
+		it('the add to recipe book button is not visible when scope returns true for canAddToRecipeBook', function () {
+			spyOn(scope, 'canAddToRecipeBook').and.returnValue(false);
+			loadPage();
+
+			var addToRecipeBookButton = $('.add-to-recipe-book-button');
+			expect(addToRecipeBookButton).not.toBeVisible();
+		});
+
+		it('the remove from recipe book button is visible when scope returns true for canAddToRecipeBook', function () {
+			spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(true);
+			loadPage();
+
+			var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
+			expect(removeFromRecipeBookButton).toBeVisible();
+		});
+
+		it('the remove from recipe book button is not visible when scope returns true for canAddToRecipeBook', function () {
+			spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(false);
+			loadPage();
+
+			var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
+			expect(removeFromRecipeBookButton).not.toBeVisible();
+		});
+	});
+
+	describe('when in edit mode', function () {
 
 		var scope;
 		var compile;
