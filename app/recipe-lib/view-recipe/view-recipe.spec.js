@@ -217,15 +217,58 @@ describe('the view recipe controller', function () {
 
 	describe('when not in edit mode', function() {
 
+		var scope, imageUploadScope, upload;
 
-		it('should not show the ???********anything in edit mode', function() {
-			expect(true).toBe(false);
+		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
+
+		var editRecipeButtonSelector = '#edit-recipe-button';
+		var imageUploadSectionSelector = '.image-upload-section';
+		var imageUploadToggleSelector = '.image-upload-toggle';
+
+		beforeEach(function() {
+			angular.mock.inject(function ($controller, $rootScope, _Upload_) {
+				scope = $rootScope.$new();
+				$controller('ViewRecipeCtrl', {
+					$scope: scope
+				});
+
+				imageUploadScope = scope.$new();
+				upload = _Upload_;
+
+				$controller('imageUploadCtrl', {
+					$scope: imageUploadScope,
+					Upload: upload
+				});
+			});
+		});
+
+		function loadPage() {
+			angular.mock.inject(function ($httpBackend, $templateCache, $compile) {
+				$httpBackend.expect('GET', 'api/recipe/undefined').respond(recipe);
+				$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond([]);
+				$httpBackend.flush();
+
+				setFixtures($templateCache.get('recipe-lib/view-recipe/view-recipe.html'));
+
+				var fixture = angular.element(document).find('div')[0];
+				var elem = angular.element(fixture);
+
+				$compile(elem)(scope);
+				scope.$digest();
+			});
+		}
+		it('should not show the image section in edit mode', function() {
+
+			loadPage();
+
+			expect($(imageUploadSectionSelector)).not.toBeVisible();
+			expect($(imageUploadToggleSelector)).not.toBeVisible();
 		})
 	});
 
-	fdescribe('when in edit mode', function () {
+	describe('when in edit mode', function () {
 
-		var scope, imageUploadScope, upload, sce;
+		var scope, imageUploadScope, upload;
 
 		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
 
