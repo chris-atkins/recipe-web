@@ -3,6 +3,8 @@
 describe('The image-upload module', function () {
 
 	var scope, upload, timeout, parentScope, userService;
+	var imageSavedCallbackCalled = false;
+	var imageSavedCallbackParam;
 
 	beforeEach(angular.mock.module('recipe', 'my.templates', 'ngFileUpload', 'ngImgCrop'));
 
@@ -10,12 +12,17 @@ describe('The image-upload module', function () {
 		angular.module('recipe')
 		.controller("recipeTestEditController", function ($scope) {
 			$scope.recipe = recipe;
+
+			$scope.callbackFunction = function(image)  {
+				imageSavedCallbackCalled = true;
+				imageSavedCallbackParam = image;
+			}
 		});
 	}
 
 	var fixture =
 		'<div ngController="recipeTestEditController">' +
-		'     <div image-upload recipe="recipe" class="image-upload-holder"></div>' +
+		'     <div image-upload recipe="recipe" image-saved-callback="callbackFunction" class="image-upload-holder"></div>' +
 		'</div>';
 
 	function setupImageUploadController() {
@@ -98,6 +105,20 @@ describe('The image-upload module', function () {
 
 				expect($('.success-message')).toBeVisible();
 				expect($('.error-message')).not.toBeVisible();
+			});
+		});
+
+		it('calls back to the callback function when completed', function () {
+			angular.mock.inject(function ($httpBackend) {
+				imageSavedCallbackCalled = false;
+
+				$httpBackend.expect('POST', '/api/recipe/theId/image').respond(200, {data: 'data'});
+
+				SpecUtils.clickElement($('.upload-image-button'));
+				$httpBackend.flush();
+
+				expect(imageSavedCallbackCalled).toBe(true);
+				expect(imageSavedCallbackParam).toEqual({data: 'data'});
 			});
 		});
 

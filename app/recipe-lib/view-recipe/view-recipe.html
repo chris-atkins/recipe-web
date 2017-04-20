@@ -10,7 +10,8 @@
 		<span id="edit-recipe-page-title">Edit Recipe</span>
 	</h2>
 
-	<div image-upload recipe="recipe" class="image-upload-holder"></div>
+	<a class="image-upload-toggle btn btn-secondary" ng-click="toggleUploadImage()" >Upload Image</a>
+	<div image-upload recipe="recipe" image-saved-callback="imageSaved" class="image-upload-section" ng-show="shouldShowImageUpload()"></div>
 
 	<div class="form-group">
 		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="nameBeingEdited"/>

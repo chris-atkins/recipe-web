@@ -9,12 +9,13 @@ angular.module('recipe')
 		templateUrl: 'recipe-lib/new-recipe/image-upload.html',
 		controller: 'imageUploadCtrl',
 		scope: {
-			recipe: '='
+			recipe: '=',
+			imageSavedCallback: '='
 		}
 	}
 })
 
-.controller('imageUploadCtrl', function ($scope, Upload, $timeout) {
+.controller('imageUploadCtrl', function ($scope, Upload) {
 
 	$scope.upload = function (dataUrl, name) {
 		Upload.upload({
@@ -23,7 +24,8 @@ angular.module('recipe')
 				file: Upload.dataUrltoBlob(dataUrl, name)
 			}
 		}).then(function (response) {
-				$scope.result = response.data;
+			$scope.result = response.data;
+			$scope.imageSavedCallback($scope.result);
 		}, function (error) {
 			if (error.status > 0)
 				$scope.errorMsg = error.status + ': ' + error.data;

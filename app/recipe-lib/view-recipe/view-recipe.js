@@ -13,8 +13,10 @@ angular.module('recipe')
 
 	var inEditMode = false;
 	var userRecipeBook = [];
+	var shouldShowImageUpload = false;
 
 	$scope.recipe = {};
+	$scope.initialContent = '';
 	$scope.nameBeingEdited = '';
 	$scope.contentBeingEdited = '';
 
@@ -23,8 +25,7 @@ angular.module('recipe')
 	function initialize() {
 		$http.get('api/recipe/' + $routeParams.recipeId)
 		.success(function (recipe) {
-			$scope.recipe = recipe;
-			$scope.recipe.recipeContent = $sce.trustAsHtml($scope.recipe.recipeContent);
+			recipeRetrieved(recipe);
 		})
 		.error(function (error) {
 			console.log('error retrieving recipe: ', error);
@@ -36,12 +37,30 @@ angular.module('recipe')
 		});
 	}
 
+	function recipeRetrieved(recipe) {
+		$scope.recipe = recipe;
+		$scope.initialContent = $scope.recipe.recipeContent;
+		$scope.recipe.recipeContent = $sce.trustAsHtml($scope.recipe.recipeContent);
+	}
+
+	$scope.imageSaved = function(image) {
+		$scope.recipe.image = image;
+	};
+
 	$scope.shouldShowEditButtons = function() {
 		return $scope.recipe.editable;
 	};
 
 	$scope.inEditMode = function() {
 		return inEditMode;
+	};
+
+	$scope.shouldShowImageUpload = function() {
+		return shouldShowImageUpload;
+	};
+
+	$scope.toggleUploadImage = function() {
+		shouldShowImageUpload = !shouldShowImageUpload;
 	};
 
 	$scope.editClicked = function() {
@@ -55,30 +74,22 @@ angular.module('recipe')
 	};
 
 	$scope.saveClicked = function() {
+		var recipeContent = typeof($scope.contentBeingEdited) === 'object' ? $scope.initialContent: $scope.contentBeingEdited;
 		var recipeToPut = {
 			recipeId: $scope.recipe.recipeId,
 			recipeName: $scope.nameBeingEdited,
-			recipeContent: $scope.contentBeingEdited
+			recipeContent: recipeContent,
+			image: $scope.recipe.image
 		};
 
 		$http.put('/api/recipe/' + $scope.recipe.recipeId, recipeToPut)
 			.success(function (recipe) {
-				$scope.recipe = recipe;
-				$scope.recipe.recipeContent = $sce.trustAsHtml($scope.recipe.recipeContent);
+				recipeRetrieved(recipe);
 			})
 			.error(function (error) {
 				console.log('failure saving recipe:', error);
 			});
 		inEditMode = false;
-	};
-
-	$scope.back = function() {
-		var lastPath = routeHistory.getLastRoute();
-		$location.url(lastPath);
-	};
-
-	$scope.shouldShowBackButton = function() {
-		return routeHistory.getLastRoute() !== undefined;
 	};
 
 	$scope.inRecipeBook = function() {

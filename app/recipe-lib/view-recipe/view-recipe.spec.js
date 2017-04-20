@@ -2,7 +2,7 @@
 
 describe('the view recipe controller', function () {
 
-	beforeEach(module('recipe', 'my.templates'));
+	beforeEach(angular.mock.module('recipe', 'my.templates'));
 
 	describe('the scope canAddToRecipeBook function', function () {
 		var scope;
@@ -215,66 +215,94 @@ describe('the view recipe controller', function () {
 		});
 	});
 
-	describe('when in edit mode', function () {
+	describe('when not in edit mode', function() {
 
-		var scope;
-		var compile;
 
-		beforeEach(inject(function ($controller, $rootScope, $compile) {
-			scope = $rootScope.$new();
-			compile = $compile;
-			$controller('ViewRecipeCtrl', {
-				$scope: scope
+		it('should not show the ???********anything in edit mode', function() {
+			expect(true).toBe(false);
+		})
+	});
+
+	fdescribe('when in edit mode', function () {
+
+		var scope, imageUploadScope, upload, sce;
+
+		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
+
+		var editRecipeButtonSelector = '#edit-recipe-button';
+			var imageUploadSectionSelector = '.image-upload-section';
+			var imageUploadToggleSelector = '.image-upload-toggle';
+
+		beforeEach(function() {
+			angular.mock.inject(function ($controller, $rootScope, _Upload_) {
+				scope = $rootScope.$new();
+				$controller('ViewRecipeCtrl', {
+					$scope: scope
+				});
+
+				imageUploadScope = scope.$new();
+				upload = _Upload_;
+
+				$controller('imageUploadCtrl', {
+					$scope: imageUploadScope,
+					Upload: upload
+				});
 			});
-		}));
+		});
 
-		function loadPage() {
-			angular.mock.inject(function ($httpBackend, $templateCache) {
-				$httpBackend.expect('GET', 'api/recipe/undefined').respond({});
-				$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond({});
-				$httpBackend.expect('GET', 'recipe-lib/navbar/navbar.html').respond('<div></div>');
+		function loadPageInEditMode() {
+			angular.mock.inject(function ($httpBackend, $templateCache, $compile) {
+				$httpBackend.expect('GET', 'api/recipe/undefined').respond(recipe);
+				$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond([]);
+				$httpBackend.flush();
 
 				setFixtures($templateCache.get('recipe-lib/view-recipe/view-recipe.html'));
 
-				var doc = angular.element(document);
-				var fixture = doc.find('div');
-
+				var fixture = angular.element(document).find('div')[0];
 				var elem = angular.element(fixture);
-				compile(elem)(scope);
+
+				$compile(elem)(scope);
 				scope.$digest();
+
+				var editRecipeButton = $(editRecipeButtonSelector);
+				SpecUtils.clickElement(editRecipeButton);
 			});
 		}
 
-		it('the add to recipe book button is visible when scope returns true for canAddToRecipeBook', function () {
-			spyOn(scope, 'canAddToRecipeBook').and.returnValue(true);
-			loadPage();
+		it('does not start showing the image upload section', function () {
+			loadPageInEditMode();
 
-			var addToRecipeBookButton = $('.add-to-recipe-book-button');
-			expect(addToRecipeBookButton).toBeVisible();
+			expect($(imageUploadSectionSelector)).not.toBeVisible();
+			expect($(imageUploadToggleSelector)).toBeVisible();
+			expect($(imageUploadToggleSelector).text()).toBe('Upload Image');
 		});
 
-		it('the add to recipe book button is not visible when scope returns true for canAddToRecipeBook', function () {
-			spyOn(scope, 'canAddToRecipeBook').and.returnValue(false);
-			loadPage();
+		it('shows and hides the image upload section when pressing the toggle', function () {
+			loadPageInEditMode();
+			var toggle = $(imageUploadToggleSelector);
 
-			var addToRecipeBookButton = $('.add-to-recipe-book-button');
-			expect(addToRecipeBookButton).not.toBeVisible();
+			expect($(imageUploadSectionSelector)).not.toBeVisible();
+
+			SpecUtils.clickElement(toggle);
+			expect($(imageUploadSectionSelector)).toBeVisible();
+
+			SpecUtils.clickElement(toggle);
+			expect($(imageUploadSectionSelector)).not.toBeVisible();
 		});
 
-		it('the remove from recipe book button is visible when scope returns true for canAddToRecipeBook', function () {
-			spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(true);
-			loadPage();
+		it('includes an uploaded image when saving the recipe', function () {
+			angular.mock.inject(function ($httpBackend) {
+				loadPageInEditMode();
+				upload.upload = SpecUtils.buildMockPromiseFunction({data: {imageId: 'imageId', imageUrl: 'imageUrl'}});
 
-			var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
-			expect(removeFromRecipeBookButton).toBeVisible();
+				SpecUtils.clickElement($(imageUploadToggleSelector));
+				SpecUtils.clickElement($('.upload-image-button'));
+
+				var expectedRecipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
+				$httpBackend.expect('PUT', '/api/recipe/1', expectedRecipe).respond(recipe);
+				SpecUtils.clickElement($('#update-recipe-button'));
+			});
 		});
 
-		it('the remove from recipe book button is not visible when scope returns true for canAddToRecipeBook', function () {
-			spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(false);
-			loadPage();
-
-			var removeFromRecipeBookButton = $('.remove-recipe-from-book-button');
-			expect(removeFromRecipeBookButton).not.toBeVisible();
-		});
 	});
 });

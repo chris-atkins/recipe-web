@@ -190,6 +190,4 @@ describe('the recipeService', function () {
 			});
 		});
 	});
-
-
 });
