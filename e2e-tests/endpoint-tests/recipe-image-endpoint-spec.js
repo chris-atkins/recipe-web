@@ -4,7 +4,7 @@ var config = browser.params;
 var rs = require('request-promise');
 var fs = require('fs');
 
-describe('the Recipe Image endpoints', function () {
+fdescribe('the Recipe Image endpoints', function () {
 
 	var recipeId;
 	var userId;
@@ -41,7 +41,7 @@ describe('the Recipe Image endpoints', function () {
 			},
 			json: true,
 			formData: {
-				'file': fs.createReadStream('/Users/chrisatkins/git/recipe-web/e2e-tests/endpoint-tests/pexels-photo-48726.jpeg')
+				'file': fs.createReadStream('e2e-tests/endpoint-tests/pexels-photo-48726.jpeg')
 			},
 			simple: false //https://github.com/request/request-promise
 		};
