@@ -302,7 +302,7 @@ describe('the recipe directive', function () {
 			it('image is shown', function () {
 				var recipeImage = $(recipeImage_Selector);
 				expect(recipeImage).toBeVisible();
-				expect(recipeImage.prop('src')).toBe('http://imageurl/');
+				expect(recipeImage.prop('src').toLowerCase()).toBe('http://imageurl/');
 			});
 		});
 
