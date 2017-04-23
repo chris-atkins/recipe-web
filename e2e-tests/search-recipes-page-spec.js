@@ -211,6 +211,11 @@ describe('the search recipes page', function() {
 			expect(recipeBookAddButton.getText()).toBe('Add to Recipe Book');
 
 			recipeBookAddButton.click();
+			browser.wait(function() {
+				return recipeBookAddButton.isPresent().then(function(isPresent) {
+					return !isPresent;
+				});
+			}, 3000);
 			expect(recipeBookAddButton.isPresent()).toBe(false);
 			var inRecipeBookIndicator = foundRecipe.element(by.className('in-recipe-book-indicator'));
 			expect(inRecipeBookIndicator.isDisplayed()).toBe(true);
