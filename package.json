@@ -16,7 +16,8 @@
     "passport-google-oauth": "^1.0.0",
     "passport-jwt": "^2.0.0",
     "passport-local": "^1.0.0",
-    "request-promise": "^2.0.1",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

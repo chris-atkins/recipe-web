@@ -4,7 +4,7 @@ var config = browser.params;
 var rs = require('request-promise');
 var fs = require('fs');
 
-fdescribe('the Recipe Image endpoints', function () {
+describe('the Recipe Image endpoints', function () {
 
 	var recipeId;
 	var userId;
