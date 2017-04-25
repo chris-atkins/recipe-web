@@ -10,8 +10,26 @@
 		<span id="edit-recipe-page-title">Edit Recipe</span>
 	</h2>
 
-	<a class="image-upload-toggle btn btn-secondary" ng-click="toggleUploadImage()" >Upload Image</a>
-	<div image-upload recipe="recipe" image-saved-callback="imageSaved" class="image-upload-section" ng-show="shouldShowImageUpload()"></div>
+	<button class="image-upload-toggle btn btn-secondary" data-toggle="modal" data-target=".image-upload-modal">Upload Image</button>
+
+	<div class="image-upload-modal modal fade" tabindex="-1" role="dialog" aria-labelledby="image-upload-modal-title" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="image-upload-modal-title">Image Upload</h5>
+					<button type="button" class="close close-upload-image-x" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div image-upload recipe="recipe" image-saved-callback="imageSaved" class="image-upload-section"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary close-upload-image-button" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div class="form-group">
 		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="nameBeingEdited"/>

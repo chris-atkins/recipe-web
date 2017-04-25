@@ -20,6 +20,9 @@ module.exports = function (config) {
 			'app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
 			'app/bower_components/ng-file-upload/ng-file-upload-all.js',
 			'app/bower_components/ng-img-crop/compile/unminified/ng-img-crop.js',
+			'app/bower_components/bootstrap/dist/css/bootstrap.css',
+			'app/bower_components/tether/dist/js/tether.js',
+			'app/bower_components/bootstrap/dist/js/bootstrap.js',
 			'app/recipe-lib/**/*.js',
 			'app/recipe-lib/**/*.html'
 		],

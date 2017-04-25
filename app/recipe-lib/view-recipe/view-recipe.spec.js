@@ -215,7 +215,7 @@ describe('the view recipe controller', function () {
 		});
 	});
 
-	describe('when not in edit mode', function() {
+	describe('when not in edit mode', function () {
 
 		var scope, imageUploadScope, upload;
 
@@ -225,7 +225,7 @@ describe('the view recipe controller', function () {
 		var imageUploadSectionSelector = '.image-upload-section';
 		var imageUploadToggleSelector = '.image-upload-toggle';
 
-		beforeEach(function() {
+		beforeEach(function () {
 			angular.mock.inject(function ($controller, $rootScope, _Upload_) {
 				scope = $rootScope.$new();
 				$controller('ViewRecipeCtrl', {
@@ -257,7 +257,8 @@ describe('the view recipe controller', function () {
 				scope.$digest();
 			});
 		}
-		it('should not show the image section in edit mode', function() {
+
+		it('should not show the image section in edit mode', function () {
 
 			loadPage();
 
@@ -273,10 +274,13 @@ describe('the view recipe controller', function () {
 		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
 
 		var editRecipeButtonSelector = '#edit-recipe-button';
-			var imageUploadSectionSelector = '.image-upload-section';
-			var imageUploadToggleSelector = '.image-upload-toggle';
+		var imageUploadSectionSelector = '.image-upload-section';
+		var imageUploadModalSelector = '.image-upload-modal';
+		var imageUploadToggleSelector = '.image-upload-toggle';
+		var closeUploadSelector = '.close-upload-image-button';
+		var closeUploadXSelector = '.close-upload-image-x';
 
-		beforeEach(function() {
+		beforeEach(function () {
 			angular.mock.inject(function ($controller, $rootScope, _Upload_) {
 				scope = $rootScope.$new();
 				$controller('ViewRecipeCtrl', {
@@ -320,17 +324,42 @@ describe('the view recipe controller', function () {
 			expect($(imageUploadToggleSelector).text()).toBe('Upload Image');
 		});
 
-		it('shows and hides the image upload section when pressing the toggle', function () {
+		it('shows and hides the image upload section when pressing the open and close buttons', function (done) {
 			loadPageInEditMode();
 			var toggle = $(imageUploadToggleSelector);
 
 			expect($(imageUploadSectionSelector)).not.toBeVisible();
 
 			SpecUtils.clickElement(toggle);
-			expect($(imageUploadSectionSelector)).toBeVisible();
+			$(imageUploadModalSelector).on('shown.bs.modal', function () {
+				expect($(imageUploadSectionSelector)).toBeVisible();
+
+				var close = $(closeUploadSelector);
+				SpecUtils.clickElement(close);
+				$(imageUploadModalSelector).on('hidden.bs.modal', function () {
+					expect($(imageUploadSectionSelector)).not.toBeVisible();
+					done();
+				});
+			});
+		});
+
+		it('shows and hides the image upload section when pressing the open and close X buttons', function (done) {
+			loadPageInEditMode();
+			var toggle = $(imageUploadToggleSelector);
+
+			expect($(imageUploadSectionSelector)).not.toBeVisible();
 
 			SpecUtils.clickElement(toggle);
-			expect($(imageUploadSectionSelector)).not.toBeVisible();
+			$(imageUploadModalSelector).on('shown.bs.modal', function () {
+				expect($(imageUploadSectionSelector)).toBeVisible();
+
+				var closeX = $(closeUploadXSelector);
+				SpecUtils.clickElement(closeX);
+				$(imageUploadModalSelector).on('hidden.bs.modal', function () {
+					expect($(imageUploadSectionSelector)).not.toBeVisible();
+					done();
+				});
+			});
 		});
 
 		it('includes an uploaded image when saving the recipe', function () {
