@@ -2,6 +2,15 @@
   background-color: #001f3f;
 }
 
+.edit-recipe-page-title {
+  float: left;
+  margin-bottom: 21px;
+}
+
+.image-upload-toggle {
+  float: right;
+}
+
 .recipe-image-row {
   margin-right: -5px;
   margin-left: 10px;
@@ -16,8 +25,13 @@
   border-color: grey;
   background: #E4E4E4;
   overflow: hidden;
-  width:500px;
+  width:469px;
   height:350px;
+  float:left;
+}
+
+.cropped-image-holder {
+  float: left;
 }
 
 .recipe-name.card-title {

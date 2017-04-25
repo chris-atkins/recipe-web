@@ -321,7 +321,7 @@ describe('the view recipe controller', function () {
 
 			expect($(imageUploadSectionSelector)).not.toBeVisible();
 			expect($(imageUploadToggleSelector)).toBeVisible();
-			expect($(imageUploadToggleSelector).text()).toBe('Upload Image');
+			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
 
 		it('shows and hides the image upload section when pressing the open and close buttons', function (done) {
