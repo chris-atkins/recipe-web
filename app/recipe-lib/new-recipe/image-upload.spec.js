@@ -13,7 +13,7 @@ describe('The image-upload module', function () {
 		.controller("recipeTestEditController", function ($scope) {
 			$scope.recipe = recipe;
 
-			$scope.callbackFunction = function(image)  {
+			$scope.callbackFunction = function (image) {
 				imageSavedCallbackCalled = true;
 				imageSavedCallbackParam = image;
 			}
@@ -96,6 +96,40 @@ describe('The image-upload module', function () {
 			expect(upload.upload).toHaveBeenCalledWith(expectedArgument);
 		});
 
+		it('displays a processing message while an image is being loaded', function () {
+
+			angular.mock.inject(function ($httpBackend) {
+				expect($('.processing-message')).not.toBeVisible();
+
+				var childScope = parentScope.$$childTail;  //scope is not really what is used by the image-uploa on the page - this is the only way I've found to get a hold on it
+
+				childScope.startProcessing();  //not sure how to correctly test the initiation of the processing - it is a hook on the file-upload tag
+
+				parentScope.$apply();
+
+				expect($('.processing-message')).toBeVisible();
+				expect($('.processing-message').text()).toBe(' Processing...');
+
+				childScope.croppedDataUrl = 'something new';
+				parentScope.$apply();
+
+				expect($('.processing-message')).not.toBeVisible();
+			});
+		});
+
+		it('displays a loading message while upload is in progress', function () {
+			angular.mock.inject(function ($httpBackend) {
+				$httpBackend.expect('POST', '/api/recipe/theId/image').respond(200, {data: 'data'});
+
+				SpecUtils.clickElement($('.upload-image-button'));
+				expect($('.loading-message')).toBeVisible();
+				expect($('.loading-message').text()).toBe(' Working...');
+
+				$httpBackend.flush();
+				expect($('.error-message')).not.toBeVisible();
+			});
+		});
+
 		it('displays a success message when upload is completed', function () {
 			angular.mock.inject(function ($httpBackend) {
 				$httpBackend.expect('POST', '/api/recipe/theId/image').respond(200, {data: 'data'});
@@ -104,6 +138,7 @@ describe('The image-upload module', function () {
 				$httpBackend.flush();
 
 				expect($('.success-message')).toBeVisible();
+				expect($('.success-message').text()).toBe('Image uploaded.');
 				expect($('.error-message')).not.toBeVisible();
 			});
 		});

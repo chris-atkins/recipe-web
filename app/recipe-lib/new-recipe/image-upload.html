@@ -1,6 +1,7 @@
 <form name="myForm">
 	<div>
-		<button class="select-image-button" ngf-select ng-model="picFile" accept="image/*">Select Image</button>
+		<button class="select-image-button" ngf-select ng-model="picFile" accept="image/*" ngf-change="startProcessing()" >Select Image</button>
+		<span class="processing-message" ng-show="processing"><i class="fa fa-spinner fa-pulse fa-fw"></i> Processing...</span></span>
 	</div>
 
 	<div ngf-drop ng-model="picFile" ngf-pattern="image/*" class="cropArea selected-image">
@@ -14,7 +15,8 @@
 
 		<button class="upload-image-button" ng-click="upload(croppedDataUrl, picFile.name)">Submit</button>
 
-		<span class="success-message" ng-show="result">Upload Successful</span>
+		<span class="loading-message" ng-show="loading"><i class="fa fa-spinner fa-pulse fa-fw"></i> Working...</span></span>
+		<span class="success-message" ng-show="result">Image uploaded.</span>
 		<span class="error-message" ng-show="errorMsg">{{errorMsg}}</span>
 	</div>
 </form>

@@ -16,19 +16,32 @@ angular.module('recipe')
 })
 
 .controller('imageUploadCtrl', function ($scope, Upload) {
+	$scope.loading = false;
+	$scope.processing = false;
+
+	$scope.startProcessing = function(){
+		$scope.processing = true;
+	};
+
+	$scope.$watch('croppedDataUrl', function() {
+		$scope.processing = false;
+	});
 
 	$scope.upload = function (dataUrl, name) {
+		$scope.loading = true;
 		Upload.upload({
 			url: '/api/recipe/' + $scope.recipe.recipeId + '/image',
 			data: {
 				file: Upload.dataUrltoBlob(dataUrl, name)
 			}
 		}).then(function (response) {
+			$scope.loading = false;
 			$scope.result = response.data;
 			$scope.imageSavedCallback($scope.result);
 		}, function (error) {
+			$scope.loading = false;
 			if (error.status > 0)
-				$scope.errorMsg = error.status + ': ' + error.data;
+				$scope.errorMsg = "Error uploading image.";
 		});
 	}
 });
