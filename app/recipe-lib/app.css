@@ -11,6 +11,17 @@
   float: right;
 }
 
+.selected-image {
+  margin-top: 15px;
+  margin-right: 15px;
+}
+
+.cropped-image {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  background: #E4E4E4;
+}
+
 .recipe-image-row {
   margin-right: -5px;
   margin-left: 10px;
