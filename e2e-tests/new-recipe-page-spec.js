@@ -15,14 +15,6 @@ describe('the new recipe page,', function () {
     var loginButton = element(by.id('log-in-user-button'));
     var loginEmailField = element(by.id('sign-up-user-email'));
 
-	function waitForSaveToSettle() {
-		browser.wait(function () {
-			return browser.getLocationAbsUrl().then(function (url) {
-				return url.includes('/view-recipe/');
-			});
-		}, 3000);
-	}
-
 	describe('when a user is logged in, ', function () {
 
         beforeAll(function (done) {
@@ -93,7 +85,6 @@ describe('the new recipe page,', function () {
                 recipeContentInput.sendKeys('test content');
 
                 saveButton.click();
-				waitForSaveToSettle();
                 expect(browser.getLocationAbsUrl()).toContain('/view-recipe/');
 
 
@@ -108,7 +99,6 @@ describe('the new recipe page,', function () {
                 recipeNameInput.sendKeys(newRecipeName);
                 recipeContentInput.sendKeys(newRecipeContent);
                 saveButton.click();
-				waitForSaveToSettle();
 
                 browser.get('/#/search-recipes?searchFor=all');
                 var savedRecipeLink = pageUtils.findRecipeWithName(newRecipeName, allRecipesOnBrowsePage);
