@@ -55,7 +55,7 @@ describe('the recipe book system', function() {
 			it('the recipe book link takes the user to the recipe book page for that user', function() {
 				browser.get('/#/home');
 				recipeBookButton.click();
-				expect(browser.getLocationAbsUrl()).toMatch('/user/' + userId + '/recipe-book');
+				expect(browser.getCurrentUrl()).toMatch('/user/' + userId + '/recipe-book');
 			});
 		});
 

@@ -85,7 +85,7 @@ describe('the new recipe page,', function () {
                 recipeContentInput.sendKeys('test content');
 
                 saveButton.click();
-                expect(browser.getLocationAbsUrl()).toContain('/view-recipe/');
+                expect(browser.getCurrentUrl()).toContain('/view-recipe/');
 
 
                 var recipeNameElement = element(by.id('recipe-name'));
@@ -120,7 +120,7 @@ describe('the new recipe page,', function () {
 
             expect(errorMessage.isDisplayed()).toBe(true);
             expect(errorMessage.getText()).toBe('In order to save a recipe you must be logged in. Click the \'Log In\' link in the top right corner and enter your email address.');
-            expect(browser.getLocationAbsUrl()).toContain('/new-recipe');
+            expect(browser.getCurrentUrl()).toContain('/new-recipe');
 
             browser.get('/#/browse-all-recipes');
             expect(allRecipesOnBrowsePage.count()).toBe(0);

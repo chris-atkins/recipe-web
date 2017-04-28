@@ -177,7 +177,7 @@ describe('the search recipes page', function() {
 			
 			firstRecipe.getAttribute('id').then(function(recipeId) {
 				findRecipeLink(firstRecipe).click();
-				expect(browser.getLocationAbsUrl()).toMatch('/view-recipe/' + recipeId + '$');
+				expect(browser.getCurrentUrl()).toMatch('/view-recipe/' + recipeId + '$');
 			});
 		});
 

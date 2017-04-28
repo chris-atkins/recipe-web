@@ -4,6 +4,8 @@ RUN yum -y install nodejs
 RUN npm -g install npm@latest
 RUN yum -y install tar
 RUN yum -y install bzip2
+RUN npm -g install n
+RUN n stable
 COPY . /src
 COPY ./run-on-server.sh /
 RUN cd src && npm install

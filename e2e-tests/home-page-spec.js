@@ -4,7 +4,7 @@ describe('the home page', function() {
 
   it('should be redirected to when location hash/fragment is empty', function() {
     browser.get('');
-    expect(browser.getLocationAbsUrl()).toMatch('/home');
+    expect(browser.getCurrentUrl()).toMatch('/home');
   });
   
   describe('content', function() {
@@ -50,7 +50,7 @@ describe('the home page', function() {
 		  var searchButton = element(by.id('search-button'));
 		  expect(searchButton.getText()).toMatch(/^Browse Recipes.*/);
 		  searchButton.click();
-		  expect(browser.getLocationAbsUrl()).toMatch('/search-recipes');
+		  expect(browser.getCurrentUrl()).toMatch('/search-recipes');
 	  });
   });
 });
