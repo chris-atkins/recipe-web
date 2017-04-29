@@ -85,6 +85,7 @@ describe('the new recipe page,', function () {
                 recipeContentInput.sendKeys('test content');
 
                 saveButton.click();
+				browser.waitForAngular();
                 expect(browser.getCurrentUrl()).toContain('/view-recipe/');
 
 
@@ -101,6 +102,7 @@ describe('the new recipe page,', function () {
                 saveButton.click();
 
                 browser.get('/#/search-recipes?searchFor=all');
+				browser.waitForAngular();
                 var savedRecipeLink = pageUtils.findRecipeWithName(newRecipeName, allRecipesOnBrowsePage);
                 savedRecipeLink.click();
 

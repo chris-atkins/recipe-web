@@ -102,6 +102,7 @@ describe('the vew recipe page', function() {
 
 		beforeAll(function() {
 			browser.get('/#/view-recipe/' + recipeId);
+			browser.waitForAngular();
 		});
 
 		afterAll(function () {
@@ -143,6 +144,7 @@ describe('the vew recipe page', function() {
 
 		it('editing can be cancelled without altering the recipe contents or title', function() {
 			browser.get('/#/view-recipe/' + recipeId);
+			browser.waitForAngular();
 			editRecipeButton.click();
 
 			recipeNameInput.sendKeys('edited');
@@ -163,6 +165,7 @@ describe('the vew recipe page', function() {
 
 		it('the recipe can be updated', function() {
 			browser.get('/#/view-recipe/' + recipeId);
+			browser.waitForAngular();
 			editRecipeButton.click();
 
 			recipeNameInput.sendKeys(protractor.Key.END);

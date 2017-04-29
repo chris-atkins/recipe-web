@@ -23,10 +23,13 @@ function login(userEmail) {
 function loginWithoutNavigating(userEmail) {
 	return loginLink.click()
 	.then(function() {
-		return loginEmailField.sendKeys(userEmail);
+		browser.waitForAngular();
+		loginEmailField.sendKeys(userEmail);
 	})
 	.then(function() {
-		return loginButton.click();
+		browser.waitForAngular();
+		loginButton.click();
+		browser.waitForAngular();
 	});
 }
 
