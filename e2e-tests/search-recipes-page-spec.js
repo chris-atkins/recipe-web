@@ -91,6 +91,7 @@ describe('the search recipes page', function() {
 		  
 		beforeEach(function() {
 			browser.get("/#/search-recipes");
+			browser.waitForAngular();
 		});
 		
 		it('the page starts with the search input having focus', function() {
