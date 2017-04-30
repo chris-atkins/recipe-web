@@ -1,4 +1,7 @@
 'use strict';
+
+var browserName = process.env.SELENIUM_BROWSER ? process.env.SELENIUM_BROWSER : 'chrome';
+
 exports.config = {
 	allScriptsTimeout: 11000,
 
@@ -9,7 +12,7 @@ exports.config = {
 	],
 
 	capabilities: {
-		'browserName': 'chrome'
+		'browserName': browserName
 	},
 
 	baseUrl: 'http://localhost:8000/',

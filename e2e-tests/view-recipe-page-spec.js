@@ -167,11 +167,15 @@ describe('the vew recipe page', function() {
 			browser.get('/#/view-recipe/' + recipeId);
 			browser.waitForAngular();
 			editRecipeButton.click();
+			browser.waitForAngular();
 
 			recipeNameInput.sendKeys(protractor.Key.END);
 			recipeNameInput.sendKeys('edited');
-			recipeContentInput.sendKeys(protractor.Key.END);
-			recipeContentInput.sendKeys('moreedited');
+
+			recipeContentInput.clear();
+			recipeContentInput.sendKeys('Recipe Being Tested - Contentmoreedited');  //FIREFOX WAS NOT WORKING WITH THE 2 BELOW LINES - BUT THEY ARE PREFERABLE
+			// recipeContentInput.sendKeys(protractor.Key.END);
+			// recipeContentInput.sendKeys('moreedited');
 
 			updateRecipeButton.click();
 
