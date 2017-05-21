@@ -1,13 +1,18 @@
-<nav class="navbar-section navbar fixed-top navbar-toggleable navbar-inverse bg-navy hidden-print" ng-controller="NavbarCtrl">
+<nav class="navbar-section navbar fixed-top navbar-toggleable-sm navbar-inverse bg-navy hidden-print" ng-controller="NavbarCtrl">
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu-links" aria-controls="main-menu-links" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
 
-	<div class="navbar-nav">
-		<a class="nav-item nav-link nav-home-page-link" ng-click="navigateHome()">Home Page</a>
-		<a class="nav-item nav-link nav-browse-page-link" ng-click="navigateBrowse()">Browse Recipes</a>
-		<a class="nav-item nav-link nav-save-page-link" ng-click="navigateSave()">Save Recipe</a>
-		<a class="nav-item nav-link nav-recipe-book-page-link" ng-click="navigateRecipeBook()">Recipe Book</a>
+	<div class="collapse navbar-collapse" id="main-menu-links">
+		<div class="navbar-nav">
+			<a class="nav-item nav-link nav-home-page-link" ng-click="navigateHome()">Home Page</a>
+			<a class="nav-item nav-link nav-browse-page-link" ng-click="navigateBrowse()">Browse Recipes</a>
+			<a class="nav-item nav-link nav-save-page-link" ng-click="navigateSave()">Save Recipe</a>
+			<a class="nav-item nav-link nav-recipe-book-page-link" ng-click="navigateRecipeBook()">Recipe Book</a>
+		</div>
 	</div>
 
-	<div class="navbar-nav ml-auto">
+	<div class="navbar-nav ml-auto user-nav-section">
 		<div class="nav-item dropdown">
 			<a class="nav-link dropdown-toggle login-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="loginClicked()">
 				<small>{{loginMessage}}</small>
