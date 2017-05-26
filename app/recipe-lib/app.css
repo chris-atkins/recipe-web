@@ -145,6 +145,12 @@
     white-space: nowrap;
 }
 
+.user-nav-section-container {
+    margin-right: 0;
+    position: fixed;
+    right: 13px;
+}
+
 .home-nav-button-holder {
     /*column-count: 3;*/
     margin-top: 3.5rem;

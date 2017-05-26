@@ -12,37 +12,38 @@
 		</div>
 	</div>
 
-	<div class="navbar-nav ml-auto user-nav-section">
-		<div class="nav-item dropdown">
-			<a class="nav-link dropdown-toggle login-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="loginClicked()">
-				<small>{{loginMessage}}</small>
-			</a>
-			<div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="logoutLink">
-				<div class="login-fields nav-item" ng-show="shouldShowLogIn()">
-					<div class="user-login-message">
-						<small>Enter your email address to log in or sign up.</small>
+	<div class="container user-nav-section-container">
+		<div class="navbar-nav ml-auto user-nav-section">
+			<div class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle login-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="loginClicked()">
+					<small>{{loginMessage}}</small>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="logoutLink">
+					<div class="login-fields nav-item" ng-show="shouldShowLogIn()">
+						<div class="user-login-message">
+							<small>Enter your email address to log in or sign up.</small>
+						</div>
+						<div class="form-inline input-group input-group-sm">
+							<input id="sign-up-user-email" class="form-control input-sm" ng-model="email" placeholder="jane.doe@example.com"></input>
+							<button id="log-in-user-button" class="btn btn-secondary btn-sm" ng-click="logIn($event)">Log In</button>
+						</div>
 					</div>
-					<div class="form-inline input-group input-group-sm">
-						<input id="sign-up-user-email" class="form-control input-sm" ng-model="email" placeholder="jane.doe@example.com"></input>
-						<button id="log-in-user-button" class="btn btn-secondary btn-sm" ng-click="logIn($event)">Log In</button>
+					<div class="login-fields nav-item" ng-show="shouldShowSignUp()">
+						<div class="user-sign-up-message">
+							<small>What name would you like to use?</small>
+						</div>
+						<div class="form-inline input-group input-group-sm">
+							<input id="sign-up-user-name" class="form-control input-sm" ng-model="name" placeholder="Jane"></input>
+							<button id="sign-up-user-button" class="btn btn-secondary btn-sm" ng-click="signUp()">Sign Up</button>
+						</div>
 					</div>
-				</div>
-				<div class="login-fields nav-item" ng-show="shouldShowSignUp()">
-					<div class="user-sign-up-message">
-						<small>What name would you like to use?</small>
+					<div class="logout-section nav navbar-form login-fields" ng-show="isLoggedIn">
+						<button id="log-out-button" class="btn btn-outline-secondary btn-sm mx-auto" ng-click="logOut()">Log Out</button>
 					</div>
-					<div class="form-inline input-group input-group-sm">
-						<input id="sign-up-user-name" class="form-control input-sm" ng-model="name" placeholder="Jane"></input>
-						<button id="sign-up-user-button" class="btn btn-secondary btn-sm" ng-click="signUp()">Sign Up</button>
-					</div>
-				</div>
-				<div class="logout-section nav navbar-form login-fields" ng-show="isLoggedIn">
-					<button id="log-out-button" class="btn btn-outline-secondary btn-sm mx-auto" ng-click="logOut()">Log Out</button>
 				</div>
 			</div>
 		</div>
 	</div>
-
 	<div class="alert alert-danger login-required-alert" ng-show="isAlertVisible()">
 		<button type="button" class="close" aria-label="Close" ng-click="setAlertVisible(false)">
 			<span aria-hidden="true">&times;</span>
