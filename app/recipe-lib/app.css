@@ -142,7 +142,7 @@
 }
 
 .user-nav-section {
-    min-width: 130px;
+    white-space: nowrap;
 }
 
 .home-nav-button-holder {
