@@ -145,6 +145,10 @@
     white-space: nowrap;
 }
 
+.mobile-menu-toggle {
+    margin-left: -20px;
+}
+
 .user-nav-section-container {
     margin-right: 0;
     position: fixed;
