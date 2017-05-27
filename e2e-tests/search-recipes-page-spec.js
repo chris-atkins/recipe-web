@@ -74,11 +74,11 @@ describe('the search recipes page', function() {
 		});
 		
 		it('has a search button', function() {
-			expect(searchButton.getText()).toBe('Search Recipes');
+			expect(searchButton.getText()).toBe('Search');
 		});
 
 		it('has a show all recipes button', function() {
-			expect(showAllRecipesButton.getText()).toBe('Show All Recipes');
+			expect(showAllRecipesButton.getText()).toBe('Show All');
 		});
 		
 		it('all recipes are shown on the page when first navigated to', function() {
