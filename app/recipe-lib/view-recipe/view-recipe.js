@@ -120,4 +120,13 @@ angular.module('recipe')
 	$scope.canRemoveFromRecipeBook = function() {
 		return !inEditMode && $scope.inRecipeBook();
 	};
+
+	$scope.imageExists = function(recipe) {
+		if (recipe.image) {
+			if (recipe.image.imageUrl) {
+				return true;
+			}
+		}
+		return false;
+	};
 });

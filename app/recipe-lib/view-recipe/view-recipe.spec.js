@@ -219,11 +219,13 @@ describe('the view recipe controller', function () {
 
 		var scope, imageUploadScope, upload;
 
-		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
+		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: {imageId: 'imageId', imageUrl: 'hiImAnImageUrl'}};
+		var recipeWithNOImaage = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
 
 		var editRecipeButtonSelector = '#edit-recipe-button';
 		var imageUploadSectionSelector = '.image-upload-section';
 		var imageUploadToggleSelector = '.image-upload-toggle';
+		var imageSelector = '.recipe-image';
 
 		beforeEach(function () {
 			angular.mock.inject(function ($controller, $rootScope, _Upload_) {
@@ -242,7 +244,7 @@ describe('the view recipe controller', function () {
 			});
 		});
 
-		function loadPage() {
+		function loadPage(recipe) {
 			angular.mock.inject(function ($httpBackend, $templateCache, $compile) {
 				$httpBackend.expect('GET', 'api/recipe/undefined').respond(recipe);
 				$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond([]);
@@ -258,13 +260,24 @@ describe('the view recipe controller', function () {
 			});
 		}
 
-		it('should not show the image section in edit mode', function () {
+		it('should not show the image upload section in edit mode', function () {
 
-			loadPage();
+			loadPage(recipe);
 
 			expect($(imageUploadSectionSelector)).not.toBeVisible();
 			expect($(imageUploadToggleSelector)).not.toBeVisible();
-		})
+		});
+
+		it('should show an existing image', function() {
+			loadPage(recipe);
+			expect($(imageSelector)).toBeVisible();
+			expect($(imageSelector).attr('src')).toBe('hiImAnImageUrl');
+		});
+
+		it('should not show an image if none exists', function() {
+			loadPage(recipeWithNOImaage);
+			expect($(imageSelector)).not.toBeVisible();
+		});
 	});
 
 	describe('when in edit mode', function () {

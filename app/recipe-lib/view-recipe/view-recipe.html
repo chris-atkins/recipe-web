@@ -1,6 +1,7 @@
 <div ng-include="'recipe-lib/navbar/navbar.html'"></div>
 
 <div class="container" ng-hide="inEditMode()">
+	<img class="recipe-image image-with-bottom-buffer" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
 	<h2><span id="recipe-name">{{recipe.recipeName}}</span></h2>
 	<p><span id="recipe-content" class="show-line-breaks" ng-bind-html="recipe.recipeContent"></span></p>
 </div>

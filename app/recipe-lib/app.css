@@ -219,6 +219,10 @@
     border-bottom: 2px solid #ddd;
 }
 
+.image-with-bottom-buffer {
+    margin-bottom: 15px;
+}
+
 /** FOOTER SECTION **/
 html {
     position: relative;
