@@ -153,6 +153,8 @@
     margin-right: 0;
     position: fixed;
     right: 13px;
+    max-width: 280px;
+    text-align: right;
 }
 
 .home-nav-button-holder {
