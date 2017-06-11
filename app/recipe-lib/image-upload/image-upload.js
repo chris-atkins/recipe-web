@@ -6,7 +6,7 @@ angular.module('recipe')
 	return {
 		replace: false,
 		restrict: 'A',
-		templateUrl: 'recipe-lib/new-recipe/image-upload.html',
+		templateUrl: 'recipe-lib/image-upload/image-upload.html',
 		controller: 'imageUploadCtrl',
 		scope: {
 			recipe: '=',
