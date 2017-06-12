@@ -2,7 +2,7 @@
 
 angular.module('recipe')
 
-.directive('imageUpload', function () {
+.directive('imageUploadModal', function () {
 	return {
 		replace: true,
 		restrict: 'E',
@@ -15,7 +15,7 @@ angular.module('recipe')
 	}
 })
 
-.controller('imageUploadModalCtrl', function ($scope, Upload) {
+.controller('imageUploadModalCtrl', function ($scope) {
 
 });
 
