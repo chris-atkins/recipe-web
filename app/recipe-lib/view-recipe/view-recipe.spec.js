@@ -287,11 +287,7 @@ describe('the view recipe controller', function () {
 		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
 
 		var editRecipeButtonSelector = '#edit-recipe-button';
-		var imageUploadSectionSelector = '.image-upload-section';
-		var imageUploadModalSelector = '.image-upload-modal';
 		var imageUploadToggleSelector = '.image-upload-toggle';
-		var closeUploadSelector = '.close-upload-image-button';
-		var closeUploadXSelector = '.close-upload-image-x';
 
 		beforeEach(function () {
 			angular.mock.inject(function ($controller, $rootScope, _Upload_) {
@@ -329,53 +325,13 @@ describe('the view recipe controller', function () {
 			});
 		}
 
-		it('does not start showing the image upload section', function () {
+		it('shows the upload image button', function () {
 			loadPageInEditMode();
-
-			expect($(imageUploadSectionSelector)).not.toBeVisible();
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
 
-		it('shows and hides the image upload section when pressing the open and close buttons', function (done) {
-			loadPageInEditMode();
-			var toggle = $(imageUploadToggleSelector);
-
-			expect($(imageUploadSectionSelector)).not.toBeVisible();
-
-			SpecUtils.clickElement(toggle);
-			$(imageUploadModalSelector).on('shown.bs.modal', function () {
-				expect($(imageUploadSectionSelector)).toBeVisible();
-
-				var close = $(closeUploadSelector);
-				SpecUtils.clickElement(close);
-				$(imageUploadModalSelector).on('hidden.bs.modal', function () {
-					expect($(imageUploadSectionSelector)).not.toBeVisible();
-					done();
-				});
-			});
-		});
-
-		it('shows and hides the image upload section when pressing the open and close X buttons', function (done) {
-			loadPageInEditMode();
-			var toggle = $(imageUploadToggleSelector);
-
-			expect($(imageUploadSectionSelector)).not.toBeVisible();
-
-			SpecUtils.clickElement(toggle);
-			$(imageUploadModalSelector).on('shown.bs.modal', function () {
-				expect($(imageUploadSectionSelector)).toBeVisible();
-
-				var closeX = $(closeUploadXSelector);
-				SpecUtils.clickElement(closeX);
-				$(imageUploadModalSelector).on('hidden.bs.modal', function () {
-					expect($(imageUploadSectionSelector)).not.toBeVisible();
-					done();
-				});
-			});
-		});
-
-		it('includes an uploaded image when saving the recipe', function () {
+		it('if an image has been uploaded, includes the uploaded image when saving the recipe', function () {
 			angular.mock.inject(function ($httpBackend) {
 				loadPageInEditMode();
 				upload.upload = SpecUtils.buildMockPromiseFunction({data: {imageId: 'imageId', imageUrl: 'imageUrl'}});
