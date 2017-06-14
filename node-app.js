@@ -5,7 +5,7 @@ var http = require('http');
 var path = require('path');
 var multiparty = require('multiparty');
 var FormData = require('form-data');
-var cookieParser = require('cookie-parser');
+// var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var rs = require('request-promise');
 
@@ -39,15 +39,15 @@ passport.deserializeUser(function(userName, done) {
 	done('error', null);
 });
 
-var auth = function(req, res, next) { 
-	if (!req.isAuthenticated()) {
-		res.send(401);
-	}
-	else {
-		next(); 
-	}
-	//- See more at: https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs
-}; 
+// var auth = function(req, res, next) {
+// 	if (!req.isAuthenticated()) {
+// 		res.send(401);
+// 	}
+// 	else {
+// 		next();
+// 	}
+// 	//- See more at: https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs
+// };
 
 passport.use(new GoogleStrategy({
 	//see https://console.developers.google.com to get the clientID and clientSecret
@@ -223,7 +223,7 @@ function performRecipeBookDELETERecipe(userId, recipeId, request) {
 	return rs.del(deleteOptions);
 }
 
-app.get('/api/recipe', function(request, response, next) {
+app.get('/api/recipe', function(request, response) {
 	performRecipeListGET(request.query.searchString, request.query.recipeBook).then(function(data) {
 		response.statusCode = data.statusCode;	
 		response.json(data.body);
@@ -233,7 +233,7 @@ app.get('/api/recipe', function(request, response, next) {
 	});
 });
 
-app.get('/api/recipe/:recipeId', function(request, response, next) {
+app.get('/api/recipe/:recipeId', function(request, response) {
 	var recipeId = request.params.recipeId;
 	performRecipeGET(recipeId, request).then(function(data) {
 		response.statusCode = data.statusCode;	
@@ -244,7 +244,7 @@ app.get('/api/recipe/:recipeId', function(request, response, next) {
 	});
 });
 
-app.post('/api/recipe', function(request, response, next) {
+app.post('/api/recipe', function(request, response) {
 	var recipe = request.body;
 	performRecipePOST(recipe, request).then(function(data) {
 		response.statusCode = data.statusCode;	
@@ -255,7 +255,7 @@ app.post('/api/recipe', function(request, response, next) {
 	});
 });
 
-app.put('/api/recipe/:recipeId', function(request, response, next) {
+app.put('/api/recipe/:recipeId', function(request, response) {
 	var recipe = request.body;
 	performRecipePUT(recipe, request).then(function(data) {
 		response.statusCode = data.statusCode;
@@ -266,7 +266,7 @@ app.put('/api/recipe/:recipeId', function(request, response, next) {
 	});
 });
 
-app.post('/api/recipe/:recipeId/image', function(request, response, next) {
+app.post('/api/recipe/:recipeId/image', function(request, response) {
 	var recipeId =  request.params.recipeId;
 	var form = new multiparty.Form();
 
@@ -285,7 +285,7 @@ app.post('/api/recipe/:recipeId/image', function(request, response, next) {
 						"RequestingUser": request.headers.requestinguser
 					}
 				},
-				function(err, res, body){
+				function(err, res){
 					response.statusCode = res.statusCode;
 					response.send(res);
 			});
@@ -301,7 +301,7 @@ app.post('/api/recipe/:recipeId/image', function(request, response, next) {
 	form.parse(request);
 });
 
-app.post('/api/user', function(request, response, next) {
+app.post('/api/user', function(request, response) {
 	var user = request.body;
 	performUserPOST(user).then(function(data) {
 		response.statusCode = data.statusCode;	
@@ -312,7 +312,7 @@ app.post('/api/user', function(request, response, next) {
 	});
 });
 
-app.get('/api/user', function(request, response, next) {
+app.get('/api/user', function(request, response) {
 	var email = request.query.email;
 	performUserGETByEmail(email).then(function(data) {
 		response.statusCode = data.statusCode;	
@@ -323,7 +323,7 @@ app.get('/api/user', function(request, response, next) {
 	});
 });
 
-app.get('/api/user/:userId', function(request, response, next) {
+app.get('/api/user/:userId', function(request, response) {
 	var userId =  request.params.userId;
 	performUserGET(userId).then(function(data) {
 		response.statusCode = data.statusCode;
@@ -349,7 +349,7 @@ app.post('/login', passport.authenticate('local-login', {
     failureFlash : true // allow flash messages
 }));
 
-app.get('/api/user/:userId/recipe-book', function(request, response, next) {
+app.get('/api/user/:userId/recipe-book', function(request, response) {
 	var userId = request.params.userId;
 	performRecipeBookGET(userId).then(function(data) {
 		response.statusCode = data.statusCode;
@@ -360,7 +360,7 @@ app.get('/api/user/:userId/recipe-book', function(request, response, next) {
 	});
 });
 
-app.post('/api/user/:userId/recipe-book', function(request, response, next) {
+app.post('/api/user/:userId/recipe-book', function(request, response) {
 	var userId = request.params.userId;
 	var recipeId = request.body;
 	performRecipeBookPOSTRecipe(recipeId, userId, request).then(function(data) {
@@ -372,7 +372,7 @@ app.post('/api/user/:userId/recipe-book', function(request, response, next) {
 	});
 });
 
-app.delete('/api/user/:userId/recipe-book/:recipeId', function(request, response, next) {
+app.delete('/api/user/:userId/recipe-book/:recipeId', function(request, response) {
 	var userId = request.params.userId;
 	var recipeId = request.params.recipeId;
 	performRecipeBookDELETERecipe(userId, recipeId, request).then(function(data) {
@@ -431,7 +431,7 @@ function respond(req, res) {
 }
 
 var authenticate = expressJwt({secret : 'server secret'});
-app.get('/test-auth', authenticate, function(request, response, next) {
+app.get('/test-auth', authenticate, function(request, response) {
 	response.json({auth: 'success', user: request.user});
 });
 

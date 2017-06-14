@@ -30,6 +30,6 @@ angular.module('recipe')
 		}, function (evt) {
 			$scope.progress = parseInt(100.0 * evt.loaded / evt.total);
 		});
-	}
+	};
 
 });

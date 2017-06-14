@@ -1,10 +1,11 @@
+'use strict';
 
 describe('the recipe-card-wall module', function() {
 
 	var parentScope, recipeScope;
 	
 	var recipeBookMode = 'false';
-	var owningUserId = 'userId1'
+	var owningUserId = 'userId1';
 	var recipeRemovalCallback = function() {console.log('hi');};
 
 	var recipe1 = {

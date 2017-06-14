@@ -10,12 +10,10 @@ describe('the search recipes page', function() {
 	var pageTitle = searchPage.pageTitle;
 	var userSection = searchPage.userSection;
 	var showAllRecipesButton = searchPage.showAllRecipesButton;
-	var homeButton = searchPage.homeButton;
 	var recipeListHolder = searchPage.recipeListHolder;
 	var recipeList = searchPage.recipeList;
 	var resultInfoMessage = searchPage.resultInfoMessage;
 	var noSearchResultsMessage = searchPage.noSearchResultsMessage;
-	var backButton = searchPage.backButton;
 	var findRecipeLink = searchPage.findRecipeLink;
 		
 	var recipe1 = {

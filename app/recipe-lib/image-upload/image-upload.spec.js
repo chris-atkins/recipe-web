@@ -16,7 +16,7 @@ describe('The image-upload module', function () {
 			$scope.callbackFunction = function (image) {
 				imageSavedCallbackCalled = true;
 				imageSavedCallbackParam = image;
-			}
+			};
 		});
 	}
 
@@ -26,7 +26,7 @@ describe('The image-upload module', function () {
 		'</div>';
 
 	function setupImageUploadController() {
-		angular.mock.inject(function ($controller, $rootScope, _Upload_, $timeout, _userService_) {
+		angular.mock.inject(function ($controller, $rootScope, _Upload_, $timeout) {
 			scope = $rootScope.$new();
 
 			upload = _Upload_;
@@ -97,24 +97,20 @@ describe('The image-upload module', function () {
 		});
 
 		it('displays a processing message while an image is being loaded', function () {
+			expect($('.processing-message')).not.toBeVisible();
 
-			angular.mock.inject(function ($httpBackend) {
-				expect($('.processing-message')).not.toBeVisible();
+			var childScope = parentScope.$$childTail;  //scope is not really what is used by the image-uploa on the page - this is the only way I've found to get a hold on it
+			childScope.startProcessing();  //not sure how to correctly test the initiation of the processing - it is a hook on the file-upload tag
 
-				var childScope = parentScope.$$childTail;  //scope is not really what is used by the image-uploa on the page - this is the only way I've found to get a hold on it
+			parentScope.$apply();
 
-				childScope.startProcessing();  //not sure how to correctly test the initiation of the processing - it is a hook on the file-upload tag
+			expect($('.processing-message')).toBeVisible();
+			expect($('.processing-message').text()).toBe(' Processing...');
 
-				parentScope.$apply();
+			childScope.croppedDataUrl = 'something new';
+			parentScope.$apply();
 
-				expect($('.processing-message')).toBeVisible();
-				expect($('.processing-message').text()).toBe(' Processing...');
-
-				childScope.croppedDataUrl = 'something new';
-				parentScope.$apply();
-
-				expect($('.processing-message')).not.toBeVisible();
-			});
+			expect($('.processing-message')).not.toBeVisible();
 		});
 
 		it('displays a loading message while upload is in progress', function () {

@@ -1,3 +1,5 @@
+'use strict';
+
 describe('the recipeService', function () {
 
 	beforeEach(angular.mock.module('recipe'));
@@ -11,7 +13,7 @@ describe('the recipeService', function () {
 				$httpBackend.expect('GET', '/api/recipe?searchString=' + searchString).respond({});
 				recipeService.searchRecipes(searchString);
 				$httpBackend.verifyNoOutstandingExpectation();
-			})
+			});
 		});
 
 		it('calls the endpoint with no query parameters if no searchString is passed', function() {
@@ -19,7 +21,7 @@ describe('the recipeService', function () {
 				$httpBackend.expect('GET', '/api/recipe').respond({});
 				recipeService.searchRecipes();
 				$httpBackend.verifyNoOutstandingExpectation();
-			})
+			});
 		});
 
 		it('returns a promise with the result of the recipe GET call', function(done) {
@@ -89,7 +91,7 @@ describe('the recipeService', function () {
 
 				recipeService.allRecipesInUserBook(userId)
 					.then(function(){
-						done.fail('expected error')
+						done.fail('expected error');
 					})
 					.catch(function(error) {
 						expect(error.data.message).toBe('uh-oh');
@@ -134,7 +136,7 @@ describe('the recipeService', function () {
 
 				recipeService.findRecipe(recipeId)
 				.then(function(){
-					done.fail('expected error')
+					done.fail('expected error');
 				})
 				.catch(function(error) {
 					expect(error.data.message).toBe('uh-oh');
@@ -179,7 +181,7 @@ describe('the recipeService', function () {
 
 				recipeService.saveRecipe(recipe)
 				.then(function(){
-					done.fail('expected error')
+					done.fail('expected error');
 				})
 				.catch(function(error) {
 					expect(error.data.message).toBe('uh-oh');

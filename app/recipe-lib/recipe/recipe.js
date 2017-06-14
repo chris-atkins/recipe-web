@@ -15,7 +15,7 @@ angular.module('recipe')
 			owningUserId: '@',
 			recipeRemovalCallback: '='
 		}
-	}
+	};
 })
 
 .controller('recipeCtrl', function ($scope, $location, recipeBookService, userService, _) {

@@ -15,14 +15,7 @@ angular.module('recipe')
 			owningUserId: '@',
 			recipeRemovalCallback: '='
 		}
-	}
+	};
 })
 
-.controller('recipeCardWallCtrl', function ($scope, $location, recipeBookService, userService, _) {
-
-	//$scope.recipeList: '=',
-	//$scope.recipeBook: '=',
-	//$scope.recipeBookMode: '@',
-	//$scope.owningUserId: '@',
-	//$scope.recipeRemovalCallback: '='
-});
+.controller('recipeCardWallCtrl', function () {});

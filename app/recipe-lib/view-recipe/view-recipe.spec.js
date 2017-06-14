@@ -39,7 +39,7 @@ describe('the view recipe controller', function () {
 				var options = {withRecipeInRecipeBook: false};
 				spyOn(userService, 'isLoggedIn').and.returnValue(false);
 
-				buildControllerForRecipeId(options)
+				buildControllerForRecipeId(options);
 				initializeController(options);
 
 				var result = scope.canAddToRecipeBook();
@@ -52,7 +52,7 @@ describe('the view recipe controller', function () {
 				var options = {withRecipeInRecipeBook: true};
 				spyOn(userService, 'isLoggedIn').and.returnValue(true);
 
-				buildControllerForRecipeId(options)
+				buildControllerForRecipeId(options);
 				initializeController(options);
 
 				var result = scope.canAddToRecipeBook();
@@ -65,7 +65,7 @@ describe('the view recipe controller', function () {
 				var options = {withRecipeInRecipeBook: false};
 				spyOn(userService, 'isLoggedIn').and.returnValue(true);
 
-				buildControllerForRecipeId(options)
+				buildControllerForRecipeId(options);
 				initializeController(options);
 
 				scope.editClicked();
@@ -80,7 +80,7 @@ describe('the view recipe controller', function () {
 				var options = {withRecipeInRecipeBook: false};
 				spyOn(userService, 'isLoggedIn').and.returnValue(true);
 
-				buildControllerForRecipeId(options)
+				buildControllerForRecipeId(options);
 				initializeController(options);
 
 				var result = scope.canAddToRecipeBook();
@@ -97,7 +97,7 @@ describe('the view recipe controller', function () {
 			beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
 				scope = $rootScope.$new();
 				var recipeBookService = {};
-				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([{recipeId: 5}])
+				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([{recipeId: 5}]);
 
 				$httpBackend.expect('GET', 'api/recipe/recipeIdNotInRecipeBook').respond({recipeId: 5});
 
@@ -127,7 +127,7 @@ describe('the view recipe controller', function () {
 			beforeEach(inject(function ($controller, $rootScope, $httpBackend) {
 				scope = $rootScope.$new();
 				var recipeBookService = {};
-				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([{recipeId: 5}])
+				recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([{recipeId: 5}]);
 
 				$httpBackend.expect('GET', 'api/recipe/recipeIdNotInRecipeBook').respond({recipeId: 'recipeNotInRecipeBook'});
 
@@ -222,7 +222,6 @@ describe('the view recipe controller', function () {
 		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: {imageId: 'imageId', imageUrl: 'hiImAnImageUrl'}};
 		var recipeWithNOImaage = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
 
-		var editRecipeButtonSelector = '#edit-recipe-button';
 		var imageUploadSectionSelector = '.image-upload-section';
 		var imageUploadToggleSelector = '.image-upload-toggle';
 		var imageSelector = '.recipe-image';

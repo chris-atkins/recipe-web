@@ -1,6 +1,5 @@
 'use strict';
 
-var http = require('http');
 var rs = require('request-promise');
 var _ = require('underscore');
 var config = browser.params;
@@ -12,7 +11,7 @@ var addRecipes = function(recipeArray, userId) {
 	for (var i = 1; i < recipeArray.length; i++) {
 		p = p.then(postRecipeFunction(recipeArray[i], userId));
 	}
-	p = p.then(function(response){
+	p = p.then(function(){
 		return;
 	});
 	
@@ -65,7 +64,7 @@ var cleanupData = function(done) {
 
 function cleanUpTestRecipesThatHaveBeenPosted() {
 	var p = cleanUpTestRecipes(listOfRecipeIdsToCleanUp);
-	p = p.then(function(response){
+	p = p.then(function(){
 		listOfRecipeIdsToCleanUp = [];
 	});
 	return p;

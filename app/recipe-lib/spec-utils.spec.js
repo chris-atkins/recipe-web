@@ -1,6 +1,8 @@
 'use strict';
 
+/* jshint ignore:start */
 var SpecUtils = {};
+/* jshint ignore:end */
 
 SpecUtils.buildMockPromiseFunction = function (valueToResolveTo) {
 	var valuePromise = SpecUtils.resolvedPromise(valueToResolveTo);
@@ -17,8 +19,8 @@ SpecUtils.resolvedPromise = function (valueToResolveTo) {
 	return valuePromise;
 };
 
+/* jshint ignore:start */
 SpecUtils.clickElement = function (jqueryObject) {
-	/* jshint ignore:start */
 	var ev = document.createEvent("MouseEvent");
 	ev.initMouseEvent(
 		"click",
@@ -33,8 +35,8 @@ SpecUtils.clickElement = function (jqueryObject) {
 	} else if (jqueryObject.dispatchEvent) {
 		$(jqueryObject).dispatchEvent(ev);
 	}
-	/* jshint ignore:end */
 };
+/* jshint ignore:end */
 
 SpecUtils.loadPage = function(htmlFilePath, scope) {
 	angular.mock.inject(function ($templateCache, $compile) {

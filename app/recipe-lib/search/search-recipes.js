@@ -9,7 +9,7 @@ angular.module('recipe')
 	});
 }])
 
-.controller('SearchRecipesCtrl', function ($scope, $http, $routeParams, $location, userService, recipeBookService, recipeService, _) {
+.controller('SearchRecipesCtrl', function ($scope, $http, $routeParams, $location, userService, recipeBookService, recipeService) {
 
 	$scope.recipeList = [];
 	$scope.searchString = '';

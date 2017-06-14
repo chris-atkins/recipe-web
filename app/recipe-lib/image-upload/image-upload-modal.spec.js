@@ -18,7 +18,7 @@ describe('the image upload modal module', function () {
 			$scope.callbackFunction = function (image) {
 				imageSavedCallbackCalled = true;
 				imageSavedCallbackParam = image;
-			}
+			};
 		});
 	}
 

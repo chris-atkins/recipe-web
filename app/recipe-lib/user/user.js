@@ -27,7 +27,7 @@ angular.module('recipe')
 			handleNewlyLoggedInUser(user);
 			return user;
 		})
-		.error(function(error) {
+		.error(function() {
 			return {};
 		});
 	};
@@ -40,7 +40,7 @@ angular.module('recipe')
 			handleNewlyLoggedInUser(user);
 			return user;
 		})
-		.error(function(error) {
+		.error(function() {
 			return {};
 		});
 	};

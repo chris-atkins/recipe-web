@@ -12,10 +12,8 @@ angular.module('recipe')
 			recipe: '=',
 			imageSavedCallback: '='
 		}
-	}
+	};
 })
 
-.controller('imageUploadModalCtrl', function ($scope) {
-
-});
+.controller('imageUploadModalCtrl', function () {});
 

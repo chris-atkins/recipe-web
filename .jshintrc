@@ -18,8 +18,10 @@
     "exports": false,
     "process": false,
     "__dirname": false,
-    "document": false
+    "document": false,
+    "$": false,
+    "SpecUtils": false
   },
-  "jasmine": true
-  
+  "jasmine": true,
+  "unused": true
 }

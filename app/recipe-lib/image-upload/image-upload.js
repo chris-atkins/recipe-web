@@ -12,7 +12,7 @@ angular.module('recipe')
 			recipe: '=',
 			imageSavedCallback: '='
 		}
-	}
+	};
 })
 
 .controller('imageUploadCtrl', function ($scope, Upload) {
@@ -43,6 +43,6 @@ angular.module('recipe')
 			if (error.status > 0)
 				$scope.errorMsg = "Error uploading image.";
 		});
-	}
+	};
 });
 

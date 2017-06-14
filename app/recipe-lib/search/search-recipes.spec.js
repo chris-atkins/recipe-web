@@ -17,7 +17,7 @@ describe('The searchRecipes module', function () {
 		recipeService.searchRecipes = SpecUtils.buildMockPromiseFunction(recipes);
 
 		recipeBookService = {};
-		recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([])
+		recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([]);
 
 		$controller('SearchRecipesCtrl',
 			{

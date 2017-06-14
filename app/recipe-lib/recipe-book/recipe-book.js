@@ -64,5 +64,5 @@ angular.module('recipe')
 
 	$scope.navigateToRecipe = function(recipeId){
 		$location.url('/view-recipe/'+ recipeId);
-	}
+	};
 });
