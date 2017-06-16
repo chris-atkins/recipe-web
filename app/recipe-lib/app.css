@@ -232,11 +232,12 @@ html {
 }
 
 body {
-    /* Margin bottom must match the footer height and floating-bottom-button height*/
+    /* Margin bottom must match the footer height and floating-bottom-button bottom margin */
     margin-bottom: 30px;
 }
 
 .floating-bottom-button {
+    /* Margin bottom must match the footer height and body bottom margin */
     margin-bottom: 30px;
 }
 
