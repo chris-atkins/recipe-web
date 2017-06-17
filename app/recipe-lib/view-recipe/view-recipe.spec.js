@@ -341,6 +341,10 @@ describe('the view recipe controller', function () {
 				var expectedRecipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
 				$httpBackend.expect('PUT', '/api/recipe/1', expectedRecipe).respond(recipe);
 				SpecUtils.clickElement($('#update-recipe-button'));
+
+				$httpBackend.flush();
+				$httpBackend.verifyNoOutstandingExpectation();
+				$httpBackend.verifyNoOutstandingRequest();
 			});
 		});
 

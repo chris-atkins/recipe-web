@@ -13,6 +13,8 @@ angular.module('recipe')
 
 	$scope.newRecipeName = '';
 	$scope.newRecipeContent = '';
+	$scope.newImage = null;
+
 	var attemptedToSaveWithNoLogin = false;
 
 	$scope.saveRecipeAndNavigate = function () {
@@ -31,6 +33,10 @@ angular.module('recipe')
 		return attemptedToSaveWithNoLogin && isNotLoggedIn();
 	};
 
+	$scope.imageSaved = function(image) {
+		$scope.newImage = image;
+	};
+
 	function isNotLoggedIn() {
 		return !userService.isLoggedIn();
 	}
@@ -38,7 +44,8 @@ angular.module('recipe')
 	function saveRecipe() {
 		var recipeToSave = {
 			recipeName: $scope.newRecipeName,
-			recipeContent: $scope.newRecipeContent
+			recipeContent: $scope.newRecipeContent,
+			image: $scope.newImage
 		};
 
 		return recipeService.saveRecipe(recipeToSave);
