@@ -32,6 +32,12 @@
     padding-left: 0px;
 }
 
+.recipe.card .recipe-image {
+    border-radius: 6px;
+    height: 110px;
+    width: 110px;
+}
+
 .cropArea {
     border-color: grey;
     background: #E4E4E4;

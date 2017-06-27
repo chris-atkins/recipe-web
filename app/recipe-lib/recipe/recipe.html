@@ -2,9 +2,8 @@
 	<div class="card-block">
 		<h5 class="recipe-name card-title ng-binding">{{recipe.recipeName}}</h5>
 		<p class="card-text"></p>
+		<img class="recipe-image" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
 	</div>
-
-	<img class="recipe-image" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
 
 	<div class="card-footer text-right">
 		<span ng-if="recipeInRecipeBook" class="in-recipe-book-indicator badge badge-default"><i class="fa fa-check" aria-hidden="true"></i> In Recipe Book</span>
