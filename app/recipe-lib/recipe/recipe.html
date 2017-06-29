@@ -1,8 +1,9 @@
 <div class="recipe card" id="{{recipe.recipeId}}" ng-click="navigateToRecipePage(recipe)">
 	<div class="card-block">
+		<img class="recipe-image" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
+		<!--<a class="recipe-image-spacer" ng-if="imageExists(recipe)"></a>-->
 		<h5 class="recipe-name card-title ng-binding">{{recipe.recipeName}}</h5>
 		<p class="card-text"></p>
-		<img class="recipe-image" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
 	</div>
 
 	<div class="card-footer text-right">

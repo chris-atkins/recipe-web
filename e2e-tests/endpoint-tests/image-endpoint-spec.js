@@ -4,7 +4,7 @@ var config = browser.params;
 var rs = require('request-promise');
 var fs = require('fs');
 
-xdescribe('the Image endpoints', function () {
+describe('the Image endpoints', function () {
 
 	var userId;
 
@@ -40,7 +40,7 @@ xdescribe('the Image endpoints', function () {
 			postOptions.resolveWithFullResponse = true;
 		}
 
-		if (options && options.userId && options.authUserId === 'none') {
+		if (options && options.authUserId === 'none') {
 			delete postOptions.headers.RequestingUser;
 		} else if (options && options.authUserId) {
 			postOptions.headers.RequestingUser = options.authUserId;
@@ -65,7 +65,7 @@ xdescribe('the Image endpoints', function () {
 			deleteOptions.resolveWithFullResponse = true;
 		}
 
-		if (options && options.userId && options.authUserId === 'none') {
+		if (options && options.authUserId === 'none') {
 			delete deleteOptions.headers.RequestingUser;
 		} else if (options && options.authUserId) {
 			deleteOptions.headers.RequestingUser = options.authUserId;
@@ -94,7 +94,7 @@ xdescribe('the Image endpoints', function () {
 			expect(response.body.imageUrl).toBeTruthy();
 			imageUrl = response.body.imageUrl;
 			imageId = response.body.imageId;
-			return performGETImage(response.body.imageUrl);
+			return performGETImage(imageUrl);
 		})
 		.then(function (response) {
 			expect(response.statusCode).toBe(200);
@@ -131,12 +131,14 @@ xdescribe('the Image endpoints', function () {
 
 		describe('with an existing image', function () {
 			var imageId;
+			var imageUrl;
 
 			beforeAll(function(done) {
 				performImagePOST({responseType: 'full'})
 				.then(function (response) {
 					expect(response.statusCode).toBe(200);
 					imageId = response.body.imageId;
+					imageUrl = response.body.imageUrl;
 				})
 				.then(done, done.fail);
 			});
@@ -149,11 +151,11 @@ xdescribe('the Image endpoints', function () {
 				.then(done, done.fail);
 			});
 
-			it('attempting to DELETE an image, if the user does not own it, will return 401 and will not delete the image', function (done) {
+			it('attempting to DELETE an image, if the user does not own it, will return 403 and will not delete the image', function (done) {
 				 performDELETEImage(imageId, {authUserId: '577d1a8e3dcc7d0c76cb72d0', responseType: 'full'})
 				.then(function (response) {
-					expect(response.statusCode).toBe(401);
-					return performGETImage(response.body.imageUrl);
+					expect(response.statusCode).toBe(403);
+					return performGETImage(imageUrl);
 				})
 				 .then(function (response) {
 					 expect(response.statusCode).toBe(200);
@@ -165,7 +167,7 @@ xdescribe('the Image endpoints', function () {
 				performDELETEImage(imageId, {authUserId: 'none', responseType: 'full'})
 				.then(function (response) {
 					expect(response.statusCode).toBe(401);
-					return performGETImage(response.body.imageUrl);
+					return performGETImage(imageUrl);
 				})
 				.then(function (response) {
 					expect(response.statusCode).toBe(200);

@@ -33,9 +33,16 @@
 }
 
 .recipe.card .recipe-image {
-    border-radius: 6px;
+    border-radius: 5px;
     height: 110px;
     width: 110px;
+    margin-right: 15px;
+}
+
+.recipe-name.card-title {
+    color: #555555;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .cropArea {
@@ -49,10 +56,6 @@
 
 .cropped-image-holder {
     float: left;
-}
-
-.recipe-name.card-title {
-    color: #555555;
 }
 
 .navbar-section {
