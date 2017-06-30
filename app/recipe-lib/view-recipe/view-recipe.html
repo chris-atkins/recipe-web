@@ -11,6 +11,8 @@
 		<span id="edit-recipe-page-title">Edit Recipe</span>
 	</h2>
 
+	<img class="editing-recipe-image" ng-show="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
+
 	<image-upload-modal image-saved-callback="imageSaved"></image-upload-modal>
 
 	<div class="form-group">

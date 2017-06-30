@@ -37,6 +37,10 @@ angular.module('recipe')
 		$scope.newImage = image;
 	};
 
+	$scope.hasImage = function() {
+		return $scope.newImage !== null;
+	};
+
 	function isNotLoggedIn() {
 		return !userService.isLoggedIn();
 	}

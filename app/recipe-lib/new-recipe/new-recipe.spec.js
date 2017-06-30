@@ -79,7 +79,17 @@ describe('the new recipe module', function () {
 				expect(recipeService.saveRecipe).toHaveBeenCalledWith(expectedRecipe);
 				done();
 			});
+		});
 
+		it('once an image has been saved, displays it on screen', function() {
+			loadPage();
+			expect($('.recipe-image')).not.toBeVisible();
+
+			scope.imageSaved({imageUrl:'hi'});
+			scope.$digest();
+
+			expect($('.recipe-image')).toBeVisible();
+			expect($('.recipe-image').attr('src')).toBe('hi');
 		});
 	});
 });

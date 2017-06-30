@@ -284,6 +284,8 @@ describe('the view recipe controller', function () {
 		var scope, imageUploadScope, upload;
 
 		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
+		var recipeWithImage = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: {imageId: 'imageId', imageUrl: 'originalUrl'}};
+
 
 		var editRecipeButtonSelector = '#edit-recipe-button';
 		var imageUploadToggleSelector = '.image-upload-toggle';
@@ -305,9 +307,10 @@ describe('the view recipe controller', function () {
 			});
 		});
 
-		function loadPageInEditMode() {
+		function loadPageInEditMode(recipeToUse) {
 			angular.mock.inject(function ($httpBackend, $templateCache, $compile) {
-				$httpBackend.expect('GET', 'api/recipe/undefined').respond(recipe);
+				var mockedRecipe = 	recipeToUse ? recipeToUse : recipe;
+				$httpBackend.expect('GET', 'api/recipe/undefined').respond(mockedRecipe);
 				$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond([]);
 				$httpBackend.flush();
 
@@ -328,6 +331,29 @@ describe('the view recipe controller', function () {
 			loadPageInEditMode();
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
+		});
+
+		it('once an image has been saved, displays it on screen', function() {
+			loadPageInEditMode(recipe);
+			expect($('.editing-recipe-image')).not.toBeVisible();
+
+			scope.imageSaved({imageUrl:'hi'});
+			scope.$digest();
+
+			expect($('.editing-recipe-image')).toBeVisible();
+			expect($('.editing-recipe-image').attr('src')).toBe('hi');
+		});
+
+		it('starts off showing an existing image, but once a new image has been saved, displays it on screen', function() {
+			loadPageInEditMode(recipeWithImage);
+			expect($('.editing-recipe-image')).toBeVisible();
+			expect($('.editing-recipe-image').attr('src')).toBe('originalUrl');
+
+			scope.imageSaved({imageUrl:'newUrl'});
+			scope.$digest();
+
+			expect($('.editing-recipe-image')).toBeVisible();
+			expect($('.editing-recipe-image').attr('src')).toBe('newUrl');
 		});
 
 		it('if an image has been uploaded, includes the uploaded image when saving the recipe', function () {

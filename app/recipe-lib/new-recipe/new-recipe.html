@@ -1,12 +1,11 @@
 <div ng-include="'recipe-lib/navbar/navbar.html'"></div>
 <div class="container">
+	<img class="recipe-image" ng-show="hasImage()" src="{{newImage.imageUrl}}" />
 	<h2>
 		<span id="new-recipe-page-title">Save a New Recipe</span>
 		<image-upload-modal image-saved-callback="imageSaved"></image-upload-modal>
 	</h2>
-</div>
 
-<div class="container">
 	<div class="form-group">
 		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="newRecipeName"/>
 	</div>
@@ -14,9 +13,7 @@
 		<trix-editor id="recipe-editor" angular-trix ng-model="newRecipeContent" placeholder="Recipe Content" toolbar="trix-toolbar"></trix-editor>
 		<trix-toolbar id="trix-toolbar"></trix-toolbar>
 	</div>
-</div>
 
-<div class="container">
 	<a class="save-button btn btn-secondary" role="button" ng-click="saveRecipeAndNavigate()">Save Recipe</a>
 </div>
 
