@@ -278,41 +278,6 @@ app.put('/api/recipe/:recipeId', function(request, response) {
 	});
 });
 
-app.post('/api/recipe/:recipeId/image', function(request, response) {
-	var recipeId =  request.params.recipeId;
-	var form = new multiparty.Form();
-
-	form.on("part", function(part){
-		if(part.filename)
-		{
-			var form = new FormData();
-			form.append("file", part, {filename: part.filename,contentType: part["content-type"]});
-
-			var url = serviceRoot + '/recipe/' + recipeId + '/image';
-			var r = rs.post(
-				url,
-				{ "headers":
-				{
-					"transfer-encoding": "chunked",
-					"RequestingUser": request.headers.requestinguser
-				}
-				},
-				function(err, res){
-					response.statusCode = res.statusCode;
-					response.send(res);
-				});
-
-			r._form = form;
-		}
-	});
-
-	form.on("error", function(error){
-		console.log(error);
-	});
-
-	form.parse(request);
-});
-
 app.post('/api/image', function(request, response) {
 	var form = new multiparty.Form();
 
