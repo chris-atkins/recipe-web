@@ -160,13 +160,13 @@ describe('the image upload modal module', function () {
 
 			$(imageUploadModalSelector).on('shown.bs.modal', function () {
 
-				$httpBackend.expect('POST', '/api/recipe/theId/image').respond(200, {data: 'data'});
+				$httpBackend.expect('POST', '/api/image').respond(200, {body: '{"data":"hi"}'});
 
 				SpecUtils.clickElement($('.upload-image-button'));
 				$httpBackend.flush();
 
 				expect(imageSavedCallbackCalled).toBe(true);
-				expect(imageSavedCallbackParam).toEqual({data: 'data'});
+				expect(imageSavedCallbackParam).toEqual({data: 'hi'});
 
 				SpecUtils.clickElement($(closeUploadSelector));
 				$(imageUploadModalSelector).on('hidden.bs.modal', function () {

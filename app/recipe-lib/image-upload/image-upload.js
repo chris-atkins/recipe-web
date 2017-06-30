@@ -9,7 +9,6 @@ angular.module('recipe')
 		templateUrl: 'recipe-lib/image-upload/image-upload.html',
 		controller: 'imageUploadCtrl',
 		scope: {
-			recipe: '=',
 			imageSavedCallback: '='
 		}
 	};
@@ -30,13 +29,13 @@ angular.module('recipe')
 	$scope.upload = function (dataUrl, name) {
 		$scope.loading = true;
 		Upload.upload({
-			url: '/api/recipe/' + $scope.recipe.recipeId + '/image',
+			url: '/api/image',
 			data: {
 				file: Upload.dataUrltoBlob(dataUrl, name)
 			}
 		}).then(function (response) {
 			$scope.loading = false;
-			$scope.result = response.data;
+			$scope.result = JSON.parse(response.data.body);
 			$scope.imageSavedCallback($scope.result);
 		}, function (error) {
 			$scope.loading = false;

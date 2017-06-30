@@ -333,7 +333,7 @@ describe('the view recipe controller', function () {
 		it('if an image has been uploaded, includes the uploaded image when saving the recipe', function () {
 			angular.mock.inject(function ($httpBackend) {
 				loadPageInEditMode();
-				upload.upload = SpecUtils.buildMockPromiseFunction({data: {imageId: 'imageId', imageUrl: 'imageUrl'}});
+				upload.upload = SpecUtils.buildMockPromiseFunction({data: {body: '{"imageId":"imageId","imageUrl":"imageUrl"}'}, status: 200});
 
 				SpecUtils.clickElement($(imageUploadToggleSelector));
 				SpecUtils.clickElement($('.upload-image-button'));

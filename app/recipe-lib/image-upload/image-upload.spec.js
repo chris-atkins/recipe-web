@@ -83,10 +83,10 @@ describe('The image-upload module', function () {
 		});
 
 		it('uploads the image when the upload button is pressed', function () {
-			upload.upload = SpecUtils.buildMockPromiseFunction({data: 'data', status: 200});
+			upload.upload = SpecUtils.buildMockPromiseFunction({data: {body: '{"data":"hi"}'}, status: 200});
 
 			var expectedArgument = {
-				url: '/api/recipe/theId/image',
+				url: '/api/image',
 				data: {
 					file: 'theFile'
 				}
@@ -115,7 +115,7 @@ describe('The image-upload module', function () {
 
 		it('displays a loading message while upload is in progress', function () {
 			angular.mock.inject(function ($httpBackend) {
-				$httpBackend.expect('POST', '/api/recipe/theId/image').respond(200, {data: 'data'});
+				$httpBackend.expect('POST', '/api/image').respond(200, {body: '{"data":"hi"}'});
 
 				SpecUtils.clickElement($('.upload-image-button'));
 				expect($('.loading-message')).toBeVisible();
@@ -128,7 +128,7 @@ describe('The image-upload module', function () {
 
 		it('displays a success message when upload is completed', function () {
 			angular.mock.inject(function ($httpBackend) {
-				$httpBackend.expect('POST', '/api/recipe/theId/image').respond(200, {data: 'data'});
+				$httpBackend.expect('POST', '/api/image').respond(200, {body: '{"data":"hi"}'});
 
 				SpecUtils.clickElement($('.upload-image-button'));
 				$httpBackend.flush();
@@ -143,19 +143,19 @@ describe('The image-upload module', function () {
 			angular.mock.inject(function ($httpBackend) {
 				imageSavedCallbackCalled = false;
 
-				$httpBackend.expect('POST', '/api/recipe/theId/image').respond(200, {data: 'data'});
+				$httpBackend.expect('POST', '/api/image').respond(200, {body: '{"data":"hi"}'});
 
 				SpecUtils.clickElement($('.upload-image-button'));
 				$httpBackend.flush();
 
 				expect(imageSavedCallbackCalled).toBe(true);
-				expect(imageSavedCallbackParam).toEqual({data: 'data'});
+				expect(imageSavedCallbackParam).toEqual({data: 'hi'});
 			});
 		});
 
 		it('displays an error message when upload is not successful', function () {
 			angular.mock.inject(function ($httpBackend) {
-				$httpBackend.expect('POST', '/api/recipe/theId/image').respond(500, {message: 'error'});
+				$httpBackend.expect('POST', '/api/image').respond(500, {message: 'error'});
 
 				SpecUtils.clickElement($('.upload-image-button'));
 				$httpBackend.flush();

@@ -223,6 +223,18 @@ function performRecipeBookDELETERecipe(userId, recipeId, request) {
 	return rs.del(deleteOptions);
 }
 
+function performDELETEImage(imageId, request) {
+	var deleteOptions = {
+		uri : serviceRoot + '/image/' + imageId,
+		headers : headersFromRequest(request),
+		json : true,
+		simple: false,
+		resolveWithFullResponse: true
+	};
+
+	return rs.del(deleteOptions);
+}
+
 app.get('/api/recipe', function(request, response) {
 	performRecipeListGET(request.query.searchString, request.query.recipeBook).then(function(data) {
 		response.statusCode = data.statusCode;	
@@ -280,15 +292,15 @@ app.post('/api/recipe/:recipeId/image', function(request, response) {
 			var r = rs.post(
 				url,
 				{ "headers":
-					{
-						"transfer-encoding": "chunked",
-						"RequestingUser": request.headers.requestinguser
-					}
+				{
+					"transfer-encoding": "chunked",
+					"RequestingUser": request.headers.requestinguser
+				}
 				},
 				function(err, res){
 					response.statusCode = res.statusCode;
 					response.send(res);
-			});
+				});
 
 			r._form = form;
 		}
@@ -299,6 +311,50 @@ app.post('/api/recipe/:recipeId/image', function(request, response) {
 	});
 
 	form.parse(request);
+});
+
+app.post('/api/image', function(request, response) {
+	var form = new multiparty.Form();
+
+	form.on("part", function(part){
+		if(part.filename)
+		{
+			var form = new FormData();
+			form.append("file", part, {filename: part.filename,contentType: part["content-type"]});
+
+			var url = serviceRoot + '/image';
+			var r = rs.post(
+				url,
+				{ "headers":
+				{
+					"transfer-encoding": "chunked",
+					"RequestingUser": request.headers.requestinguser
+				}
+				},
+				function(err, res){
+					response.statusCode = res.statusCode;
+					response.send(res);
+				});
+
+			r._form = form;
+		}
+	});
+
+	form.on("error", function(error){
+		console.log(error);
+	});
+
+	form.parse(request);
+});
+
+app.delete('/api/image/:imageId', function(request, response) {
+	var imageId = request.params.imageId;
+	performDELETEImage(imageId, request).then(function(data) {
+		response.statusCode = data.statusCode;
+	})
+	.catch(function(error) {
+		console.log('Error deleting an image. ImageId: ', imageId, 'Error:', error);
+	});
 });
 
 app.post('/api/user', function(request, response) {

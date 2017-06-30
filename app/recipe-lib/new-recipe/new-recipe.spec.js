@@ -1,6 +1,6 @@
 'use strict';
 
-xdescribe('the new recipe module', function () {
+describe('the new recipe module', function () {
 
 
 	beforeEach(angular.mock.module('recipe', 'my.templates'));
@@ -46,7 +46,7 @@ xdescribe('the new recipe module', function () {
 
 	describe('when logged in', function () {
 
-		beforeEach(function() {
+		beforeEach(function () {
 			spyOn(userService, 'isLoggedIn').and.returnValue(true);
 		});
 
@@ -56,22 +56,30 @@ xdescribe('the new recipe module', function () {
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
 
-		it('if an image has been uploaded, includes the uploaded image when saving the recipe', function () {
+		function removeModalBackdrop() {
+			var back = $('.modal-backdrop');
+			back.remove();
+		}
+
+		it('if an image has been uploaded, includes the uploaded image when saving the recipe', function (done) {
 			loadPage();
-			upload.upload = SpecUtils.buildMockPromiseFunction({data: {imageId: 'imageId', imageUrl: 'imageUrl'}});
-			recipeService.saveRecipe = SpecUtils.buildMockPromiseFunction({recipeId: '1', recipeName: 'name', recipeContent: 'content', image: {imageId: 'imageId', imageUrl: 'imageUrl'}});
+			upload.upload = SpecUtils.buildMockPromiseFunction({data: {body: '{"imageId":"imageId", "imageUrl":"imageUrl"}'}, status: 200});
+			recipeService.saveRecipe = SpecUtils.buildMockPromiseFunction({});
 
 			SpecUtils.clickElement($(imageUploadToggleSelector));
-			SpecUtils.clickElement($('.upload-image-button'));
 
-			var expectedRecipe = {recipeName: '', recipeContent: '', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
+			$('.image-upload-modal').on('shown.bs.modal', function () {
+				SpecUtils.clickElement($('.upload-image-button'));
+				SpecUtils.clickElement($('.close-upload-image-button'));
+				removeModalBackdrop();
 
+				var expectedRecipe = {recipeName: '', recipeContent: '', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
 
-			SpecUtils.clickElement($('.save-button'));
+				SpecUtils.clickElement($('.save-button'));
+				expect(recipeService.saveRecipe).toHaveBeenCalledWith(expectedRecipe);
+				done();
+			});
 
-			expect(recipeService.saveRecipe).toHaveBeenCalledWith(expectedRecipe);
 		});
-
-
 	});
 });
