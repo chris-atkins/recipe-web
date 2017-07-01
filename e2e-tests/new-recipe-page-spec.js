@@ -45,7 +45,7 @@ describe('the new recipe page,', function () {
 
             it('has a title', function () {
                 var pageTitle = element(by.id('new-recipe-page-title'));
-                expect(pageTitle.getText()).toBe('Save a New Recipe');
+                expect(pageTitle.getText()).toBe('New Recipe');
             });
 
             it('has an input to enter the recipe name', function () {

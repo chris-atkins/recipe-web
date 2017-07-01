@@ -335,25 +335,25 @@ describe('the view recipe controller', function () {
 
 		it('once an image has been saved, displays it on screen', function() {
 			loadPageInEditMode(recipe);
-			expect($('.editing-recipe-image')).not.toBeVisible();
+			expect($('.edit-recipe-page .recipe-image')).not.toBeVisible();
 
 			scope.imageSaved({imageUrl:'hi'});
 			scope.$digest();
 
-			expect($('.editing-recipe-image')).toBeVisible();
-			expect($('.editing-recipe-image').attr('src')).toBe('hi');
+			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
+			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('hi');
 		});
 
 		it('starts off showing an existing image, but once a new image has been saved, displays it on screen', function() {
 			loadPageInEditMode(recipeWithImage);
-			expect($('.editing-recipe-image')).toBeVisible();
-			expect($('.editing-recipe-image').attr('src')).toBe('originalUrl');
+			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
+			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('originalUrl');
 
 			scope.imageSaved({imageUrl:'newUrl'});
 			scope.$digest();
 
-			expect($('.editing-recipe-image')).toBeVisible();
-			expect($('.editing-recipe-image').attr('src')).toBe('newUrl');
+			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
+			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('newUrl');
 		});
 
 		it('if an image has been uploaded, includes the uploaded image when saving the recipe', function () {

@@ -1,19 +1,20 @@
 <div ng-include="'recipe-lib/navbar/navbar.html'"></div>
 
-<div class="container" ng-hide="inEditMode()">
-	<img class="recipe-image image-with-bottom-buffer" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
+<div class="container view-recipe-page" ng-hide="inEditMode()">
+	<img class="recipe-image" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
 	<h2><span id="recipe-name">{{recipe.recipeName}}</span></h2>
 	<p><span id="recipe-content" class="show-line-breaks" ng-bind-html="recipe.recipeContent"></span></p>
 </div>
 
-<div class="container" ng-show="inEditMode()">
-	<h2 class="edit-recipe-page-title">
-		<span id="edit-recipe-page-title">Edit Recipe</span>
-	</h2>
+<div class="container edit-recipe-page" ng-show="inEditMode()">
+	<div class="edit-recipe-title-holder"><h2><span id="edit-recipe-page-title">Edit Recipe</span></h2></div>
 
-	<img class="editing-recipe-image" ng-show="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
-
-	<image-upload-modal image-saved-callback="imageSaved"></image-upload-modal>
+	<div class="serves-as-newline" ng-show="imageExists(recipe)"></div>
+	<img class="recipe-image" ng-show="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
+	<div class="image-upload-holder">
+		<div class="image-upload-toggle-spacer" ng-show="imageExists(recipe)"></div>
+		<image-upload-modal image-saved-callback="imageSaved"></image-upload-modal>
+	</div>
 
 	<div class="form-group">
 		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="nameBeingEdited"/>

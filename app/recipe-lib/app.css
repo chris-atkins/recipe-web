@@ -2,9 +2,42 @@
     background-color: #001f3f;
 }
 
-.edit-recipe-page-title {
-    float: left;
-    margin-bottom: 21px;
+.save-recipe-title-holder,
+.edit-recipe-title-holder {
+    display: inline-block;
+}
+
+#recipe-name-input {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    margin-top: 9px;
+}
+
+.image-upload-holder {
+    display: inline;
+    float: right;
+}
+
+.view-recipe-page .recipe-image {
+    height: 200px;
+    width: 200px;
+    margin-bottom: 15px;
+    border-radius: 3px;
+}
+
+.new-recipe-page .recipe-image,
+.edit-recipe-page .recipe-image {
+    /*if this changes, also change the image-upload-toggle-spacer*/
+    height: 200px;
+    width: 200px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-radius: 3px;
+}
+
+.image-upload-toggle-spacer {
+    /* if the recipe image in show single recipe mode changes height, this will need to change the same # pixels*/
+    min-height: 174px;
 }
 
 .image-upload-toggle {
@@ -228,10 +261,6 @@
 .recipe-table-body {
     border-top: 2px solid #ddd;
     border-bottom: 2px solid #ddd;
-}
-
-.image-with-bottom-buffer {
-    margin-bottom: 15px;
 }
 
 /** FOOTER SECTION **/

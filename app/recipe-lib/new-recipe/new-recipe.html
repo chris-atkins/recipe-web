@@ -1,10 +1,13 @@
 <div ng-include="'recipe-lib/navbar/navbar.html'"></div>
-<div class="container">
+<div class="container new-recipe-page">
+	<div class="save-recipe-title-holder"><h2><span id="new-recipe-page-title">New Recipe</span></h2></div>
+
+	<div class="serves-as-newline" ng-show="hasImage()"></div>
 	<img class="recipe-image" ng-show="hasImage()" src="{{newImage.imageUrl}}" />
-	<h2>
-		<span id="new-recipe-page-title">Save a New Recipe</span>
+	<div class="image-upload-holder">
+		<div class="image-upload-toggle-spacer" ng-show="hasImage()"></div>
 		<image-upload-modal image-saved-callback="imageSaved"></image-upload-modal>
-	</h2>
+	</div>
 
 	<div class="form-group">
 		<input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" ng-model="newRecipeName"/>
