@@ -2,6 +2,12 @@
     background-color: #001f3f;
 }
 
+@media print {
+    h2::first-letter {
+        margin-top: 0;
+    }
+}
+
 .save-recipe-title-holder,
 .edit-recipe-title-holder {
     display: inline-block;
