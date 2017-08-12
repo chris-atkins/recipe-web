@@ -11,6 +11,7 @@ describe('Login functionality from the home page', function() {
 	var userSignUpMessage = navbarSection.element(by.className('user-sign-up-message'));
 	var signupButton = element(by.id('sign-up-user-button'));
 	var signupNameField = element(by.id('sign-up-user-name'));
+	var googleSignIn = element(by.className('google-auth'));
 	var loginEmailField = element(by.id('sign-up-user-email'));
 	var loggedInUserDropdown = navbarSection.element(by.className('login-dropdown'));
 	var logoutButton = element(by.id('log-out-button'));
@@ -45,11 +46,13 @@ describe('Login functionality from the home page', function() {
 				expect(userLoginMessage.isDisplayed()).toBe(true);
 				expect(loginEmailField.isDisplayed()).toBe(true);
 				expect(loginButton.isDisplayed()).toBe(true);
+				expect(googleSignIn.isDisplayed()).toBe(true);
 
 				loginDropdown.click();
 				expect(signupNameField.isDisplayed()).toBe(false);
 				expect(loginEmailField.isDisplayed()).toBe(false);
 				expect(userLoginMessage.isDisplayed()).toBe(false);
+				expect(googleSignIn.isDisplayed()).toBe(false);
 			});
 		});
 		
@@ -95,6 +98,7 @@ describe('Login functionality from the home page', function() {
 	});
 
 	function expectLoginFieldsAreDisplayed() {
+		expect(googleSignIn.isDisplayed()).toBe(true);
 		expect(userSignUpMessage.isDisplayed()).toBe(false);
 		expect(userLoginMessage.isDisplayed()).toBe(true);
 		expect(userLoginMessage.getText()).toBe("Enter your email address to log in or sign up.");
@@ -106,6 +110,7 @@ describe('Login functionality from the home page', function() {
 	}
 	
 	function expectSignupFieldsAreDisplayed() {
+		expect(googleSignIn.isDisplayed()).toBe(false);
 		expect(userSignUpMessage.isDisplayed()).toBe(true);
 		expect(userSignUpMessage.getText()).toBe("What name would you like to use?");
 		expect(userLoginMessage.isDisplayed()).toBe(false);
@@ -117,6 +122,7 @@ describe('Login functionality from the home page', function() {
 	}
 	
 	function expectNoUserFieldsAreDisplayed() {
+		expect(googleSignIn.isDisplayed()).toBe(false);
 		expect(userSignUpMessage.isDisplayed()).toBe(false);
 		expect(userLoginMessage.isDisplayed()).toBe(false);
 		expect(signupNameField.isDisplayed()).toBe(false);
@@ -194,7 +200,8 @@ describe('Login functionality from the home page', function() {
 			loggedInUserDropdown.click();
 			expect(logoutButton.isDisplayed()).toBe(true);
 			expect(logoutButton.getText()).toBe('Log Out');
-			
+			expect(googleSignIn.isDisplayed()).toBe(false);
+
 			logoutButton.click();
 			expect(loginDropdown.isDisplayed()).toBe(true);
 			expect(logoutButton.isDisplayed()).toBe(false);

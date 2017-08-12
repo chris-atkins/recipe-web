@@ -19,13 +19,6 @@
 					<small>{{loginMessage}}</small>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="logoutLink">
-					<div class="google-auth">
-						<img  ng-click="googleAuthClicked()" src="recipe-lib/images/btn_google_signin_dark_normal_web.png"
-							 onmouseover="this.src='recipe-lib/images/btn_google_signin_dark_focus_web.png'"
-							 onmouseout="this.src='recipe-lib/images/btn_google_signin_dark_normal_web	.png'"
-							 onmousedown="this.src='recipe-lib/images/btn_google_signin_dark_pressed_web.png'"/></div>
-
-					<div class="login-or-separator">Or</div>
 
 					<div class="login-fields nav-item" ng-show="shouldShowLogIn()">
 						<div class="user-login-message">
@@ -34,6 +27,15 @@
 						<div class="form-inline input-group input-group-sm">
 							<input id="sign-up-user-email" class="form-control input-sm" ng-model="email" placeholder="jane.doe@example.com"></input>
 							<button id="log-in-user-button" class="btn btn-secondary btn-sm" ng-click="logIn($event)">Log In</button>
+						</div>
+
+						<div class="login-or-separator">Or</div>
+
+						<div class="google-auth">
+							<img  ng-click="googleAuthClicked()" src="recipe-lib/images/btn_google_signin_dark_normal_web.png"
+								  onmouseover="this.src='recipe-lib/images/btn_google_signin_dark_focus_web.png'"
+								  onmouseout="this.src='recipe-lib/images/btn_google_signin_dark_normal_web	.png'"
+								  onmousedown="this.src='recipe-lib/images/btn_google_signin_dark_pressed_web.png'"/>
 						</div>
 					</div>
 					<div class="login-fields nav-item" ng-show="shouldShowSignUp()">
