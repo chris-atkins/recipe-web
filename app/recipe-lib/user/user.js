@@ -2,7 +2,7 @@
 
 angular.module('recipe')
 
-.factory('userService', function($http, $cookies) {
+.factory('userService', function ($http, $cookies) {
 
 	var userCookieKey = 'myrecipeconnection.com.usersLoggedInFromThisBrowser';
 	var now = new Date();
@@ -13,39 +13,39 @@ angular.module('recipe')
 
 	initializeUserAndLoggedInStatus();
 
-	var isLoggedIn = function() {
+	var isLoggedIn = function () {
 		return loggedIn;
 	};
 
-	var getLoggedInUser = function() {
+	var getLoggedInUser = function () {
 		return loggedInUser;
 	};
 
-	var logIn = function(email) {
+	var logIn = function (email) {
 		return $http.get('api/user?email=' + email)
-		.success(function(user) {
+		.success(function (user) {
 			handleNewlyLoggedInUser(user);
 			return user;
 		})
-		.error(function() {
+		.error(function () {
 			return {};
 		});
 	};
 
-	var signUp = function(name, email) {
+	var signUp = function (name, email) {
 		var userToSave = {userName: name, userEmail: email};
 
 		return $http.post('/api/user', userToSave)
-		.success(function(user) {
+		.success(function (user) {
 			handleNewlyLoggedInUser(user);
 			return user;
 		})
-		.error(function() {
+		.error(function () {
 			return {};
 		});
 	};
 
-	var logOut = function() {
+	var logOut = function () {
 		$cookies.remove(userCookieKey);
 		loggedInUser = {};
 		loggedIn = false;
@@ -69,7 +69,31 @@ angular.module('recipe')
 	}
 
 	function saveUserToCookie(user) {
-		$cookies.putObject(userCookieKey, user, {expires:cookieExpires});
+		$cookies.putObject(userCookieKey, user, {expires: cookieExpires});
+	}
+
+	var doesCookieExistForExternalLogin = function () {
+		var googleAuthUser = $cookies.getObject('RecipeConnectionGoogleAuth');
+		return googleAuthUser !== undefined;
+	};
+
+	var performExternalLogin = function () {
+		var googleAuthUser = $cookies.getObject('RecipeConnectionGoogleAuth');
+		if (googleAuthUser === undefined) {
+			return {};
+		}
+		return googleLogIn(googleAuthUser.userName, googleAuthUser.userEmail);
+	};
+
+	function googleLogIn(name, email) {
+		return $http.get('/api/user?email=' + email)
+		.then(function (user) {
+			handleNewlyLoggedInUser(user.data);
+			return user;
+		})
+		.catch(function () {
+			return signUp(name, email);
+		});
 	}
 
 	return {
@@ -77,6 +101,8 @@ angular.module('recipe')
 		isLoggedIn: isLoggedIn,
 		logIn: logIn,
 		signUp: signUp,
-		logOut: logOut
+		logOut: logOut,
+		isExternalLoginBeingAttempted: doesCookieExistForExternalLogin,
+		performExternalLogin: performExternalLogin
 	};
 });

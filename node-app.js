@@ -5,18 +5,18 @@ var http = require('http');
 var path = require('path');
 var multiparty = require('multiparty');
 var FormData = require('form-data');
-// var cookieParser = require('cookie-parser');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var rs = require('request-promise');
 
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;	
 var LocalStrategy = require('passport-local').Strategy;
-var jwt = require('jsonwebtoken');
+// var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 
 var serviceIp = process.env.SERVICE_IP || '127.0.0.1';
-var webIp = process.env.WEB_IP || 'localhost';
+// var webIp = process.env.WEB_IP || 'localhost';
 var serviceRoot = 'http://' + serviceIp + ':5555/api';
 var port = process.env.PORT || '8000';
 
@@ -26,17 +26,15 @@ app.set('port', port);
 app.use(express.static(path.join(__dirname, 'app')));
 app.use(bodyParser.urlencoded({extended: 'true'}));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 
 passport.serializeUser(function(user, done) {
-    done(null, user.name);
+    done(null, user.userName); //not used but required for passport
 });
 
 passport.deserializeUser(function(userName, done) {
-	if (userName === 'Chris') {
-		done({name: 'Chris'});
-	}
-	done('error', null);
+		done({userName: 'Chris :)'}); //not used but required for passport
 });
 
 // var auth = function(req, res, next) {
@@ -51,17 +49,13 @@ passport.deserializeUser(function(userName, done) {
 
 passport.use(new GoogleStrategy({
 	//see https://console.developers.google.com to get the clientID and clientSecret
-		clientID: 'abc',//GOOGLE_CLIENT_ID,
-		clientSecret: '123',//GOOGLE_CLIENT_SECRET,
-		callbackURL: 'http://' + webIp + '/auth/google/callback'
+		clientID: process.env.GOOGLE_CLIENT_ID,
+		clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+		callbackURL: '/auth/google/callback'
 		//add this to the html:  <a href="/auth/google" class="btn btn-info"><span class="fa fa-google-plus"></span> Google</a>
 	},
 	function(accessToken, refreshToken, profile, cb) {
-//    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-//      return cb(err, user);
-//    });
-		console.log("INSIDE GOOGLE STRATEGY FUNCTION:", profile);
-		return cb(null, profile); //?? not sure about this
+		return cb(null, {userName: profile.name.givenName, userEmail: profile.emails[0].value});
 	}
 ));
 
@@ -355,15 +349,6 @@ app.get('/api/user/:userId', function(request, response) {
 	});
 });
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
-
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }),
-	function(req, res) {
-		// Successful authentication, redirect home.
-		res.redirect('/');
-	}
-);
-
 app.post('/login', passport.authenticate('local-login', {
     successRedirect : '/', // redirect to the secure profile section
     failureRedirect : '/login', // redirect back to the signup page if there is an error
@@ -405,51 +390,19 @@ app.delete('/api/user/:userId/recipe-book/:recipeId', function(request, response
 	});
 });
 
-app.post('/auth', passport.authenticate(  
-  'local-login', {
-    session: false
-  }), serialize, generateToken, respond);
+app.get('/auth/google', function(request, response) {
+	var callbackPath = request.query.callbackPath;
+	response.cookie('RecipeConnectionGoogleAuthRedirectUrl', callbackPath, { maxAge: 1000000, httpOnly: false });
+	passport.authenticate('google', { scope: ['profile','email'] })(request, response);
+});
 
-function serialize(req, res, next) {  
-	  db.updateOrCreate(req.user, function(err, user){
-	    if(err) {return next(err);}
-	    // we store the updated information in req.user again
-	    req.user = {
-	      id: user.email, 
-	      name: user.name, 
-	      email: user.email, 
-	      ipAddress: user.ipAddress
-	    };
-	    next();
-	  });
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: 'back'}),
+	function(request, response) {
+		var callbackPath = '/#' + request.cookies.RecipeConnectionGoogleAuthRedirectUrl;
+		response.cookie('RecipeConnectionGoogleAuth', JSON.stringify(request.user), { maxAge: 10000, httpOnly: false });
+		response.redirect(callbackPath);
 	}
-
-var db = {  
-  updateOrCreate: function(user, cb){
-    // db dummy, we just cb the user
-    cb(null, user);
-  }
-};
-
-function generateToken(req, res, next) {  
-	req.token = jwt.sign(
-			{
-				id: req.user.id,
-				email: req.user.email,
-				ipAddress: req.user.ipAddress
-			},
-			'server secret'
-			//,{expiresInMinutes: 120}
-	);
-	next();
-}
-
-function respond(req, res) {  
-	  res.status(200).json({
-	    user: req.user,
-	    token: req.token
-	  });
-}
+);
 
 var authenticate = expressJwt({secret : 'server secret'});
 app.get('/test-auth', authenticate, function(request, response) {

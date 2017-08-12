@@ -11,7 +11,7 @@ describe('the new recipe page,', function () {
     var errorMessage = element(by.className('save-error-message'));
     var allRecipesOnBrowsePage = element.all(by.className('recipe'));
 
-    var loginLink = element(by.className('login-link'));
+    var loginDropdown = element(by.className('login-dropdown'));
     var loginButton = element(by.id('log-in-user-button'));
     var loginEmailField = element(by.id('sign-up-user-email'));
 
@@ -142,7 +142,7 @@ describe('the new recipe page,', function () {
         });
 
         function login() {
-            loginLink.click();
+            loginDropdown.click();
             loginEmailField.sendKeys(email);
             loginButton.click();
         }

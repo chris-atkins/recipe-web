@@ -1,6 +1,6 @@
 'use strict';
 
-var loginLink = element(by.className('login-link'));
+var loginDropdown = element(by.className('login-dropdown'));
 var loginButton = element(by.id('log-in-user-button'));
 var loginEmailField = element(by.id('sign-up-user-email'));
 
@@ -21,7 +21,7 @@ function login(userEmail) {
 }
 
 function loginWithoutNavigating(userEmail) {
-	return loginLink.click()
+	return loginDropdown.click()
 	.then(function() {
 		browser.waitForAngular();
 		loginEmailField.sendKeys(userEmail);

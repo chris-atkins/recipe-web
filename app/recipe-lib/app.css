@@ -8,6 +8,20 @@
     }
 }
 
+.google-auth img {
+    width: 45%;
+}
+
+.google-auth {
+    text-align: center;
+}
+
+.login-or-separator {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
 .save-recipe-title-holder,
 .edit-recipe-title-holder {
     display: inline-block;

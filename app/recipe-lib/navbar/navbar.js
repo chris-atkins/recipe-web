@@ -2,10 +2,10 @@
 
 angular.module('recipe')
 
-.controller('NavbarCtrl', function($scope, $http, userService, $location) {
-	
+.controller('NavbarCtrl', function ($scope, $http, userService, $location, externalNavigationService) {
+
 	var loginHasBeenAttempted = false;
-	
+
 	$scope.user = userService.getLoggedInUser();
 	$scope.isLoggedIn = userService.isLoggedIn();
 	$scope.loginMessage = buildLoginMessage();
@@ -16,23 +16,26 @@ angular.module('recipe')
 	$scope.email = '';
 
 	$scope.alertVisible = false;
-	$scope.isAlertVisible = function() {
+
+	handleExternalLoginIfUserIsAttemptingOne();
+
+	$scope.isAlertVisible = function () {
 		return $scope.alertVisible;
 	};
-	$scope.setAlertVisible = function(value) {
+	$scope.setAlertVisible = function (value) {
 		$scope.alertVisible = value;
 		// $scope.$digest();
 	};
 
-	$scope.navigateHome = function() {
+	$scope.navigateHome = function () {
 		$location.url('/home');
 	};
 
-	$scope.navigateBrowse = function() {
+	$scope.navigateBrowse = function () {
 		$location.url('/search-recipes');
 	};
 
-	$scope.navigateSave = function() {
+	$scope.navigateSave = function () {
 		if (userService.isLoggedIn()) {
 			$location.url('/new-recipe');
 		} else {
@@ -40,7 +43,7 @@ angular.module('recipe')
 		}
 	};
 
-	$scope.navigateRecipeBook = function() {
+	$scope.navigateRecipeBook = function () {
 		if (userService.isLoggedIn()) {
 			$location.url('/user/' + userService.getLoggedInUser().userId + '/recipe-book');
 		} else {
@@ -48,44 +51,48 @@ angular.module('recipe')
 		}
 	};
 
-	$scope.loginClicked = function() {
+	$scope.loginClicked = function () {
 		$scope.setAlertVisible(false);
 	};
 
-	$scope.logIn = function($event) {
+	$scope.googleAuthClicked = function () {
+		externalNavigationService.navigateTo('/auth/google?callbackPath=' + $location.path());
+	};
+
+	$scope.logIn = function ($event) {
 		$event.stopImmediatePropagation();
 		var target = $event.target;
 		loginHasBeenAttempted = true;
-		userService.logIn($scope.email).then(function() {
+		userService.logIn($scope.email).then(function () {
 			updateUserStatus();
-			if($scope.isLoggedIn) {
+			if ($scope.isLoggedIn) {
 				target.parentElement.click();
 			}
 		});
 	};
-	
-	$scope.signUp = function() {
-		userService.signUp($scope.name, $scope.email).then(function() {
+
+	$scope.signUp = function () {
+		userService.signUp($scope.name, $scope.email).then(function () {
 			updateUserStatus();
 		});
 	};
-	
-	$scope.logOut = function() {
+
+	$scope.logOut = function () {
 		userService.logOut();
 		updateUserStatus();
 		resetLogin();
 	};
 
-	$scope.shouldShowLogIn = function() {
+	$scope.shouldShowLogIn = function () {
 		return !$scope.isLoggedIn && !loginHasBeenAttempted;
 	};
-	
-	$scope.shouldShowSignUp = function() {
+
+	$scope.shouldShowSignUp = function () {
 		return !$scope.isLoggedIn && loginHasBeenAttempted;
 	};
 
 	function buildLoginMessage() {
-		if ($scope.user  && $scope.user.userId) {
+		if ($scope.user && $scope.user.userId) {
 			return 'Welcome, ' + $scope.user.userName;
 		} else {
 			return 'Log In';
@@ -97,10 +104,18 @@ angular.module('recipe')
 		$scope.isLoggedIn = userService.isLoggedIn();
 		$scope.loginMessage = buildLoginMessage();
 	}
-	
+
 	function resetLogin() {
 		$scope.loginVisible = false;
 		$scope.logoutVisible = false;
 		loginHasBeenAttempted = false;
+	}
+
+	function handleExternalLoginIfUserIsAttemptingOne() {
+		if (userService.isExternalLoginBeingAttempted()) {
+			userService.performExternalLogin().then(function () {
+				updateUserStatus();
+			});
+		}
 	}
 });

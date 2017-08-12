@@ -15,10 +15,18 @@
 	<div class="container user-nav-section-container">
 		<div class="navbar-nav ml-auto user-nav-section">
 			<div class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle login-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="loginClicked()">
+				<a class="nav-link dropdown-toggle login-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="loginClicked()">
 					<small>{{loginMessage}}</small>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="logoutLink">
+					<div class="google-auth">
+						<img  ng-click="googleAuthClicked()" src="recipe-lib/images/btn_google_signin_dark_normal_web.png"
+							 onmouseover="this.src='recipe-lib/images/btn_google_signin_dark_focus_web.png'"
+							 onmouseout="this.src='recipe-lib/images/btn_google_signin_dark_normal_web	.png'"
+							 onmousedown="this.src='recipe-lib/images/btn_google_signin_dark_pressed_web.png'"/></div>
+
+					<div class="login-or-separator">Or</div>
+
 					<div class="login-fields nav-item" ng-show="shouldShowLogIn()">
 						<div class="user-login-message">
 							<small>Enter your email address to log in or sign up.</small>

@@ -1,6 +1,5 @@
 'use strict';
 
-
 describe('the recipe directive', function () {
 
 	var scope, location, userService, recipeBookService, parentScope;

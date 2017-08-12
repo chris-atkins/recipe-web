@@ -5,14 +5,14 @@ var dataUtils = require('./utils/data-utils');
 describe('Login functionality from the home page', function() {
 	
 	var navbarSection = element(by.className('navbar-section'));
-	var loginLink = navbarSection.element(by.className('login-link'));
+	var loginDropdown = navbarSection.element(by.className('login-dropdown'));
 	var userLoginMessage = navbarSection.element(by.className('user-login-message'));
 	var loginButton = element(by.id('log-in-user-button'));
 	var userSignUpMessage = navbarSection.element(by.className('user-sign-up-message'));
 	var signupButton = element(by.id('sign-up-user-button'));
 	var signupNameField = element(by.id('sign-up-user-name'));
 	var loginEmailField = element(by.id('sign-up-user-email'));
-	var loggedInUserLink = navbarSection.element(by.className('login-link'));
+	var loggedInUserDropdown = navbarSection.element(by.className('login-dropdown'));
 	var logoutButton = element(by.id('log-out-button'));
 
 	beforeAll(function() {
@@ -30,8 +30,8 @@ describe('Login functionality from the home page', function() {
 		});
 		
 		it('starts off with the "Log In" link visisble', function() {
-			expect(loginLink.isPresent()).toBe(true);
-			expect(loginLink.getText()).toBe("Log In");
+			expect(loginDropdown.isPresent()).toBe(true);
+			expect(loginDropdown.getText()).toBe("Log In");
 			
 			expectNoUserFieldsAreDisplayed();
 		});
@@ -41,12 +41,12 @@ describe('Login functionality from the home page', function() {
 			it('toggles login fields when the login link is selected', function() {
 				browser.get('');
 				
-				loginLink.click();
+				loginDropdown.click();
 				expect(userLoginMessage.isDisplayed()).toBe(true);
 				expect(loginEmailField.isDisplayed()).toBe(true);
 				expect(loginButton.isDisplayed()).toBe(true);
 
-				loginLink.click();
+				loginDropdown.click();
 				expect(signupNameField.isDisplayed()).toBe(false);
 				expect(loginEmailField.isDisplayed()).toBe(false);
 				expect(userLoginMessage.isDisplayed()).toBe(false);
@@ -60,7 +60,7 @@ describe('Login functionality from the home page', function() {
 			it('and their name is displayed instead of the Log In link, and is persisted when refreshed', function() {
 				browser.get('');
 				
-				loginLink.click();
+				loginDropdown.click();
 				expectLoginFieldsAreDisplayed();
 				loginEmailField.sendKeys(email);
 				
@@ -79,7 +79,7 @@ describe('Login functionality from the home page', function() {
 			it('when registering with an existing email, and is persisted when refreshed', function() {
 				browser.get('');
 				
-				loginLink.click();
+				loginDropdown.click();
 				expectLoginFieldsAreDisplayed();
 				loginEmailField.sendKeys(email);
 				
@@ -130,7 +130,7 @@ describe('Login functionality from the home page', function() {
 		
 		beforeAll(function() {
 			browser.get('');
-			loginLink.click();
+			loginDropdown.click();
 			loginEmailField.sendKeys(dataUtils.randomEmail());
 			
 			loginButton.click();
@@ -143,10 +143,6 @@ describe('Login functionality from the home page', function() {
 		it('automatically logs the user in', function() {
 			browser.refresh();
 			expectLoggedInUserLinkToBe('Welcome, UserAlreadySignedInFromThisBrowser');
-		});
-		
-		it('the user can sign in as a different user', function() {
-			
 		});
 	});
 	
@@ -169,7 +165,7 @@ describe('Login functionality from the home page', function() {
 		
 		it('they stay logged in when navigating between pages', function() {
 			browser.get('');
-			loginLink.click();
+			loginDropdown.click();
 			
 			loginEmailField.sendKeys(dataUtils.randomEmail());
 			loginButton.click();
@@ -186,7 +182,7 @@ describe('Login functionality from the home page', function() {
 			var email=dataUtils.randomEmail();
 			
 			browser.get('');
-			loginLink.click();
+			loginDropdown.click();
 			
 			loginEmailField.sendKeys(email);
 			loginButton.click();
@@ -195,16 +191,16 @@ describe('Login functionality from the home page', function() {
 			signupButton.click();			
 			expectLoggedInUserLinkToBe('Welcome, OhaiOneMoreTime');
 
-			loggedInUserLink.click();
+			loggedInUserDropdown.click();
 			expect(logoutButton.isDisplayed()).toBe(true);
 			expect(logoutButton.getText()).toBe('Log Out');
 			
 			logoutButton.click();
-			expect(loginLink.isDisplayed()).toBe(true);
+			expect(loginDropdown.isDisplayed()).toBe(true);
 			expect(logoutButton.isDisplayed()).toBe(false);
 			expectNoUserFieldsAreDisplayed();
 			
-			loginLink.click();
+			loginDropdown.click();
 			expectLoginFieldsAreDisplayed();
 			loginEmailField.clear();
 			loginEmailField.sendKeys(email);
@@ -212,14 +208,14 @@ describe('Login functionality from the home page', function() {
 			expect(logoutButton.isDisplayed()).toBe(false);
 			expectLoggedInUserLinkToBe('Welcome, OhaiOneMoreTime');
 			
-			loggedInUserLink.click();
+			loggedInUserDropdown.click();
 			logoutButton.click();
 			browser.refresh();
-			expect(loginLink.isDisplayed()).toBe(true);
+			expect(loginDropdown.isDisplayed()).toBe(true);
 		});
 	});
 	
 	function expectLoggedInUserLinkToBe(expectedText) {
-		expect(loggedInUserLink.getText()).toBe(expectedText);
+		expect(loggedInUserDropdown.getText()).toBe(expectedText);
 	}
 });

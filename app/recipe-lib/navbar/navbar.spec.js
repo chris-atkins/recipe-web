@@ -2,32 +2,31 @@
 
 describe('the navbar module', function () {
 
-	var scope, location, http, userService;
+	var scope, location, userService, externalNavigationService;
+
 	var loggedInUser = {'userId': 'userId1', 'userName': 'Me', 'userEmail': 'i'};
 
 	beforeEach(angular.mock.module('my.templates', 'recipe'));
 
-	beforeEach(angular.mock.inject(function ($rootScope, $httpBackend, _$location_, $controller, _userService_) {
+	beforeEach(angular.mock.inject(function ($rootScope, _$location_, $controller, _userService_, $http, _externalNavigationService_) {
 		scope = $rootScope.$new();
 		location = _$location_;
 		userService = _userService_;
+		externalNavigationService = _externalNavigationService_;
 
 		$controller('NavbarCtrl', {
 			$scope: scope,
-			$http: http,
+			$http: $http,
 			userService: userService,
-			$location: location
+			$location: location,
+			externalNavigationService: externalNavigationService
 		});
-
-		// httpBackend.expect('GET', 'api/user/userId1').respond(loggedInUser);
-		// httpBackend.flush();
-
 	}));
 
 
 	describe('when the user is logged in', function () {
 
-		beforeEach(function() {
+		beforeEach(function () {
 			userService.getLoggedInUser = jasmine.createSpy('').and.returnValue(loggedInUser);
 			userService.isLoggedIn = jasmine.createSpy('').and.returnValue(true);
 			SpecUtils.loadPage('recipe-lib/navbar/navbar.html', scope);
@@ -67,21 +66,21 @@ describe('the navbar module', function () {
 		});
 	});
 
-	describe('when the user is not logged in', function() {
+	describe('when the user is not logged in', function () {
 
-		beforeEach(function() {
+		beforeEach(function () {
 			userService.getLoggedInUser = jasmine.createSpy('').and.returnValue({});
 			userService.isLoggedIn = jasmine.createSpy('').and.returnValue(false);
 			SpecUtils.loadPage('recipe-lib/navbar/navbar.html', scope);
 			spyOn(location, 'url');
 		});
 
-		it('the alert starts off invisible', function() {
+		it('the alert starts off invisible', function () {
 			var needToLogInAlert = $('.need-to-log-in-alert');
 			expect(needToLogInAlert).not.toBeVisible();
 		});
 
-		it('the Home Page link works the same as when the user is logged in', function(){
+		it('the Home Page link works the same as when the user is logged in', function () {
 			var homePageLink = $('.nav-home-page-link');
 			SpecUtils.clickElement(homePageLink);
 			expect(location.url).toHaveBeenCalledWith('/home');
@@ -111,11 +110,46 @@ describe('the navbar module', function () {
 			var needToLogInAlert = $('.login-required-alert .message');
 			expect(needToLogInAlert).toBeVisible();
 		});
+
+		describe('there is login functionality available', function () {
+
+			it('there exists a dropdown that has google auth or manual email entering options', function () {
+				var loginDropdown = $('.login-dropdown');
+				SpecUtils.clickElement(loginDropdown);
+
+				var googleAuthButton = $('.user-dropdown-menu .google-auth');
+				var emailEntryField = $('.user-dropdown-menu input#sign-up-user-email');
+				var loginButton = $('.user-dropdown-menu button#log-in-user-button');
+
+				expect(googleAuthButton).toBeVisible();
+
+				expect(emailEntryField).toBeVisible();
+
+				expect(loginButton).toBeVisible();
+				expect(loginButton.text()).toBe('Log In');
+			});
+
+			describe('with google login that', function () {
+
+				it('navigates to a google auth endpoint with a query param containing the current url', function () {
+					var loginDropdown = $('.login-dropdown');
+					var googleAuthButton = $('.user-dropdown-menu .google-auth img');
+
+					spyOn(location, 'path').and.returnValue('hi');
+					spyOn(externalNavigationService, 'navigateTo');
+
+					SpecUtils.clickElement(loginDropdown);
+					SpecUtils.clickElement(googleAuthButton);
+
+					expect(externalNavigationService.navigateTo).toHaveBeenCalledWith('/auth/google?callbackPath=hi');
+				});
+			});
+		});
 	});
 
-	describe('when showing the error message', function() {
+	describe('when showing the error message', function () {
 
-		beforeEach(function() {
+		beforeEach(function () {
 			userService.getLoggedInUser = jasmine.createSpy('').and.returnValue({});
 			userService.isLoggedIn = jasmine.createSpy('').and.returnValue(false);
 			SpecUtils.loadPage('recipe-lib/navbar/navbar.html', scope);
@@ -123,7 +157,7 @@ describe('the navbar module', function () {
 			SpecUtils.clickElement(saveRecipeLink);
 		});
 
-		it('the error message can be dismissed by clicking the X inside the message', function() {
+		it('the error message can be dismissed by clicking the X inside the message', function () {
 			var needToLogInAlert = $('.login-required-alert .message');
 			expect(needToLogInAlert).toBeVisible();
 
@@ -132,13 +166,63 @@ describe('the navbar module', function () {
 			expect(needToLogInAlert).not.toBeVisible();
 		});
 
-		it('the error message can be dismissed by clicking the Login link', function() {
+		it('the error message can be dismissed by clicking the Login link', function () {
 			var needToLogInAlert = $('.login-required-alert .message');
 			expect(needToLogInAlert).toBeVisible();
 
-			var loginLink = $('.login-link');
-			SpecUtils.clickElement(loginLink);
+			var loginDropdown = $('.login-dropdown');
+			SpecUtils.clickElement(loginDropdown);
 			expect(needToLogInAlert).not.toBeVisible();
+		});
+	});
+
+	describe('on load', function () {
+
+		var createController;
+
+		beforeEach(angular.mock.inject(function ($rootScope, _$location_, $controller, _userService_, _externalNavigationService_, $http) {
+			scope = $rootScope.$new();
+			location = _$location_;
+			userService = _userService_;
+			externalNavigationService = _externalNavigationService_;
+
+			createController = function() {
+				return $controller('NavbarCtrl', {
+					$scope: scope,
+					$http: $http,
+					userService: userService,
+					$location: location,
+					externalNavigationService: externalNavigationService
+				});
+			};
+		}));
+
+		it('asks the user service if login is being attempted and directs it to log in if it is', function () {
+
+			userService.isExternalLoginBeingAttempted = jasmine.createSpy('').and.returnValue(true);
+			userService.performExternalLogin = SpecUtils.buildMockPromiseFunction({});
+			userService.getLoggedInUser = jasmine.createSpy('').and.returnValue({userId: 'hi', userName: 'theBestUser', userEmail: 'a@b.com'});
+			userService.isLoggedIn = jasmine.createSpy('').and.returnValue(true);
+
+			createController();
+
+			expect(userService.isExternalLoginBeingAttempted).toHaveBeenCalled();
+			expect(scope.user).toEqual({userId: 'hi', userName: 'theBestUser', userEmail: 'a@b.com'});
+			expect(scope.isLoggedIn).toBe(true);
+			expect(scope.loginMessage).toBe('Welcome, theBestUser');
+
+		});
+
+		it('asks the user service if login is being attempted and does not attempt login if not', function () {
+
+			userService.isExternalLoginBeingAttempted = jasmine.createSpy('').and.returnValue(false);
+			userService.performExternalLogin = SpecUtils.buildMockPromiseFunction({});
+
+			createController();
+
+			expect(scope.user).toEqual({});
+			expect(scope.isLoggedIn).toBe(false);
+			expect(userService.performExternalLogin).not.toHaveBeenCalled();
 		});
 	});
 

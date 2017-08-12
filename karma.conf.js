@@ -3,6 +3,12 @@ module.exports = function (config) {
 
 		basePath: './',
 
+		browserConsoleLogOptions: {
+			level: 'log',
+			format: '%b %T: %m',
+			terminal: true
+		},
+
 		preprocessors: {
 			"app/recipe-lib/**/*.html": ["ng-html2js"]
 		},
