@@ -3,7 +3,7 @@
 <div class="container view-recipe-page" ng-hide="inEditMode()">
 	<img class="recipe-image" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
 	<h2><span id="recipe-name">{{recipe.recipeName}}</span></h2>
-	<p><span id="recipe-content" class="show-line-breaks ingredients" ng-bind-html="recipe.recipeContent"></span></p>
+	<p><span id="recipe-content" class="show-line-breaks" ng-bind-html="recipe.recipeContent"></span></p>
 </div>
 
 <div class="container edit-recipe-page" ng-show="inEditMode()">
