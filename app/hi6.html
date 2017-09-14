@@ -1,0 +1,293 @@
+<html lang="en" ng-app="recipe" class="js flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths ng-scope" style=""><!--<![endif]--><head><style type="text/css" data-tag-name="trix-editor">trix-editor:empty:not(:focus)::before {
+	content: attr(placeholder);
+	color: graytext;
+}
+
+trix-editor a[contenteditable=false] {
+	cursor: text;
+}
+
+trix-editor img {
+	max-width: 100%;
+	height: auto;
+}
+
+trix-editor [data-trix-attachment] figcaption textarea {
+	resize: none;
+}
+
+trix-editor [data-trix-attachment] figcaption textarea.trix-autoresize-clone {
+	position: absolute;
+	left: -9999px;
+	max-height: 0px;
+}
+
+trix-editor [data-trix-attachment][data-trix-mutable] figcaption:empty::before {
+	content: "Add a caption…";
+	color: graytext;
+}
+
+trix-editor [data-trix-selection] { font-size: 0 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: none !important; }
+trix-editor { display: block; }</style><style type="text/css" data-tag-name="trix-toolbar">trix-toolbar {
+	white-space: collapse;
+}
+
+trix-toolbar .dialog {
+	display: none;
+}
+
+trix-toolbar .dialog.active {
+	display: block;
+}
+
+trix-toolbar .dialog input.validate:invalid {
+	background-color: #ffdddd;
+}
+
+trix-toolbar[native] {
+	display: none;
+}
+trix-toolbar { display: block; }</style><style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Recipe Connection</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+	<link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="bower_components/trix/dist/trix.css">
+	<link rel="stylesheet" href="bower_components/tether/dist/css/tether.css">
+	<link rel="stylesheet" href="recipe-lib/app.css">
+	<link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.css">
+	<link rel="stylesheet" href="bower_components/ng-img-crop/compile/unminified/ng-img-crop.css">
+	<script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body class="bg-faded">
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- ngView:  --><div ng-view="" class="ng-scope"><!-- ngInclude: 'recipe-lib/navbar/navbar.html' --><div ng-include="'recipe-lib/navbar/navbar.html'" class="ng-scope"><nav class="navbar-section navbar fixed-top navbar-toggleable-sm navbar-inverse bg-navy hidden-print ng-scope" ng-controller="NavbarCtrl">
+	<button class="navbar-toggler mobile-menu-toggle" type="button" data-toggle="collapse" data-target="#main-menu-links" aria-controls="main-menu-links" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="main-menu-links">
+		<div class="navbar-nav">
+			<a class="nav-item nav-link nav-home-page-link" ng-click="navigateHome()">Home Page</a>
+			<a class="nav-item nav-link nav-browse-page-link" ng-click="navigateBrowse()">Browse Recipes</a>
+			<a class="nav-item nav-link nav-save-page-link" ng-click="navigateSave()">Save Recipe</a>
+			<a class="nav-item nav-link nav-recipe-book-page-link" ng-click="navigateRecipeBook()">Recipe Book</a>
+		</div>
+	</div>
+
+	<div class="container user-nav-section-container">
+		<div class="navbar-nav ml-auto user-nav-section">
+			<div class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle login-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="loginClicked()">
+					<small class="ng-binding">Welcome, Chris</small>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="logoutLink">
+
+					<div class="login-fields nav-item ng-hide" ng-show="shouldShowLogIn()">
+						<div class="user-login-message">
+							<small>Enter your email address to log in or sign up.</small>
+						</div>
+						<div class="form-inline input-group input-group-sm">
+							<input id="sign-up-user-email" class="form-control input-sm ng-pristine ng-untouched ng-valid" ng-model="email" placeholder="jane.doe@example.com">
+							<button id="log-in-user-button" class="btn btn-secondary btn-sm" ng-click="logIn($event)">Log In</button>
+						</div>
+
+						<div class="login-or-separator">Or</div>
+
+						<div class="google-auth">
+							<img ng-click="googleAuthClicked()" src="recipe-lib/images/btn_google_signin_dark_normal_web.png" onmouseover="this.src='recipe-lib/images/btn_google_signin_dark_focus_web.png'" onmouseout="this.src='recipe-lib/images/btn_google_signin_dark_normal_web	.png'" onmousedown="this.src='recipe-lib/images/btn_google_signin_dark_pressed_web.png'">
+						</div>
+					</div>
+					<div class="login-fields nav-item ng-hide" ng-show="shouldShowSignUp()">
+						<div class="user-sign-up-message">
+							<small>What name would you like to use?</small>
+						</div>
+						<div class="form-inline input-group input-group-sm">
+							<input id="sign-up-user-name" class="form-control input-sm ng-pristine ng-untouched ng-valid" ng-model="name" placeholder="Jane">
+							<button id="sign-up-user-button" class="btn btn-secondary btn-sm" ng-click="signUp()">Sign Up</button>
+						</div>
+					</div>
+					<div class="logout-section nav navbar-form login-fields" ng-show="isLoggedIn">
+						<button id="log-out-button" class="btn btn-outline-secondary btn-sm mx-auto" ng-click="logOut()">Log Out</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="alert alert-danger login-required-alert ng-hide" ng-show="isAlertVisible()">
+		<button type="button" class="close" aria-label="Close" ng-click="setAlertVisible(false)">
+			<span aria-hidden="true">×</span>
+		</button>
+		<span class="message">You must be logged in to perform this action.</span>
+	</div>
+</nav>
+
+
+	<div class="navbar-spacer ng-scope"></div>
+
+</div>
+
+	<div class="container view-recipe-page ng-scope" ng-hide="inEditMode()">
+		<!-- ngIf: imageExists(recipe) -->
+		<h2><span id="recipe-name" class="ng-binding">Corn Beef Hash</span></h2>
+		<p><span id="recipe-content" class="recipe-ingredients show-line-breaks ng-binding" ng-bind-html="recipe.recipeContent"><div><!--block--><br><strong>INGREDIENTS</strong><br><br>1 lb baking (russet) potatoes, peeled and cut into 1/4-inch dice<br>1-lb piece cooked corned beef, cut into chunks<br>1 cup chopped onion<br>1 large red bell pepper, cut into 1/4-inch pieces<br>2 tablespoons unsalted butter<br>1/4 cup heavy cream<br>4 large eggs (optional)<br>1 tablespoon chopped fresh flat-leaf parsley<br><br><strong>PREPARATION</strong><br><br>- Cook potatoes in boiling salted water to cover until just tender, about 3 minutes, then drain.&nbsp;<br>- Pulse corned beef in a food processor until coarsely chopped.<br>- Sauté onion and bell pepper in butter in a 12-inch nonstick skillet over moderately high heat, stirring, until lightly browned, about 5 minutes.&nbsp;<br>- Add potatoes and sauté over moderately high heat, stirring occasionally, until browned, about 5 minutes.&nbsp;<br>- Stir in corned beef and salt and pepper to taste, then cook, stirring occasionally, until browned.&nbsp;<br>- Add cream and cook, stirring, 1 minute.<br><br>If desired, make 4 holes in hash and break 1 egg into each. Cook over moderately low heat, covered, 5 minutes, or until eggs are cooked to desired doneness, and season with salt and pepper. Sprinkle hash with parsley.</div></span></p>
+	</div>
+
+	<div class="container edit-recipe-page ng-scope ng-hide" ng-show="inEditMode()">
+		<div class="edit-recipe-title-holder"><h2><span id="edit-recipe-page-title">Edit Recipe</span></h2></div>
+
+		<div class="serves-as-newline ng-hide" ng-show="imageExists(recipe)"></div>
+		<img class="recipe-image ng-hide" ng-show="imageExists(recipe)">
+		<div class="image-upload-holder">
+			<div class="image-upload-toggle-spacer ng-hide" ng-show="imageExists(recipe)"></div>
+			<span image-saved-callback="imageSaved" class="ng-isolate-scope">
+	<button class="image-upload-toggle btn btn-secondary" data-toggle="modal" data-target=".image-upload-modal"><i class="fa fa-file-image-o" aria-hidden="true"></i> Upload Image</button>
+
+	<div class="image-upload-modal modal fade" tabindex="-1" role="dialog" aria-labelledby="image-upload-modal-title" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="image-upload-modal-title">Image Upload</h5>
+					<button type="button" class="close close-upload-image-x" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div image-upload="" recipe="recipe" image-saved-callback="imageSavedCallback" class="image-upload-section ng-isolate-scope"><form name="myForm" class="ng-pristine ng-valid">
+	<div>
+		<button class="select-image-button ng-pristine ng-untouched ng-valid" ngf-select="" ng-model="picFile" accept="image/*" ngf-change="startProcessing()">Select Image</button>
+		<span class="processing-message ng-hide" ng-show="processing"><i class="fa fa-spinner fa-pulse fa-fw"></i> Processing...</span>
+	</div>
+
+	<div ngf-drop="" ng-model="picFile" ngf-pattern="image/*" class="cropArea selected-image ng-pristine ng-untouched ng-valid">
+		<img-crop image="picFile  | ngfDataUrl" result-image="croppedDataUrl" ng-init="croppedDataUrl=''" area-type="square" class="ng-isolate-scope"><canvas width="0" height="0" style="margin-top: 0px;"></canvas></img-crop>
+	</div>
+
+	<div class="cropped-image-holder">
+		<div class="cropped-image">
+			<img ng-src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAFIklEQVR4Xu3VsRHAMAzEsHj/pTOBXbB9pFchyLycz0eAwFXgsCFA4C4gEK+DwENAIJ4HAYF4AwSagD9IczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhH4AStUAMmSuOW2AAAAAElFTkSuQmCC" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAFIklEQVR4Xu3VsRHAMAzEsHj/pTOBXbB9pFchyLycz0eAwFXgsCFA4C4gEK+DwENAIJ4HAYF4AwSagD9IczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhEQyMihrdkEBNLcTI0ICGTk0NZsAgJpbqZGBAQycmhrNgGBNDdTIwICGTm0NZuAQJqbqREBgYwc2ppNQCDNzdSIgEBGDm3NJiCQ5mZqREAgI4e2ZhMQSHMzNSIgkJFDW7MJCKS5mRoREMjIoa3ZBATS3EyNCAhk5NDWbAICaW6mRgQEMnJoazYBgTQ3UyMCAhk5tDWbgECam6kRAYGMHNqaTUAgzc3UiIBARg5tzSYgkOZmakRAICOHtmYTEEhzMzUiIJCRQ1uzCQikuZkaERDIyKGt2QQE0txMjQgIZOTQ1mwCAmlupkYEBDJyaGs2AYE0N1MjAgIZObQ1m4BAmpupEQGBjBzamk1AIM3N1IiAQEYObc0mIJDmZmpEQCAjh7ZmExBIczM1IiCQkUNbswkIpLmZGhH4AStUAMmSuOW2AAAAAElFTkSuQmCC">
+		</div>
+
+		<button class="upload-image-button" ng-click="upload(croppedDataUrl, picFile.name)">Submit</button>
+
+		<span class="loading-message ng-hide" ng-show="loading"><i class="fa fa-spinner fa-pulse fa-fw"></i> Working...</span>
+		<span class="success-message ng-hide" ng-show="result">Image uploaded.</span>
+		<span class="error-message ng-binding ng-hide" ng-show="errorMsg"></span>
+	</div>
+</form></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary close-upload-image-button" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</span>
+		</div>
+
+		<div class="form-group">
+			<input id="recipe-name-input" class="form-control ng-pristine ng-untouched ng-valid" placeholder="Recipe Name" type="text" ng-model="nameBeingEdited">
+		</div>
+		<div class="form-group">
+			<trix-editor id="hi" angular-trix="" ng-model="contentBeingEdited" toolbar="trix-toolbar" contenteditable="" trix-id="2" input="trix-input-2" class="ng-pristine ng-untouched ng-valid ng-isolate-scope"></trix-editor>
+			<input type="hidden" id="trix-input-2" autocomplete="off"><trix-toolbar id="trix-toolbar"><div class="button_groups">
+  <span class="button_group text_tools">
+    <button type="button" class="bold" data-trix-attribute="bold" data-trix-key="b" title="Bold">Bold</button>
+    <button type="button" class="italic" data-trix-attribute="italic" data-trix-key="i" title="Italic">Italic</button>
+    <button type="button" class="strike" data-trix-attribute="strike" title="Strikethrough">Strikethrough</button>
+    <button type="button" class="link" data-trix-attribute="href" data-trix-action="link" data-trix-key="k" title="Link">Link</button>
+  </span>
+
+			<span class="button_group block_tools">
+    <button type="button" class="heading-1" data-trix-attribute="heading1" title="Heading">Heading</button>
+    <button type="button" class="quote" data-trix-attribute="quote" title="Quote">Quote</button>
+    <button type="button" class="code" data-trix-attribute="code" title="Code">Code</button>
+    <button type="button" class="list bullets" data-trix-attribute="bullet" title="Bullets">Bullets</button>
+    <button type="button" class="list numbers" data-trix-attribute="number" title="Numbers">Numbers</button>
+    <button type="button" class="nesting-level decrease" data-trix-action="decreaseNestingLevel" title="Decrease Level">Decrease Level</button>
+    <button type="button" class="nesting-level increase" data-trix-action="increaseNestingLevel" title="Increase Level">Increase Level</button>
+  </span>
+
+			<span class="button_group history_tools">
+    <button type="button" class="undo" data-trix-action="undo" data-trix-key="z" title="Undo">Undo</button>
+    <button type="button" class="redo" data-trix-action="redo" data-trix-key="shift+z" title="Redo">Redo</button>
+  </span>
+		</div>
+
+			<div class="dialogs">
+				<div class="dialog link_dialog" data-trix-attribute="href" data-trix-dialog="href">
+					<div class="link_url_fields">
+						<input type="url" required="" name="href" placeholder="Enter a URL…">
+						<div class="button_group">
+							<input type="button" value="Link" data-trix-method="setAttribute">
+							<input type="button" value="Unlink" data-trix-method="removeAttribute">
+						</div>
+					</div>
+				</div>
+			</div></trix-toolbar>
+		</div>
+	</div>
+
+	<div class="container hidden-print ng-scope">
+		<!-- ngIf: shouldShowEditButtons() --><a id="edit-recipe-button" class="btn btn-secondary ng-scope" ng-click="editClicked()" role="button" ng-if="shouldShowEditButtons()" ng-hide="inEditMode()">Edit Recipe</a><!-- end ngIf: shouldShowEditButtons() -->
+		<!-- ngIf: shouldShowEditButtons() --><a id="cancel-edit-button" class="btn btn-secondary ng-scope ng-hide" ng-click="cancelEdit()" role="button" ng-if="shouldShowEditButtons()" ng-show="inEditMode()">Cancel</a><!-- end ngIf: shouldShowEditButtons() -->
+		<!-- ngIf: shouldShowEditButtons() --><a id="update-recipe-button" class="btn btn-secondary ng-scope ng-hide" ng-click="saveClicked()" role="button" ng-if="shouldShowEditButtons()" ng-show="inEditMode()">Save Recipe</a><!-- end ngIf: shouldShowEditButtons() -->
+		<div class="pull-right">
+			<span id="in-recipe-book-marker" class="badge badge-default" ng-show="inRecipeBook()"><i class="fa fa-check" aria-hidden="true"></i> In Recipe Book</span>
+			<a class="remove-recipe-from-book-button btn btn-secondary btn-sm" ng-show="canRemoveFromRecipeBook()" ng-click="removeRecipeFromBook()" role="button">Remove</a>
+		</div>
+		<a class="add-to-recipe-book-button btn btn-secondary pull-right floating-bottom-button ng-hide" ng-show="canAddToRecipeBook()" ng-click="addToRecipeBook()" role="button">Add to Recipe Book</a>
+	</div></div>
+
+<!-- In production use:
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+-->
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/underscore/underscore.js"></script>
+<script src="bower_components/angular-underscore-module/angular-underscore-module.js"></script>
+<script src="bower_components/trix/dist/trix.js"></script>
+<script src="bower_components/angular-trix/dist/angular-trix.js"></script>
+<script src="bower_components/tether/dist/js/tether.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/ng-file-upload/ng-file-upload-all.js"></script>
+<script src="bower_components/ng-img-crop/compile/unminified/ng-img-crop.js"></script>
+<script src="recipe-lib/app.js"></script>
+<script src="recipe-lib/home/home.js"></script>
+<script src="recipe-lib/navbar/navbar.js"></script>
+<script src="recipe-lib/navbar/external-navigation-service.js"></script>
+<script src="recipe-lib/user/user.js"></script>
+<script src="recipe-lib/recipe/recipe.js"></script>
+<script src="recipe-lib/recipe/recipe-card-wall.js"></script>
+<script src="recipe-lib/recipe/recipe-service.js"></script>
+<script src="recipe-lib/search/search-recipes.js"></script>
+<script src="recipe-lib/new-recipe/new-recipe.js"></script>
+<script src="recipe-lib/image-upload/image-upload.js"></script>
+<script src="recipe-lib/image-upload/image-upload-modal.js"></script>
+<script src="recipe-lib/view-recipe/view-recipe.js"></script>
+<script src="recipe-lib/recipe-book/recipe-book.js"></script>
+<script src="recipe-lib/recipe-book/recipe-book-service.js"></script>
+<script src="recipe-lib/view1/view1.js"></script>
+<script src="recipe-lib/view2/view2.js"></script>
+<script src="recipe-lib/components/version/version.js"></script>
+<script src="recipe-lib/components/version/version-directive.js"></script>
+<script src="recipe-lib/components/version/interpolate-filter.js"></script>
+
+
+<script src="recipe-lib/recipe/test.js"></script>
+
+
+<label tabindex="-1" style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height: 0px; border: none; margin: 0px; padding: 0px;">upload<input type="file" ngf-select="" ng-model="picFile" accept="image/*" ngf-change="startProcessing()"></label>
+</body></html>
