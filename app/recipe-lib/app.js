@@ -9,7 +9,8 @@ angular.module('recipe', [
 	'myApp.view2',
 	'myApp.version',
 	'ngFileUpload',
-	'ngImgCrop'
+	'ngImgCrop',
+	'angular-clipboard'
 ])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.otherwise({redirectTo: '/home'});

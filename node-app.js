@@ -229,6 +229,11 @@ function performDELETEImage(imageId, request) {
 	return rs.del(deleteOptions);
 }
 
+app.get('/recipe/:recipeId', function(request, response) {
+	var redirectPath = '/#/view-recipe/' + request.params.recipeId;
+	response.redirect(redirectPath);
+});
+
 app.get('/api/recipe', function(request, response) {
 	performRecipeListGET(request.query.searchString, request.query.recipeBook).then(function(data) {
 		response.statusCode = data.statusCode;	

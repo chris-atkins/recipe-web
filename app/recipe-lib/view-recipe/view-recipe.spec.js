@@ -2,6 +2,8 @@
 
 describe('the view recipe controller', function () {
 
+	var copyAlternateUrlSelector = '.alternate-url-copy-button';
+
 	beforeEach(angular.mock.module('recipe', 'my.templates'));
 
 	describe('the scope canAddToRecipeBook function', function () {
@@ -217,21 +219,31 @@ describe('the view recipe controller', function () {
 
 	describe('when not in edit mode', function () {
 
-		var scope, imageUploadScope, upload;
+		var scope, imageUploadScope, upload, clipboard, location;
 
 		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: {imageId: 'imageId', imageUrl: 'hiImAnImageUrl'}};
-		var recipeWithNOImaage = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
+		var recipeWithNOImaage = {recipeId: '2', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
 
 		var imageUploadSectionSelector = '.image-upload-section';
 		var imageUploadToggleSelector = '.image-upload-toggle';
 		var imageSelector = '.recipe-image';
 
 		beforeEach(function () {
-			angular.mock.inject(function ($controller, $rootScope, _Upload_) {
+			angular.mock.inject(function ($controller, $rootScope, _Upload_, _clipboard_, $location) {
+
+				clipboard = _clipboard_;
+				location = $location;
+				spyOn(clipboard, 'copyText');
+
+				spyOn(location, 'protocol').and.returnValue('wheee');
+				spyOn(location, 'host').and.returnValue('thebesthost');
+
 				scope = $rootScope.$new();
 				$controller('ViewRecipeCtrl', {
-					$scope: scope
+					$scope: scope,
+					clipboard: clipboard
 				});
+
 
 				imageUploadScope = scope.$new();
 				upload = _Upload_;
@@ -277,6 +289,12 @@ describe('the view recipe controller', function () {
 			loadPage(recipeWithNOImaage);
 			expect($(imageSelector)).not.toBeVisible();
 		});
+
+		it('will have a button that copies an alternate url to the clipboard', function() {
+			loadPage(recipe);
+			SpecUtils.clickElement($(copyAlternateUrlSelector));
+			expect(clipboard.copyText).toHaveBeenCalledWith('wheee://thebesthost/recipe/1');
+		});
 	});
 
 	describe('when in edit mode', function () {
@@ -285,7 +303,6 @@ describe('the view recipe controller', function () {
 
 		var recipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: null};
 		var recipeWithImage = {recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true, image: {imageId: 'imageId', imageUrl: 'originalUrl'}};
-
 
 		var editRecipeButtonSelector = '#edit-recipe-button';
 		var imageUploadToggleSelector = '.image-upload-toggle';
@@ -326,6 +343,11 @@ describe('the view recipe controller', function () {
 				SpecUtils.clickElement(editRecipeButton);
 			});
 		}
+
+		it('does not have a copy alternate url button', function() {
+			loadPageInEditMode(recipe);
+			expect($(copyAlternateUrlSelector)).not.toBeVisible();
+		});
 
 		it('shows the upload image button', function () {
 			loadPageInEditMode();
@@ -373,6 +395,5 @@ describe('the view recipe controller', function () {
 				$httpBackend.verifyNoOutstandingRequest();
 			});
 		});
-
 	});
 });

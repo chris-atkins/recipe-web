@@ -3,6 +3,7 @@
 <div class="container view-recipe-page" ng-hide="inEditMode()">
 	<img class="recipe-image" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
 	<h2><span id="recipe-name">{{recipe.recipeName}}</span></h2>
+	<a class="btn btn-secondary alternate-url-copy-button" ng-click="copyAlternateUrlClicked()" role="button">Alternate Url</a>
 	<p><span id="recipe-content" class="recipe-ingredients show-line-breaks" ng-bind-html="recipe.recipeContent"></span></p>
 </div>
 

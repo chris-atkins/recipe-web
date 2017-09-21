@@ -29,6 +29,7 @@ module.exports = function (config) {
 			'app/bower_components/bootstrap/dist/css/bootstrap.css',
 			'app/bower_components/tether/dist/js/tether.js',
 			'app/bower_components/bootstrap/dist/js/bootstrap.js',
+			'app/bower_components/angular-clipboard/angular-clipboard.js',
 			'app/recipe-lib/**/*.js',
 			'app/recipe-lib/**/*.html'
 		],

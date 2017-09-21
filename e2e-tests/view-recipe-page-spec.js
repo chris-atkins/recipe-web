@@ -215,5 +215,18 @@ describe('the vew recipe page', function() {
 			expect(editRecipeButton.isPresent()).toBe(false);
 			expect(updateRecipeButton.isPresent()).toBe(false);
 		});
+
+		it('there is an alternate url that matches the view recipe page perfectly', function(done) {
+			var originalPageText;
+			element(by.className('view-recipe-page')).getText()
+				.then(function(firstText) {
+					originalPageText = firstText;
+				}).then(function() {
+					browser.get('/recipe/' + recipeId);
+					element(by.className('view-recipe-page')).getText().then(function(alternatePageText) {
+						expect(originalPageText).toEqual(alternatePageText);
+					});
+				}).then(done, done.fail);
+		});
 	});
 });

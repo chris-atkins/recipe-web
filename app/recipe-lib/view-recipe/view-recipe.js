@@ -9,7 +9,7 @@ angular.module('recipe')
 	});
 }])
 
-.controller('ViewRecipeCtrl', function($scope, $http, $routeParams, $location, routeHistory, recipeBookService, userService, _, $sce) {
+.controller('ViewRecipeCtrl', function($scope, $http, $routeParams, $location, routeHistory, recipeBookService, userService, _, $sce, clipboard) {
 
 	var inEditMode = false;
 	var userRecipeBook = [];
@@ -128,5 +128,13 @@ angular.module('recipe')
 			}
 		}
 		return false;
+	};
+
+	$scope.copyAlternateUrlClicked = function() {
+		var protocol = $location.protocol();
+		var host = $location.host();
+		var url = protocol + '://' + host + '/recipe/' + $scope.recipe.recipeId;
+
+		clipboard.copyText(url);
 	};
 });
