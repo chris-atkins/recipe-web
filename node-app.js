@@ -230,8 +230,15 @@ function performDELETEImage(imageId, request) {
 }
 
 app.get('/recipe/:recipeId', function(request, response) {
-	var redirectPath = '/#/view-recipe/' + request.params.recipeId;
-	response.redirect(redirectPath);
+	var recipeId = request.params.recipeId;
+	return performRecipeGET(recipeId, request).then(function(recipeResponse) {
+		var recipe = recipeResponse.body;
+		var html = '<html><head></head><body><div class="view-recipe-page">' +
+			'<h2><span id="recipe-name" class="recipe-name">' + recipe.recipeName + '</span></h2>' +
+			'<p><span id="recipe-content" class="recipe-ingredients">' + recipe.recipeContent + '</span></p>' +
+			'</div></body></html>';
+		response.send(html);
+	});
 });
 
 app.get('/api/recipe', function(request, response) {

@@ -37,6 +37,31 @@ describe('the vew recipe page', function() {
 		pageUtils.logout();
 	});
 
+	describe('there is an alternate non-angular recipe page', function() {
+
+		afterAll(function () {
+			browser.waitForAngularEnabled(true);
+			pageUtils.logout();
+		});
+
+		it('that matches the view recipe ingredients list perfectly', function(done) {
+			var originalPageText;
+			browser.get('/#/view-recipe/' + recipeId);
+
+			element(by.className('recipe-ingredients')).getText()
+			.then(function(firstText) {
+				originalPageText = firstText;
+			}).then(function() {
+				browser.waitForAngularEnabled(false);
+				browser.get('/recipe/' + recipeId);
+				return element(by.className('recipe-ingredients')).getText();
+			}).then(function(alternatePageText) {
+				expect(originalPageText).toEqual(alternatePageText);
+				browser.waitForAngularEnabled(true);
+			}).then(done, done.fail);
+		});
+	});
+
 	describe('when no user is logged in', function() {
 		describe('content', function () {
 
@@ -214,19 +239,6 @@ describe('the vew recipe page', function() {
 		it('there is no recipe edit button', function() {
 			expect(editRecipeButton.isPresent()).toBe(false);
 			expect(updateRecipeButton.isPresent()).toBe(false);
-		});
-
-		it('there is an alternate url that matches the view recipe page perfectly', function(done) {
-			var originalPageText;
-			element(by.className('view-recipe-page')).getText()
-				.then(function(firstText) {
-					originalPageText = firstText;
-				}).then(function() {
-					browser.get('/recipe/' + recipeId);
-					element(by.className('view-recipe-page')).getText().then(function(alternatePageText) {
-						expect(originalPageText).toEqual(alternatePageText);
-					});
-				}).then(done, done.fail);
 		});
 	});
 });
