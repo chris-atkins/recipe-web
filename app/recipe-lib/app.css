@@ -293,22 +293,24 @@
 }
 
 .alternate-url-copy-button {
-    padding-right: 14px;
-    padding-left: 15px;
+    padding-right: 8px;
+    padding-top: 5px;
+    padding-bottom: 3px;
+    padding-left: 8px;
 }
 .copy-button {
     position: relative;
 }
 .copy-button span {
     position: absolute;
-    left: 0em;
+    left: -0.5em;
     z-index: 99;
     font-family: Calibri, Tahoma, Geneva, sans-serif;
 
     opacity: 0;
-    top: -3em;
+    top: -2em;
     transition-property: opacity, top;
-    transition-duration: .75s, .75s;
+    transition-duration: 1.25s, 1.25s;
 }
 .copy-button:active span {
     opacity: 1;
