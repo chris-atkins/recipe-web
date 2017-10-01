@@ -235,7 +235,7 @@ app.get('/recipe/:recipeId', function(request, response) {
 		var recipe = recipeResponse.body;
 		var html = '<html><head></head><body><div class="view-recipe-page">' +
 			'<h2><span id="recipe-name" class="recipe-name">' + recipe.recipeName + '</span></h2>' +
-			'<p><span id="recipe-content" class="recipe-ingredients">' + recipe.recipeContent + '</span></p>' +
+			'<div id="recipe-content" class="recipe-ingredients">' + recipe.recipeContent + '</div>' +
 			'</div></body></html>';
 		response.send(html);
 	});
