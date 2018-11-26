@@ -5,9 +5,6 @@
   "description": "A simple application that stores recipes",
   "repository": "https://github.com/angular/angular-seed",
   "license": "MIT",
-  "config": {
-    "unsafe-perm":true
-  },
   "dependencies": {
     "body-parser": "^1.15.0",
     "cookie-parser": "^1.4.3",

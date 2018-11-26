@@ -6,13 +6,13 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "angular": "~1.4.11",
-    "angular-route": "~1.4.11",
-    "angular-loader": "~1.4.11",
-    "angular-mocks": "~1.4.11",
+    "angular": "~1.4.14",
+    "angular-route": "~1.4.14",
+    "angular-loader": "~1.4.14",
+    "angular-mocks": "~1.4.14",
     "html5-boilerplate": "~5.2.0",
     "bootstrap": "~4.0.0-alpha.6",
-    "angular-cookies": "^1.4.11",
+    "angular-cookies": "~1.4.14",
     "bluebird": "^3.4.1",
     "underscore": "^1.8.3",
     "angular-underscore-module": "^1.0.3",
@@ -24,6 +24,6 @@
     "angular-clipboard": "^1.6.1"
   },
   "resolutions": {
-    "angular": "~1.4.11"
+    "angular": "~1.4.14"
   }
 }
