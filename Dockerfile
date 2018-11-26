@@ -1,11 +1,8 @@
-FROM centos:centos6
-RUN curl --silent --location https://rpm.nodesource.com/setup | bash -
-RUN yum -y install nodejs
-RUN npm -g install npm@latest
-RUN yum -y install tar
-RUN yum -y install bzip2
-RUN npm -g install n
-RUN n stable
+FROM centos:7
+RUN yum install -y wget
+RUN cd ~
+RUN wget http://nodejs.org/dist/v10.13.0/node-v10.13.0-linux-x64.tar.gz
+RUN tar --strip-components 1 -xzvf node-v* -C /usr/local
 COPY . /src
 COPY ./run-on-server.sh /
 RUN cd src && npm install
