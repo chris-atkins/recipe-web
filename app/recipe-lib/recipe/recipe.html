@@ -1,5 +1,5 @@
 <div class="recipe card" id="{{recipe.recipeId}}" ng-click="navigateToRecipePage(recipe)">
-	<div class="card-block">
+	<div class="card-body">
 		<img class="recipe-image" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
 		<!--<a class="recipe-image-spacer" ng-if="imageExists(recipe)"></a>-->
 		<h5 class="recipe-name card-title ng-binding">{{recipe.recipeName}}</h5>
@@ -7,7 +7,7 @@
 	</div>
 
 	<div class="card-footer text-right">
-		<span ng-if="recipeInRecipeBook" class="in-recipe-book-indicator badge badge-default"><i class="fa fa-check" aria-hidden="true"></i> In Recipe Book</span>
+		<span ng-if="recipeInRecipeBook" class="in-recipe-book-indicator badge badge-secondary"><i class="fa fa-check" aria-hidden="true"></i> In Recipe Book</span>
 		<span ng-if="canAddToRecipeBook"><a class="add-to-recipe-book-button btn btn-outline-secondary btn-sm" ng-click="addToRecipeBook($event)" role="button">Add to Recipe Book</a></span>
 		<span ng-if="removeAllowed()"><a class="remove-recipe-from-book-button btn btn-outline-secondary btn-sm" ng-click="removeRecipe($event, recipe)" role="button">Remove from Recipe Book</a></span>
 	</div>

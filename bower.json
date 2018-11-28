@@ -6,6 +6,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "tether": "~1.4.4",
     "angular": "~1.4.14",
     "angular-route": "~1.4.14",
     "angular-loader": "~1.4.14",

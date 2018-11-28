@@ -65,7 +65,7 @@ angular.module('recipe')
 
 	$scope.editClicked = function() {
 		$scope.nameBeingEdited = $scope.recipe.recipeName;
-		$scope.contentBeingEdited = $scope.recipe.recipeContent;
+		$scope.contentBeingEdited = String($scope.recipe.recipeContent);
 		inEditMode = true;
 	};
 
