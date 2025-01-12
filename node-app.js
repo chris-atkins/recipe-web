@@ -1,5 +1,6 @@
 'use strict';
 var express = require('express');
+var expressJwt = require("express-jwt").expressjwt;
 
 var http = require('http');
 var path = require('path');
@@ -13,7 +14,6 @@ var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;	
 var LocalStrategy = require('passport-local').Strategy;
 // var jwt = require('jsonwebtoken');
-var expressJwt = require('express-jwt');
 
 var serviceIp = process.env.SERVICE_IP || '127.0.0.1';
 // var webIp = process.env.WEB_IP || 'localhost';
@@ -416,7 +416,7 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 	}
 );
 
-var authenticate = expressJwt({secret : 'server secret'});
+var authenticate = expressJwt({secret : 'server secret', algorithms: ['RS256']});
 app.get('/test-auth', authenticate, function(request, response) {
 	response.json({auth: 'success', user: request.user});
 });
