@@ -1,7 +1,9 @@
+"use strict";
+
 module.exports = function (config) {
 	var baseProjectConfig = require('./karma.conf.js');
 
-	baseProjectConfig(config)
+	baseProjectConfig(config);
 
 	config.set({
 
