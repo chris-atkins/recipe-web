@@ -253,6 +253,7 @@ describe('the view recipe controller', function () {
 					Upload: upload
 				});
 			});
+			SpecUtils.delayABit();
 		});
 
 		function loadPage(recipe) {
@@ -268,13 +269,13 @@ describe('the view recipe controller', function () {
 
 				$compile(elem)(scope);
 				scope.$digest();
+				SpecUtils.delayABit();
 			});
+			SpecUtils.delayABit();
 		}
 
 		it('should not show the image upload section in edit mode', function () {
-
 			loadPage(recipe);
-
 			expect($(imageUploadSectionSelector)).not.toBeVisible();
 			expect($(imageUploadToggleSelector)).not.toBeVisible();
 		});
@@ -322,6 +323,7 @@ describe('the view recipe controller', function () {
 					Upload: upload
 				});
 			});
+			SpecUtils.delayABit();
 		});
 
 		function loadPageInEditMode(recipeToUse) {
@@ -341,7 +343,10 @@ describe('the view recipe controller', function () {
 
 				var editRecipeButton = $(editRecipeButtonSelector);
 				SpecUtils.clickElement(editRecipeButton);
+				scope.$digest();
+				SpecUtils.delayABit();
 			});
+			SpecUtils.delayABit();
 		}
 
 		it('does not have a copy alternate url button', function() {
@@ -361,6 +366,7 @@ describe('the view recipe controller', function () {
 
 			scope.imageSaved({imageUrl:'hi'});
 			scope.$digest();
+			SpecUtils.delayABit();
 
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
 			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('hi');
@@ -373,6 +379,7 @@ describe('the view recipe controller', function () {
 
 			scope.imageSaved({imageUrl:'newUrl'});
 			scope.$digest();
+			SpecUtils.delayABit();
 
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
 			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('newUrl');
@@ -385,10 +392,12 @@ describe('the view recipe controller', function () {
 
 				SpecUtils.clickElement($(imageUploadToggleSelector));
 				SpecUtils.clickElement($('.upload-image-button'));
+				SpecUtils.delayABit();
 
 				var expectedRecipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
 				$httpBackend.expect('PUT', '/api/recipe/1', expectedRecipe).respond(recipe);
 				SpecUtils.clickElement($('#update-recipe-button'));
+				SpecUtils.delayABit();
 
 				$httpBackend.flush();
 				$httpBackend.verifyNoOutstandingExpectation();

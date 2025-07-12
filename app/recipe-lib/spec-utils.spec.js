@@ -50,3 +50,11 @@ SpecUtils.loadPage = function(htmlFilePath, scope) {
 		scope.$digest();
 	});
 };
+
+SpecUtils.delayABit = function() {
+	for (var i = 0; i < 2000; i++) {
+		for (var j = 0; j < 2000; j++) {
+			var g = i * j;
+		}
+	}
+};

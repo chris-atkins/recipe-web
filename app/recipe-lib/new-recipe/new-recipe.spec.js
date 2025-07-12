@@ -41,7 +41,9 @@ describe('the new recipe module', function () {
 
 			$compile(elem)(scope);
 			scope.$digest();
+			SpecUtils.delayABit();
 		});
+		SpecUtils.delayABit();
 	}
 
 	describe('when logged in', function () {
@@ -87,6 +89,7 @@ describe('the new recipe module', function () {
 
 			scope.imageSaved({imageUrl:'hi'});
 			scope.$digest();
+			SpecUtils.delayABit();
 
 			expect($('.recipe-image')).toBeVisible();
 			expect($('.recipe-image').attr('src')).toBe('hi');
