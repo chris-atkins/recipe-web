@@ -1,5 +1,6 @@
 module.exports = function (config) {
 	config.set({
+		concurrency: 1,
 
 		basePath: './',
 

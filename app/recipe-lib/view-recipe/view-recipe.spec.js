@@ -353,11 +353,13 @@ describe('the view recipe controller', function () {
 
 		it('does not have a copy alternate url button', function() {
 			loadPageInEditMode(recipe);
+			SpecUtils.delayABit();
 			expect($(copyAlternateUrlSelector)).not.toBeVisible();
 		});
 
 		it('shows the upload image button', function () {
 			loadPageInEditMode();
+			SpecUtils.delayABit();
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
@@ -368,6 +370,7 @@ describe('the view recipe controller', function () {
 			expect($('.edit-recipe-page .recipe-image')).not.toBeVisible();
 
 			scope.imageSaved({imageUrl:'hi'});
+			SpecUtils.delayABit();
 			scope.$digest();
 			SpecUtils.delayABit();
 
@@ -382,8 +385,8 @@ describe('the view recipe controller', function () {
 			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('originalUrl');
 
 			scope.imageSaved({imageUrl:'newUrl'});
-			scope.$digest();
 			SpecUtils.delayABit();
+			scope.$digest();
 			SpecUtils.delayABit();
 
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
@@ -398,10 +401,14 @@ describe('the view recipe controller', function () {
 				SpecUtils.clickElement($(imageUploadToggleSelector));
 				SpecUtils.clickElement($('.upload-image-button'));
 				SpecUtils.delayABit();
+				scope.$digest();
+				SpecUtils.delayABit();
 
 				var expectedRecipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
 				$httpBackend.expect('PUT', '/api/recipe/1', expectedRecipe).respond(recipe);
 				SpecUtils.clickElement($('#update-recipe-button'));
+				SpecUtils.delayABit();
+				scope.$digest();
 				SpecUtils.delayABit();
 
 				$httpBackend.flush();

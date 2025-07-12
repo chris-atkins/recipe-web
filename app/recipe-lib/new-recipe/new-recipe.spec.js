@@ -44,6 +44,7 @@ describe('the new recipe module', function () {
 			scope.$digest();
 			SpecUtils.delayABit();
 		});
+		scope.$digest();
 		SpecUtils.delayABit();
 	}
 
@@ -55,6 +56,7 @@ describe('the new recipe module', function () {
 
 		it('contains the upload image module', function () {
 			loadPage();
+			SpecUtils.delayABit();
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
@@ -70,6 +72,8 @@ describe('the new recipe module', function () {
 			recipeService.saveRecipe = SpecUtils.buildMockPromiseFunction({});
 
 			SpecUtils.clickElement($(imageUploadToggleSelector));
+			scope.$digest();
+			SpecUtils.delayABit();
 
 			$('.image-upload-modal').on('shown.bs.modal', function () {
 				SpecUtils.clickElement($('.upload-image-button'));
@@ -79,6 +83,7 @@ describe('the new recipe module', function () {
 				var expectedRecipe = {recipeName: '', recipeContent: '', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
 
 				SpecUtils.clickElement($('.save-button'));
+				SpecUtils.delayABit();
 				expect(recipeService.saveRecipe).toHaveBeenCalledWith(expectedRecipe);
 				done();
 			});
