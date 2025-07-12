@@ -52,9 +52,11 @@ SpecUtils.loadPage = function(htmlFilePath, scope) {
 };
 
 SpecUtils.delayABit = function() {
+	var g = 0;
 	for (var i = 0; i < 2000; i++) {
 		for (var j = 0; j < 2000; j++) {
-			var g = i * j;
+			g = i * j;
 		}
 	}
+	return g;
 };

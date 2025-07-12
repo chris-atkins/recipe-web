@@ -30,6 +30,7 @@ describe('the new recipe module', function () {
 				Upload: upload
 			});
 		});
+		SpecUtils.delayABit();
 	});
 
 	function loadPage() {
@@ -89,6 +90,7 @@ describe('the new recipe module', function () {
 
 			scope.imageSaved({imageUrl:'hi'});
 			scope.$digest();
+			SpecUtils.delayABit();
 			SpecUtils.delayABit();
 
 			expect($('.recipe-image')).toBeVisible();

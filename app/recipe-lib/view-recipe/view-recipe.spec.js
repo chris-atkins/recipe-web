@@ -276,12 +276,14 @@ describe('the view recipe controller', function () {
 
 		it('should not show the image upload section in edit mode', function () {
 			loadPage(recipe);
+			SpecUtils.delayABit();
 			expect($(imageUploadSectionSelector)).not.toBeVisible();
 			expect($(imageUploadToggleSelector)).not.toBeVisible();
 		});
 
 		it('should show an existing image', function() {
 			loadPage(recipe);
+			SpecUtils.delayABit();
 			expect($(imageSelector)).toBeVisible();
 			expect($(imageSelector).attr('src')).toBe('hiImAnImageUrl');
 		});
@@ -362,6 +364,7 @@ describe('the view recipe controller', function () {
 
 		it('once an image has been saved, displays it on screen', function() {
 			loadPageInEditMode(recipe);
+			SpecUtils.delayABit();
 			expect($('.edit-recipe-page .recipe-image')).not.toBeVisible();
 
 			scope.imageSaved({imageUrl:'hi'});
@@ -374,11 +377,13 @@ describe('the view recipe controller', function () {
 
 		it('starts off showing an existing image, but once a new image has been saved, displays it on screen', function() {
 			loadPageInEditMode(recipeWithImage);
+			SpecUtils.delayABit();
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
 			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('originalUrl');
 
 			scope.imageSaved({imageUrl:'newUrl'});
 			scope.$digest();
+			SpecUtils.delayABit();
 			SpecUtils.delayABit();
 
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
