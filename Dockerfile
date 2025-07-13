@@ -1,13 +1,10 @@
-FROM centos:7
-RUN yum install -y wget
-RUN cd ~
-RUN wget http://nodejs.org/dist/v10.13.0/node-v10.13.0-linux-x64.tar.gz
-RUN tar --strip-components 1 -xzvf node-v* -C /usr/local
-RUN yum -y install tar
-RUN yum -y install bzip2
-RUN yum -y install git
+FROM node:alpine3.22
+RUN apk update
+RUN apk add bzip2
+RUN apk add git
+RUN apk add libc6-compat
 COPY . /src
 COPY ./run-on-server.sh /
-RUN cd src && npm install --unsafe-perm
+RUN cd src && npm install --unsafe-perm --legacy-peer-deps
 EXPOSE 8000
 CMD ["sh", "run-on-server.sh"]
