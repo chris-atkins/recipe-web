@@ -53,8 +53,8 @@ SpecUtils.loadPage = function(htmlFilePath, scope) {
 
 SpecUtils.delayABit = function() {
 	var g = 0;
-	for (var i = 0; i < 1000; i++) {
-		for (var j = 0; j < 1000; j++) {
+	for (var i = 0; i < 2000; i++) {
+		for (var j = 0; j < 2000; j++) {
 			g = i * j;
 		}
 	}

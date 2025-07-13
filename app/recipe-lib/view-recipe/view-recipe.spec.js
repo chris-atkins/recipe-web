@@ -276,14 +276,12 @@ describe('the view recipe controller', function () {
 
 		it('should not show the image upload section in edit mode', function () {
 			loadPage(recipe);
-			SpecUtils.delayABit();
 			expect($(imageUploadSectionSelector)).not.toBeVisible();
 			expect($(imageUploadToggleSelector)).not.toBeVisible();
 		});
 
 		it('should show an existing image', function() {
 			loadPage(recipe);
-			SpecUtils.delayABit();
 			expect($(imageSelector)).toBeVisible();
 			expect($(imageSelector).attr('src')).toBe('hiImAnImageUrl');
 		});
@@ -296,6 +294,8 @@ describe('the view recipe controller', function () {
 		it('will have a button that copies an alternate url to the clipboard', function() {
 			loadPage(recipe);
 			SpecUtils.clickElement($(copyAlternateUrlSelector));
+			scope.$digest();
+			SpecUtils.delayABit();
 			expect(clipboard.copyText).toHaveBeenCalledWith('wheee://thebesthost/recipe/1');
 		});
 	});
@@ -342,12 +342,15 @@ describe('the view recipe controller', function () {
 
 				$compile(elem)(scope);
 				scope.$digest();
+				SpecUtils.delayABit();
 
 				var editRecipeButton = $(editRecipeButtonSelector);
 				SpecUtils.clickElement(editRecipeButton);
+				SpecUtils.delayABit();
 				scope.$digest();
 				SpecUtils.delayABit();
 			});
+			scope.$digest();
 			SpecUtils.delayABit();
 		}
 

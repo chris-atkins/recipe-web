@@ -56,6 +56,7 @@ describe('the new recipe module', function () {
 
 		it('contains the upload image module', function () {
 			loadPage();
+			scope.$digest();
 			SpecUtils.delayABit();
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
@@ -94,8 +95,8 @@ describe('the new recipe module', function () {
 			expect($('.recipe-image')).not.toBeVisible();
 
 			scope.imageSaved({imageUrl:'hi'});
-			scope.$digest();
 			SpecUtils.delayABit();
+			scope.$digest();
 			SpecUtils.delayABit();
 
 			expect($('.recipe-image')).toBeVisible();
