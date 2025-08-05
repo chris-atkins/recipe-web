@@ -23,7 +23,7 @@ spec:
             - containerPort: {{ .Values.containerPort }}
           env:
             - name: SERVICE_IP
-              value: "http://$(RECIPE_BACKEND_SERVICE_SERVICE_HOST):$(RECIPE_BACKEND_SERVICE_SERVICE_PORT)"
+              value: "$(RECIPE_BACKEND_SERVICE_SERVICE_HOST)"
             - name: WEB_IP
               value: "www.myrecipeconnection.com"
             - name: GOOGLE_CLIENT_SECRET
