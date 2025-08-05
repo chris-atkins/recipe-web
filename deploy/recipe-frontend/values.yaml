@@ -1,6 +1,6 @@
 projectName: recipe
 appName: recipe-frontend
-publicUrl: myrecipeconnection.com
+publicUrl: www.myrecipeconnection.com
 
 replicaCount: 1
 
