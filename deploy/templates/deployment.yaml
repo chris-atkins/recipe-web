@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: {{ .Values.appName }}
+  labels:
+    app: {{ .Values.appName }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+    spec:
+      containers:
+        - image: "{{ .Values.containerRegistry }}/{{ .Values.projectName }}:{{ .Values.imageLabel }}"
+          imagePullPolicy: Always
+          name: {{ .Values.appName }}
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+          env:
+            - name: SERVICE_IP
+              value: "http://$(RECIPE_BACKEND_SERVICE_SERVICE_HOST):$(RECIPE_BACKEND_SERVICE_SERVICE_PORT)"
+            - name: WEB_IP
+              value: "www.myrecipeconnection.com"
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: googleClientSecret
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: googleClientId
