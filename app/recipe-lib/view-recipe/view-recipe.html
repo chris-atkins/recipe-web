@@ -5,7 +5,7 @@
 	<div class="alternate-url-holder"><button class="btn btn-secondary alternate-url-copy-button copy-button" title="Copy Import URL to Clipboard" ng-click="copyAlternateUrlClicked()" role="button"><i class="fa fa-link" aria-hidden="true"></i><span>Copied</span></button></div>
 
 	<div class="serves-as-newline" ng-show="imageExists(recipe)"></div>
-	<img class="recipe-image" ng-if="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
+	<img class="recipe-image" ng-if="imageExists(recipe)" ng-src="{{recipe.image.imageUrl}}"/>
 	<p><span id="recipe-content" class="recipe-ingredients show-line-breaks" ng-bind-html="recipe.recipeContent"></span></p>
 </div>
 
@@ -13,7 +13,7 @@
 	<div class="edit-recipe-title-holder"><h2><span id="edit-recipe-page-title">Edit Recipe</span></h2></div>
 
 	<div class="serves-as-newline" ng-show="imageExists(recipe)"></div>
-	<img class="recipe-image" ng-show="imageExists(recipe)" src="{{recipe.image.imageUrl}}"/>
+	<img class="recipe-image" ng-show="imageExists(recipe)" ng-src="{{recipe.image.imageUrl}}"/>
 	<div class="image-upload-holder">
 		<div class="image-upload-toggle-spacer" ng-show="imageExists(recipe)"></div>
 		<image-upload-modal image-saved-callback="imageSaved"></image-upload-modal>
