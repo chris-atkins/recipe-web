@@ -22,3 +22,13 @@ spec:
                 name: "{{ .Values.appName }}-service"
                 port:
                   number: {{ .Values.servicePort }}
+    - host: {{ .Values.publicUrlWithoutWWW }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "{{ .Values.appName }}-service"
+                port:
+                  number: {{ .Values.servicePort }}
