@@ -15,6 +15,9 @@ describe('the new recipe module', function () {
 			location = $location;
 			userService = _userService_;
 			recipeService = _recipeService_;
+
+			spyOn(userService, 'isExternalLoginBeingAttempted').and.returnValue(false);
+
 			$controller('NewRecipeCtrl', {
 				$scope: scope,
 				$location: location,
@@ -34,14 +37,16 @@ describe('the new recipe module', function () {
 	});
 
 	function loadPage() {
-		angular.mock.inject(function ($httpBackend, $templateCache, $compile) {
+		angular.mock.inject(function ($httpBackend, $templateCache, $compile, $rootScope) {
 			setFixtures($templateCache.get('recipe-lib/new-recipe/new-recipe.html'));
 
 			var fixture = angular.element(document).find('div')[0];
 			var elem = angular.element(fixture);
 
 			$compile(elem)(scope);
-			scope.$digest();
+			$rootScope.$digest();
+			SpecUtils.delayABit();
+			$rootScope.$digest();
 			SpecUtils.delayABit();
 		});
 		scope.$digest();
@@ -58,6 +63,7 @@ describe('the new recipe module', function () {
 			loadPage();
 			scope.$digest();
 			SpecUtils.delayABit();
+			SpecUtils.waitForElement(imageUploadToggleSelector, 2000);
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
@@ -68,13 +74,10 @@ describe('the new recipe module', function () {
 		}
 
 		it('if an image has been uploaded, includes the uploaded image when saving the recipe', function (done) {
+			jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // Increase timeout for modal
 			loadPage();
 			upload.upload = SpecUtils.buildMockPromiseFunction({data: {body: '{"imageId":"imageId", "imageUrl":"imageUrl"}'}, status: 200});
 			recipeService.saveRecipe = SpecUtils.buildMockPromiseFunction({});
-
-			SpecUtils.clickElement($(imageUploadToggleSelector));
-			scope.$digest();
-			SpecUtils.delayABit();
 
 			$('.image-upload-modal').on('shown.bs.modal', function () {
 				SpecUtils.clickElement($('.upload-image-button'));
@@ -88,6 +91,10 @@ describe('the new recipe module', function () {
 				expect(recipeService.saveRecipe).toHaveBeenCalledWith(expectedRecipe);
 				done();
 			});
+
+			SpecUtils.clickElement($(imageUploadToggleSelector));
+			scope.$digest();
+			SpecUtils.delayABit();
 		});
 
 		it('once an image has been saved, displays it on screen', function() {
@@ -98,6 +105,7 @@ describe('the new recipe module', function () {
 			SpecUtils.delayABit();
 			scope.$digest();
 			SpecUtils.delayABit();
+			SpecUtils.waitForElement('.recipe-image', 2000);
 
 			expect($('.recipe-image')).toBeVisible();
 			expect($('.recipe-image').attr('src')).toBe('hi');

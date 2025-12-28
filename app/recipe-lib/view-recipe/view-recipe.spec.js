@@ -229,7 +229,7 @@ describe('the view recipe controller', function () {
 		var imageSelector = '.recipe-image';
 
 		beforeEach(function () {
-			angular.mock.inject(function ($controller, $rootScope, _Upload_, _clipboard_, $location) {
+			angular.mock.inject(function ($controller, $rootScope, _Upload_, _clipboard_, $location, userService) {
 
 				clipboard = _clipboard_;
 				location = $location;
@@ -237,6 +237,7 @@ describe('the view recipe controller', function () {
 
 				spyOn(location, 'protocol').and.returnValue('wheee');
 				spyOn(location, 'host').and.returnValue('thebesthost');
+				spyOn(userService, 'isExternalLoginBeingAttempted').and.returnValue(false);
 
 				scope = $rootScope.$new();
 				$controller('ViewRecipeCtrl', {
@@ -282,6 +283,7 @@ describe('the view recipe controller', function () {
 
 		it('should show an existing image', function() {
 			loadPage(recipe);
+			SpecUtils.waitForElement(imageSelector, 2000);
 			expect($(imageSelector)).toBeVisible();
 			expect($(imageSelector).attr('src')).toBe('hiImAnImageUrl');
 		});
@@ -293,6 +295,7 @@ describe('the view recipe controller', function () {
 
 		it('will have a button that copies an alternate url to the clipboard', function() {
 			loadPage(recipe);
+			SpecUtils.waitForElement(copyAlternateUrlSelector, 2000);
 			SpecUtils.clickElement($(copyAlternateUrlSelector));
 			scope.$digest();
 			SpecUtils.delayABit();
@@ -311,7 +314,9 @@ describe('the view recipe controller', function () {
 		var imageUploadToggleSelector = '.image-upload-toggle';
 
 		beforeEach(function () {
-			angular.mock.inject(function ($controller, $rootScope, _Upload_) {
+			angular.mock.inject(function ($controller, $rootScope, _Upload_, userService) {
+				spyOn(userService, 'isExternalLoginBeingAttempted').and.returnValue(false);
+
 				scope = $rootScope.$new();
 				$controller('ViewRecipeCtrl', {
 					$scope: scope
@@ -363,6 +368,7 @@ describe('the view recipe controller', function () {
 		it('shows the upload image button', function () {
 			loadPageInEditMode();
 			SpecUtils.delayABit();
+			SpecUtils.waitForElement(imageUploadToggleSelector, 2000);
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
@@ -376,6 +382,7 @@ describe('the view recipe controller', function () {
 			SpecUtils.delayABit();
 			scope.$digest();
 			SpecUtils.delayABit();
+			SpecUtils.waitForElement('.edit-recipe-page .recipe-image', 2000);
 
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
 			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('hi');
@@ -384,6 +391,7 @@ describe('the view recipe controller', function () {
 		it('starts off showing an existing image, but once a new image has been saved, displays it on screen', function() {
 			loadPageInEditMode(recipeWithImage);
 			SpecUtils.delayABit();
+			SpecUtils.waitForElement('.edit-recipe-page .recipe-image', 2000);
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
 			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('originalUrl');
 

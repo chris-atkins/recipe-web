@@ -60,3 +60,17 @@ SpecUtils.delayABit = function() {
 	}
 	return g;
 };
+
+SpecUtils.waitForElement = function(selector, timeout) {
+	timeout = timeout || 1000;
+	var startTime = Date.now();
+
+	while (Date.now() - startTime < timeout) {
+		var element = $(selector);
+		if (element.length > 0 && element.is(':visible')) {
+			return true;
+		}
+		SpecUtils.delayABit();
+	}
+	return false;
+};

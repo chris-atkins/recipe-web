@@ -51,6 +51,13 @@ angular.module('recipe')
 		return recipe.image !== null;
 	};
 
+	$scope.buildUrl = function(recipe) {
+		if (recipe.image !== null && recipe.image.imageUrl != null) {
+			return recipe.image.imageUrl;
+		}
+		return "";
+	};
+
 	function updateRecipeBookFlags() {
 		if ($scope.bookMode) {
 			return;
