@@ -78,3 +78,8 @@ SpecUtils.waitForAngular = async function(scope) {
 	}
 	await SpecUtils.delayABit(200);
 };
+
+SpecUtils.removeModalBackdrop = async function() {
+	var back = $('.modal-backdrop');
+	await back.remove();
+};

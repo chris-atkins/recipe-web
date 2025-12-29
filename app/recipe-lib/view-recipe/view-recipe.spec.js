@@ -384,7 +384,6 @@ describe('the view recipe controller', function () {
 
 		it('does not have a copy alternate url button', async function() {
 			await loadPageInEditMode(recipeWithNOImage);
-			await SpecUtils.delayABit(1000);
 			expect($(copyAlternateUrlSelector)).not.toBeVisible();
 		});
 
@@ -400,7 +399,6 @@ describe('the view recipe controller', function () {
 			expect($(recipeImageSelector)).not.toBeVisible();
 
 			scope.imageSaved({imageUrl:'hi'});
-			await SpecUtils.delayABit(1000);
 			await SpecUtils.waitForAngular(scope);
 			await SpecUtils.waitForElement(recipeImageSelector, 5000);
 			await SpecUtils.delayABit(1000);
@@ -416,7 +414,6 @@ describe('the view recipe controller', function () {
 			expect($(recipeImageSelector).attr('src')).toBe('originalUrl');
 
 			scope.imageSaved({imageUrl:'newUrl'});
-			await SpecUtils.delayABit(1000);
 			await SpecUtils.waitForAngular(scope);
 			await SpecUtils.waitForElement(recipeImageSelector, 5000);
 			await SpecUtils.delayABit(1000);
@@ -433,7 +430,6 @@ describe('the view recipe controller', function () {
 			SpecUtils.clickElement($(imageUploadToggleSelector));
 			SpecUtils.clickElement($('.upload-image-button'));
 			await SpecUtils.waitForAngular(scope);
-			await SpecUtils.delayABit(1000);
 
 			angular.mock.inject(function ($httpBackend) {
 				var expectedRecipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
@@ -451,6 +447,7 @@ describe('the view recipe controller', function () {
 			});
 			upload.upload = originalUpload;
 			await SpecUtils.delayABit(1000);
+			await SpecUtils.removeModalBackdrop();
 		});
 	});
 });

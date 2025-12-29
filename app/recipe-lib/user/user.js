@@ -80,7 +80,7 @@ angular.module('recipe')
 	var performExternalLogin = function () {
 		var googleAuthUser = $cookies.getObject('RecipeConnectionGoogleAuth');
 		if (googleAuthUser === undefined) {
-			return {};
+			return Promise.resolve({});
 		}
 		return googleLogIn(googleAuthUser.userName, googleAuthUser.userEmail);
 	};

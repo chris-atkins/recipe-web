@@ -1,7 +1,6 @@
 'use strict';
 
 var rs = require('request-promise');
-var Promise = require('bluebird');
 var config = browser.params;
 var dataUtils = require('./../utils/data-utils');
 

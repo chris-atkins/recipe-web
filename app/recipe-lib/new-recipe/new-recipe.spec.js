@@ -73,11 +73,6 @@ describe('the new recipe module', function () {
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
 
-		function removeModalBackdrop() {
-			var back = $('.modal-backdrop');
-			back.remove();
-		}
-
 		it('if an image has been uploaded, includes the uploaded image when saving the recipe', async function () {
 			jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 			await loadPage();
@@ -101,7 +96,7 @@ describe('the new recipe module', function () {
 			await SpecUtils.waitForAngular(scope);
 
 			SpecUtils.clickElement($('.close-upload-image-button'));
-			removeModalBackdrop();
+			await SpecUtils.removeModalBackdrop();
 			await SpecUtils.waitForAngular(scope);
 
 			var expectedRecipe = {recipeName: '', recipeContent: '', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
