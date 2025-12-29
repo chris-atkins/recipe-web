@@ -31,6 +31,7 @@ describe('the recipe book module', function () {
 		recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([]);
 
 		userService.getLoggedInUser = jasmine.createSpy('').and.returnValue(recipeBookOwner);
+		userService.isExternalLoginBeingAttempted = jasmine.createSpy('').and.returnValue(false);
 
 		recipeService = {};
 		recipeService.allRecipesInUserBook = SpecUtils.buildMockPromiseFunction([recipe1, recipe2]);

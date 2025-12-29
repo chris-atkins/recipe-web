@@ -8,7 +8,7 @@ describe('The searchRecipes module', function () {
 
 	var recipes = [{recipeId: '1', recipeName: 'recipe 1', recipeContent: ''}, {recipeId: '2', recipeName: 'recipe 2', recipeContent: ''}];
 
-	beforeEach(angular.mock.inject(function ($q, $rootScope, _$location_, $controller, $compile) {
+	beforeEach(angular.mock.inject(function ($q, $rootScope, _$location_, $controller, $compile, userService) {
 		scope = $rootScope.$new();
 		compile = $compile;
 		location = _$location_;
@@ -18,6 +18,8 @@ describe('The searchRecipes module', function () {
 
 		recipeBookService = {};
 		recipeBookService.getRecipeBook = SpecUtils.buildMockPromiseFunction([]);
+
+		userService.isExternalLoginBeingAttempted = jasmine.createSpy('').and.returnValue(false);
 
 		$controller('SearchRecipesCtrl',
 			{

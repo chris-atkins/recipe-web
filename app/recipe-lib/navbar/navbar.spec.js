@@ -8,11 +8,13 @@ describe('the navbar module', function () {
 
 	beforeEach(angular.mock.module('my.templates', 'recipe'));
 
-	beforeEach(angular.mock.inject(function ($rootScope, _$location_, $controller, _userService_, $http, _externalNavigationService_) {
+	beforeEach(angular.mock.inject(function ($rootScope, _$location_, $controller, _userService_, $http, _externalNavigationService_, $httpBackend) {
 		scope = $rootScope.$new();
 		location = _$location_;
 		userService = _userService_;
 		externalNavigationService = _externalNavigationService_;
+
+		$httpBackend.whenGET(/\/api\/user\?email=.*/).respond(200, {});
 
 		$controller('NavbarCtrl', {
 			$scope: scope,
@@ -180,11 +182,13 @@ describe('the navbar module', function () {
 
 		var createController;
 
-		beforeEach(angular.mock.inject(function ($rootScope, _$location_, $controller, _userService_, _externalNavigationService_, $http) {
+		beforeEach(angular.mock.inject(function ($rootScope, _$location_, $controller, _userService_, _externalNavigationService_, $http, $httpBackend) {
 			scope = $rootScope.$new();
 			location = _$location_;
 			userService = _userService_;
 			externalNavigationService = _externalNavigationService_;
+
+			$httpBackend.whenGET(/\/api\/user\?email=.*/).respond(200, {});
 
 			createController = function() {
 				return $controller('NavbarCtrl', {

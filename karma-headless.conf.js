@@ -6,13 +6,13 @@ module.exports = function (config) {
 	baseProjectConfig(config);
 
 	config.set({
-
+		concurrency: 1,
 		autoWatch: false,
 
-		browsers: ['PhantomJS'],
+		browsers: ['ChromeHeadless'],
 
 		plugins: [
-			'karma-phantomjs-launcher',
+			'karma-chrome-launcher',
 			'karma-jasmine',
 			'karma-junit-reporter',
 			'karma-ng-html2js-preprocessor'

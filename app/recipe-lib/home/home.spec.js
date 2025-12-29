@@ -11,6 +11,8 @@ describe('the home page', function() {
 		location = _$location_;
 		userService = _userService_;
 
+		userService.isExternalLoginBeingAttempted = jasmine.createSpy('').and.returnValue(false);
+
 		$controller('HomeCtrl', {
 			$scope: scope,
 			userService: userService,

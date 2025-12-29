@@ -1,7 +1,7 @@
 'use strict';
 
 /* jshint ignore:start */
-var SpecUtils = {};
+window.SpecUtils = {};
 /* jshint ignore:end */
 
 SpecUtils.buildMockPromiseFunction = function (valueToResolveTo) {
@@ -51,12 +51,13 @@ SpecUtils.loadPage = function(htmlFilePath, scope) {
 	});
 };
 
-SpecUtils.delayABit = async function() {
-	return new Promise(resolve => setTimeout(resolve, 500));
+SpecUtils.delayABit = async function(milliseconds) {
+	const millis = milliseconds || 500;
+	return new Promise(resolve => setTimeout(resolve, millis));
 };
 
 SpecUtils.waitForElement = async function(selector, timeout) {
-	timeout = timeout || 1000;
+	timeout = timeout || 3000;
 	var startTime = Date.now();
 	var pollInterval = 50;
 
@@ -65,15 +66,15 @@ SpecUtils.waitForElement = async function(selector, timeout) {
 		if (element.length > 0 && element.is(':visible')) {
 			return true;
 		}
-		await new Promise(resolve => setTimeout(resolve, pollInterval));
+		await SpecUtils.delayABit(pollInterval);
 	}
 	return false;
 };
 
 SpecUtils.waitForAngular = async function(scope) {
-	await new Promise(resolve => setTimeout(resolve, 50));
+	await SpecUtils.delayABit(200);
 	if (scope) {
 		scope.$digest();
 	}
-	await new Promise(resolve => setTimeout(resolve, 100));
+	await SpecUtils.delayABit(200);
 };

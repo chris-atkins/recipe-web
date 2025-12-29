@@ -10,7 +10,7 @@ describe('the new recipe module', function () {
 	var imageUploadToggleSelector = '.image-upload-toggle';
 
 	beforeEach(async function () {
-		angular.mock.inject(function ($controller, $rootScope, _Upload_, $location, _userService_, _recipeService_) {
+		await angular.mock.inject(function ($controller, $rootScope, _Upload_, $location, _userService_, _recipeService_) {
 			scope = $rootScope.$new();
 			location = $location;
 			userService = _userService_;
@@ -33,7 +33,17 @@ describe('the new recipe module', function () {
 				Upload: upload
 			});
 		});
-		await SpecUtils.delayABit();
+		await SpecUtils.waitForAngular(scope);
+	});
+
+	afterEach(async function () {
+		await SpecUtils.waitForAngular(scope);
+		scope = null;
+		imageUploadScope = null;
+		upload = null;
+		location = null;
+		userService = null;
+		recipeService = null;
 	});
 
 	async function loadPage() {
@@ -58,6 +68,7 @@ describe('the new recipe module', function () {
 		it('contains the upload image module', async function () {
 			await loadPage();
 			await SpecUtils.waitForElement(imageUploadToggleSelector, 3000);
+			await SpecUtils.delayABit(1000);
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
@@ -68,27 +79,23 @@ describe('the new recipe module', function () {
 		}
 
 		it('if an image has been uploaded, includes the uploaded image when saving the recipe', async function () {
-			jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // Increase timeout for modal
+			jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 			await loadPage();
 			upload.upload = SpecUtils.buildMockPromiseFunction({data: {body: '{"imageId":"imageId", "imageUrl":"imageUrl"}'}, status: 200});
 			recipeService.saveRecipe = SpecUtils.buildMockPromiseFunction({});
 
-			// Create a promise that resolves when modal is shown
 			var modalShownPromise = new Promise(function(resolve) {
 				$('.image-upload-modal').on('shown.bs.modal', function () {
 					resolve();
 				});
 			});
 
-			// Click to open modal
 			SpecUtils.clickElement($(imageUploadToggleSelector));
 			await SpecUtils.waitForAngular(scope);
 
-			// Wait for modal to be shown
 			await modalShownPromise;
 
-			// Wait for upload button to be visible and clickable
-			await SpecUtils.waitForElement('.upload-image-button', 2000);
+			await SpecUtils.waitForElement('.upload-image-button', 5000);
 
 			SpecUtils.clickElement($('.upload-image-button'));
 			await SpecUtils.waitForAngular(scope);
@@ -110,7 +117,8 @@ describe('the new recipe module', function () {
 
 			scope.imageSaved({imageUrl:'hi'});
 			await SpecUtils.waitForAngular(scope);
-			await SpecUtils.waitForElement('.recipe-image', 3000);
+			await SpecUtils.waitForElement('.recipe-image', 5000);
+			await SpecUtils.delayABit(1000);
 
 			expect($('.recipe-image')).toBeVisible();
 			expect($('.recipe-image').attr('src')).toBe('hi');
