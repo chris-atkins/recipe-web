@@ -51,26 +51,29 @@ SpecUtils.loadPage = function(htmlFilePath, scope) {
 	});
 };
 
-SpecUtils.delayABit = function() {
-	var g = 0;
-	for (var i = 0; i < 1000; i++) {
-		for (var j = 0; j < 1000; j++) {
-			g = i * j;
-		}
-	}
-	return g;
+SpecUtils.delayABit = async function() {
+	return new Promise(resolve => setTimeout(resolve, 500));
 };
 
-SpecUtils.waitForElement = function(selector, timeout) {
+SpecUtils.waitForElement = async function(selector, timeout) {
 	timeout = timeout || 1000;
 	var startTime = Date.now();
+	var pollInterval = 50;
 
 	while (Date.now() - startTime < timeout) {
 		var element = $(selector);
 		if (element.length > 0 && element.is(':visible')) {
 			return true;
 		}
-		SpecUtils.delayABit();
+		await new Promise(resolve => setTimeout(resolve, pollInterval));
 	}
 	return false;
+};
+
+SpecUtils.waitForAngular = async function(scope) {
+	await new Promise(resolve => setTimeout(resolve, 50));
+	if (scope) {
+		scope.$digest();
+	}
+	await new Promise(resolve => setTimeout(resolve, 100));
 };

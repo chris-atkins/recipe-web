@@ -1,4 +1,5 @@
 {
+  "esversion": 8,
   "globalstrict": true,
   "globals": {
     "angular": false,

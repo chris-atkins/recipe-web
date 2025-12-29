@@ -9,7 +9,7 @@ describe('the new recipe module', function () {
 
 	var imageUploadToggleSelector = '.image-upload-toggle';
 
-	beforeEach(function () {
+	beforeEach(async function () {
 		angular.mock.inject(function ($controller, $rootScope, _Upload_, $location, _userService_, _recipeService_) {
 			scope = $rootScope.$new();
 			location = $location;
@@ -33,10 +33,10 @@ describe('the new recipe module', function () {
 				Upload: upload
 			});
 		});
-		SpecUtils.delayABit();
+		await SpecUtils.delayABit();
 	});
 
-	function loadPage() {
+	async function loadPage() {
 		angular.mock.inject(function ($httpBackend, $templateCache, $compile, $rootScope) {
 			setFixtures($templateCache.get('recipe-lib/new-recipe/new-recipe.html'));
 
@@ -45,25 +45,19 @@ describe('the new recipe module', function () {
 
 			$compile(elem)(scope);
 			$rootScope.$digest();
-			SpecUtils.delayABit();
-			$rootScope.$digest();
-			SpecUtils.delayABit();
 		});
-		scope.$digest();
-		SpecUtils.delayABit();
+		await SpecUtils.waitForAngular(scope);
 	}
 
 	describe('when logged in', function () {
 
-		beforeEach(function () {
+		beforeEach(async function () {
 			spyOn(userService, 'isLoggedIn').and.returnValue(true);
 		});
 
-		it('contains the upload image module', function () {
-			loadPage();
-			scope.$digest();
-			SpecUtils.delayABit();
-			SpecUtils.waitForElement(imageUploadToggleSelector, 2000);
+		it('contains the upload image module', async function () {
+			await loadPage();
+			await SpecUtils.waitForElement(imageUploadToggleSelector, 3000);
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
@@ -73,39 +67,50 @@ describe('the new recipe module', function () {
 			back.remove();
 		}
 
-		it('if an image has been uploaded, includes the uploaded image when saving the recipe', function (done) {
+		it('if an image has been uploaded, includes the uploaded image when saving the recipe', async function () {
 			jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // Increase timeout for modal
-			loadPage();
+			await loadPage();
 			upload.upload = SpecUtils.buildMockPromiseFunction({data: {body: '{"imageId":"imageId", "imageUrl":"imageUrl"}'}, status: 200});
 			recipeService.saveRecipe = SpecUtils.buildMockPromiseFunction({});
 
-			$('.image-upload-modal').on('shown.bs.modal', function () {
-				SpecUtils.clickElement($('.upload-image-button'));
-				SpecUtils.clickElement($('.close-upload-image-button'));
-				removeModalBackdrop();
-
-				var expectedRecipe = {recipeName: '', recipeContent: '', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
-
-				SpecUtils.clickElement($('.save-button'));
-				SpecUtils.delayABit();
-				expect(recipeService.saveRecipe).toHaveBeenCalledWith(expectedRecipe);
-				done();
+			// Create a promise that resolves when modal is shown
+			var modalShownPromise = new Promise(function(resolve) {
+				$('.image-upload-modal').on('shown.bs.modal', function () {
+					resolve();
+				});
 			});
 
+			// Click to open modal
 			SpecUtils.clickElement($(imageUploadToggleSelector));
-			scope.$digest();
-			SpecUtils.delayABit();
+			await SpecUtils.waitForAngular(scope);
+
+			// Wait for modal to be shown
+			await modalShownPromise;
+
+			// Wait for upload button to be visible and clickable
+			await SpecUtils.waitForElement('.upload-image-button', 2000);
+
+			SpecUtils.clickElement($('.upload-image-button'));
+			await SpecUtils.waitForAngular(scope);
+
+			SpecUtils.clickElement($('.close-upload-image-button'));
+			removeModalBackdrop();
+			await SpecUtils.waitForAngular(scope);
+
+			var expectedRecipe = {recipeName: '', recipeContent: '', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
+
+			SpecUtils.clickElement($('.save-button'));
+			await SpecUtils.waitForAngular(scope);
+			expect(recipeService.saveRecipe).toHaveBeenCalledWith(expectedRecipe);
 		});
 
-		it('once an image has been saved, displays it on screen', function() {
-			loadPage();
+		it('once an image has been saved, displays it on screen', async function() {
+			await loadPage();
 			expect($('.recipe-image')).not.toBeVisible();
 
 			scope.imageSaved({imageUrl:'hi'});
-			SpecUtils.delayABit();
-			scope.$digest();
-			SpecUtils.delayABit();
-			SpecUtils.waitForElement('.recipe-image', 2000);
+			await SpecUtils.waitForAngular(scope);
+			await SpecUtils.waitForElement('.recipe-image', 3000);
 
 			expect($('.recipe-image')).toBeVisible();
 			expect($('.recipe-image').attr('src')).toBe('hi');

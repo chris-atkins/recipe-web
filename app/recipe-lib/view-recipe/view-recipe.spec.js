@@ -36,7 +36,7 @@ describe('the view recipe controller', function () {
 			});
 		}
 
-		it('will return false if no user is logged in', function () {
+		it('will return false if no user is logged in', async function () {
 			angular.mock.inject(function (userService) {
 				var options = {withRecipeInRecipeBook: false};
 				spyOn(userService, 'isLoggedIn').and.returnValue(false);
@@ -49,7 +49,7 @@ describe('the view recipe controller', function () {
 			});
 		});
 
-		it('will return false if the current recipe is in the logged in users recipe book', function () {
+		it('will return false if the current recipe is in the logged in users recipe book', async function () {
 			angular.mock.inject(function (userService) {
 				var options = {withRecipeInRecipeBook: true};
 				spyOn(userService, 'isLoggedIn').and.returnValue(true);
@@ -62,7 +62,7 @@ describe('the view recipe controller', function () {
 			});
 		});
 
-		it('will return false if in editMode', function () {
+		it('will return false if in editMode', async function () {
 			angular.mock.inject(function (userService) {
 				var options = {withRecipeInRecipeBook: false};
 				spyOn(userService, 'isLoggedIn').and.returnValue(true);
@@ -77,7 +77,7 @@ describe('the view recipe controller', function () {
 			});
 		});
 
-		it('will return true if the user is logged in and the page is not in edit mode and the recipe is in the users recipe book', function () {
+		it('will return true if the user is logged in and the page is not in edit mode and the recipe is in the users recipe book', async function () {
 			angular.mock.inject(function (userService) {
 				var options = {withRecipeInRecipeBook: false};
 				spyOn(userService, 'isLoggedIn').and.returnValue(true);
@@ -111,13 +111,13 @@ describe('the view recipe controller', function () {
 				$httpBackend.flush();
 			}));
 
-			it('when in edit mode, returns false', function () {
+			it('when in edit mode, returns false', async function () {
 				scope.editClicked();
 				var result = scope.canRemoveFromRecipeBook();
 				expect(result).toBe(false);
 			});
 
-			it('when not in edit mode, returns true', function () {
+			it('when not in edit mode, returns true', async function () {
 				var result = scope.canRemoveFromRecipeBook();
 				expect(result).toBe(true);
 			});
@@ -141,13 +141,13 @@ describe('the view recipe controller', function () {
 				$httpBackend.flush();
 			}));
 
-			it('when in edit mode, returns false', function () {
+			it('when in edit mode, returns false', async function () {
 				scope.editClicked();
 				var result = scope.canRemoveFromRecipeBook();
 				expect(result).toBe(false);
 			});
 
-			it('when not in edit mode, returns false', function () {
+			it('when not in edit mode, returns false', async function () {
 				var result = scope.canRemoveFromRecipeBook();
 				expect(result).toBe(false);
 			});
@@ -184,7 +184,7 @@ describe('the view recipe controller', function () {
 			});
 		}
 
-		it('the add to recipe book button is visible when scope returns true for canAddToRecipeBook', function () {
+		it('the add to recipe book button is visible when scope returns true for canAddToRecipeBook', async function () {
 			spyOn(scope, 'canAddToRecipeBook').and.returnValue(true);
 			loadPage();
 
@@ -192,7 +192,7 @@ describe('the view recipe controller', function () {
 			expect(addToRecipeBookButton).toBeVisible();
 		});
 
-		it('the add to recipe book button is not visible when scope returns true for canAddToRecipeBook', function () {
+		it('the add to recipe book button is not visible when scope returns true for canAddToRecipeBook', async function () {
 			spyOn(scope, 'canAddToRecipeBook').and.returnValue(false);
 			loadPage();
 
@@ -200,7 +200,7 @@ describe('the view recipe controller', function () {
 			expect(addToRecipeBookButton).not.toBeVisible();
 		});
 
-		it('the remove from recipe book button is visible when scope returns true for canAddToRecipeBook', function () {
+		it('the remove from recipe book button is visible when scope returns true for canAddToRecipeBook', async function () {
 			spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(true);
 			loadPage();
 
@@ -208,7 +208,7 @@ describe('the view recipe controller', function () {
 			expect(removeFromRecipeBookButton).toBeVisible();
 		});
 
-		it('the remove from recipe book button is not visible when scope returns true for canAddToRecipeBook', function () {
+		it('the remove from recipe book button is not visible when scope returns true for canAddToRecipeBook', async function () {
 			spyOn(scope, 'canRemoveFromRecipeBook').and.returnValue(false);
 			loadPage();
 
@@ -228,7 +228,7 @@ describe('the view recipe controller', function () {
 		var imageUploadToggleSelector = '.image-upload-toggle';
 		var imageSelector = '.recipe-image';
 
-		beforeEach(function () {
+		beforeEach(async function () {
 			angular.mock.inject(function ($controller, $rootScope, _Upload_, _clipboard_, $location, userService) {
 
 				clipboard = _clipboard_;
@@ -254,10 +254,10 @@ describe('the view recipe controller', function () {
 					Upload: upload
 				});
 			});
-			SpecUtils.delayABit();
+			await SpecUtils.delayABit();
 		});
 
-		function loadPage(recipe) {
+		async function loadPage(recipe) {
 			angular.mock.inject(function ($httpBackend, $templateCache, $compile) {
 				$httpBackend.expect('GET', 'api/recipe/undefined').respond(recipe);
 				$httpBackend.expect('GET', '/api/user/undefined/recipe-book').respond([]);
@@ -270,35 +270,34 @@ describe('the view recipe controller', function () {
 
 				$compile(elem)(scope);
 				scope.$digest();
-				SpecUtils.delayABit();
 			});
-			SpecUtils.delayABit();
+			await SpecUtils.delayABit();
 		}
 
-		it('should not show the image upload section in edit mode', function () {
-			loadPage(recipe);
+		it('should not show the image upload section in edit mode', async function () {
+			await loadPage(recipe);
 			expect($(imageUploadSectionSelector)).not.toBeVisible();
 			expect($(imageUploadToggleSelector)).not.toBeVisible();
 		});
 
-		it('should show an existing image', function() {
-			loadPage(recipe);
-			SpecUtils.waitForElement(imageSelector, 2000);
+		it('should show an existing image', async function() {
+			await loadPage(recipe);
+			await SpecUtils.waitForElement(imageSelector, 2000);
 			expect($(imageSelector)).toBeVisible();
 			expect($(imageSelector).attr('src')).toBe('hiImAnImageUrl');
 		});
 
-		it('should not show an image if none exists', function() {
-			loadPage(recipeWithNOImaage);
+		it('should not show an image if none exists', async function() {
+			await loadPage(recipeWithNOImaage);
 			expect($(imageSelector)).not.toBeVisible();
 		});
 
-		it('will have a button that copies an alternate url to the clipboard', function() {
-			loadPage(recipe);
-			SpecUtils.waitForElement(copyAlternateUrlSelector, 2000);
+		it('will have a button that copies an alternate url to the clipboard', async function() {
+			await loadPage(recipe);
+			await SpecUtils.waitForElement(copyAlternateUrlSelector, 2000);
 			SpecUtils.clickElement($(copyAlternateUrlSelector));
 			scope.$digest();
-			SpecUtils.delayABit();
+			await SpecUtils.delayABit();
 			expect(clipboard.copyText).toHaveBeenCalledWith('wheee://thebesthost/recipe/1');
 		});
 	});
@@ -313,7 +312,7 @@ describe('the view recipe controller', function () {
 		var editRecipeButtonSelector = '#edit-recipe-button';
 		var imageUploadToggleSelector = '.image-upload-toggle';
 
-		beforeEach(function () {
+		beforeEach(async function () {
 			angular.mock.inject(function ($controller, $rootScope, _Upload_, userService) {
 				spyOn(userService, 'isExternalLoginBeingAttempted').and.returnValue(false);
 
@@ -330,10 +329,10 @@ describe('the view recipe controller', function () {
 					Upload: upload
 				});
 			});
-			SpecUtils.delayABit();
+			await SpecUtils.delayABit();
 		});
 
-		function loadPageInEditMode(recipeToUse) {
+		async function loadPageInEditMode(recipeToUse) {
 			angular.mock.inject(function ($httpBackend, $templateCache, $compile) {
 				var mockedRecipe = 	recipeToUse ? recipeToUse : recipe;
 				$httpBackend.expect('GET', 'api/recipe/undefined').respond(mockedRecipe);
@@ -347,81 +346,82 @@ describe('the view recipe controller', function () {
 
 				$compile(elem)(scope);
 				scope.$digest();
-				SpecUtils.delayABit();
 
 				var editRecipeButton = $(editRecipeButtonSelector);
 				SpecUtils.clickElement(editRecipeButton);
-				SpecUtils.delayABit();
 				scope.$digest();
-				SpecUtils.delayABit();
 			});
+			await SpecUtils.delayABit();
 			scope.$digest();
-			SpecUtils.delayABit();
+			await SpecUtils.delayABit();
 		}
 
-		it('does not have a copy alternate url button', function() {
-			loadPageInEditMode(recipe);
-			SpecUtils.delayABit();
+		it('does not have a copy alternate url button', async function() {
+			await loadPageInEditMode(recipe);
+			await SpecUtils.delayABit();
 			expect($(copyAlternateUrlSelector)).not.toBeVisible();
 		});
 
-		it('shows the upload image button', function () {
-			loadPageInEditMode();
-			SpecUtils.delayABit();
-			SpecUtils.waitForElement(imageUploadToggleSelector, 2000);
+		it('shows the upload image button', async function () {
+			await loadPageInEditMode();
+			await SpecUtils.delayABit();
+			await SpecUtils.waitForElement(imageUploadToggleSelector, 2000);
 			expect($(imageUploadToggleSelector)).toBeVisible();
 			expect($(imageUploadToggleSelector).text()).toBe(' Upload Image');
 		});
 
-		it('once an image has been saved, displays it on screen', function() {
-			loadPageInEditMode(recipe);
-			SpecUtils.delayABit();
+		it('once an image has been saved, displays it on screen', async function() {
+			await loadPageInEditMode(recipe);
+			await SpecUtils.delayABit();
 			expect($('.edit-recipe-page .recipe-image')).not.toBeVisible();
 
 			scope.imageSaved({imageUrl:'hi'});
-			SpecUtils.delayABit();
+			await SpecUtils.delayABit();
 			scope.$digest();
-			SpecUtils.delayABit();
-			SpecUtils.waitForElement('.edit-recipe-page .recipe-image', 2000);
+			await SpecUtils.delayABit();
+			await SpecUtils.waitForElement('.edit-recipe-page .recipe-image', 2000);
 
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
 			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('hi');
 		});
 
-		it('starts off showing an existing image, but once a new image has been saved, displays it on screen', function() {
-			loadPageInEditMode(recipeWithImage);
-			SpecUtils.delayABit();
-			SpecUtils.waitForElement('.edit-recipe-page .recipe-image', 2000);
+		it('starts off showing an existing image, but once a new image has been saved, displays it on screen', async function() {
+			await loadPageInEditMode(recipeWithImage);
+			await SpecUtils.delayABit();
+			await SpecUtils.waitForElement('.edit-recipe-page .recipe-image', 2000);
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
 			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('originalUrl');
 
 			scope.imageSaved({imageUrl:'newUrl'});
-			SpecUtils.delayABit();
+			await SpecUtils.delayABit();
 			scope.$digest();
-			SpecUtils.delayABit();
+			await SpecUtils.delayABit();
 
 			expect($('.edit-recipe-page .recipe-image')).toBeVisible();
 			expect($('.edit-recipe-page .recipe-image').attr('src')).toBe('newUrl');
 		});
 
-		it('if an image has been uploaded, includes the uploaded image when saving the recipe', function () {
+		it('if an image has been uploaded, includes the uploaded image when saving the recipe', async function () {
+			await loadPageInEditMode();
+			upload.upload = SpecUtils.buildMockPromiseFunction({data: {body: '{"imageId":"imageId","imageUrl":"imageUrl"}'}, status: 200});
+
+			SpecUtils.clickElement($(imageUploadToggleSelector));
+			SpecUtils.clickElement($('.upload-image-button'));
+			await SpecUtils.delayABit();
+			scope.$digest();
+			await SpecUtils.delayABit();
+
 			angular.mock.inject(function ($httpBackend) {
-				loadPageInEditMode();
-				upload.upload = SpecUtils.buildMockPromiseFunction({data: {body: '{"imageId":"imageId","imageUrl":"imageUrl"}'}, status: 200});
-
-				SpecUtils.clickElement($(imageUploadToggleSelector));
-				SpecUtils.clickElement($('.upload-image-button'));
-				SpecUtils.delayABit();
-				scope.$digest();
-				SpecUtils.delayABit();
-
 				var expectedRecipe = {recipeId: '1', recipeName: 'name', recipeContent: 'content', image: {imageId: 'imageId', imageUrl: 'imageUrl'}};
 				$httpBackend.expect('PUT', '/api/recipe/1', expectedRecipe).respond(recipe);
-				SpecUtils.clickElement($('#update-recipe-button'));
-				SpecUtils.delayABit();
-				scope.$digest();
-				SpecUtils.delayABit();
+			});
 
+			SpecUtils.clickElement($('#update-recipe-button'));
+			await SpecUtils.delayABit();
+			scope.$digest();
+			await SpecUtils.delayABit();
+
+			angular.mock.inject(function ($httpBackend) {
 				$httpBackend.flush();
 				$httpBackend.verifyNoOutstandingExpectation();
 				$httpBackend.verifyNoOutstandingRequest();
