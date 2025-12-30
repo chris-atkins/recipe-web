@@ -322,6 +322,7 @@ app.delete('/api/image/:imageId', function(request, response) {
 	var imageId = request.params.imageId;
 	performDELETEImage(imageId, request).then(function(data) {
 		response.statusCode = data.statusCode;
+		response.send();
 	})
 	.catch(function(error) {
 		console.log('Error deleting an image. ImageId: ', imageId, 'Error:', error);

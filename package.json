@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "bower": "^1.8.14",
-    "chromedriver": "^131.0.5",
+    "chromedriver": "^143.0.3",
     "continuation-local-storage": "^3.2.1",
     "geckodriver": "^4.5.1",
     "http-server": "^14.1.1",

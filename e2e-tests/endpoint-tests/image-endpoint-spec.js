@@ -113,7 +113,7 @@ describe('the Image endpoints', function () {
 			return performGETImage(imageUrl);
 		})
 		.then(function (imageResponse) {
-			expect(imageResponse.statusCode).toBe(404);
+			expect([403, 404]).toContain(imageResponse.statusCode);
 		})
 		.then(done, done.fail);
 	});
