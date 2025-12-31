@@ -7,13 +7,13 @@
   "private": true,
   "dependencies": {
     "angular-clipboard": "1.6.2",
-    "angular-cookies": "1.4.14",
-    "angular-loader": "1.4.14",
-    "angular-mocks": "1.4.14",
-    "angular-route": "1.4.14",
+    "angular-cookies": "1.8.3",
+    "angular-loader": "1.8.3",
+    "angular-mocks": "1.8.3",
+    "angular-route": "1.8.3",
     "angular-trix": "1.0.2",
     "angular-underscore-module": "1.0.3",
-    "angular": "1.4.14",
+    "angular": "1.8.3",
     "bluebird": "3.5.3",
     "bootstrap": "4.0.0",
     "components-font-awesome": "4.7.0",
@@ -28,6 +28,6 @@
     "underscore": "1.8.3"
   },
   "resolutions": {
-    "angular": "1.4.14"
+    "angular": "1.8.3"
   }
 }

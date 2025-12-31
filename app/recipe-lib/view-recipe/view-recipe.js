@@ -24,10 +24,10 @@ angular.module('recipe')
 
 	function initialize() {
 		$http.get('api/recipe/' + $routeParams.recipeId)
-		.success(function (recipe) {
-			recipeRetrieved(recipe);
+		.then(function (response) {
+			recipeRetrieved(response.data);
 		})
-		.error(function (error) {
+		.catch(function (error) {
 			console.log('error retrieving recipe: ', error);
 		});
 
@@ -83,10 +83,10 @@ angular.module('recipe')
 		};
 
 		$http.put('/api/recipe/' + $scope.recipe.recipeId, recipeToPut)
-			.success(function (recipe) {
-				recipeRetrieved(recipe);
+			.then(function (response) {
+				recipeRetrieved(response.data);
 			})
-			.error(function (error) {
+			.catch(function (error) {
 				console.log('failure saving recipe:', error);
 			});
 		inEditMode = false;

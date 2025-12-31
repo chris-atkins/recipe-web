@@ -8,6 +8,10 @@ describe('The image-upload module', function () {
 
 	beforeEach(angular.mock.module('recipe', 'my.templates', 'ngFileUpload', 'ngImgCrop'));
 
+	beforeEach(angular.mock.module(function($qProvider) {
+		$qProvider.errorOnUnhandledRejections(false);
+	}));
+
 	function buildFixtureControllerWithRecipe(recipe) {
 		angular.module('recipe')
 		.controller("recipeTestEditController", function ($scope) {
@@ -159,6 +163,7 @@ describe('The image-upload module', function () {
 
 				SpecUtils.clickElement($('.upload-image-button'));
 				$httpBackend.flush();
+				parentScope.$digest();
 
 				expect($('.success-message')).not.toBeVisible();
 				expect($('.error-message')).toBeVisible();

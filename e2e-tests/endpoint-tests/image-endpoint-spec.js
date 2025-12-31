@@ -110,7 +110,9 @@ describe('the Image endpoints', function () {
 		})
 		.then(function (response) {
 			expect(response.statusCode).toBe(204);
-			return performGETImage(imageUrl);
+		})
+		.then(function () {
+			return performGETImage(imageUrl + '?cacheBust=' + Date.now());
 		})
 		.then(function (imageResponse) {
 			expect([403, 404]).toContain(imageResponse.statusCode);

@@ -21,10 +21,10 @@ angular.module('recipe')
 		//TODO - check logged in user, if they are the same, don't make this WS call
 		var userId = $routeParams.userId;
 		$http.get('api/user/' + userId)
-		.success(function (user) {
-			$scope.user = user;
+		.then(function (response) {
+			$scope.user = response.data;
 		})
-		.error(function (error) {
+		.catch(function (error) {
 			console.log('error retrieving user: ', error);
 		});
 	}

@@ -7,45 +7,30 @@ angular.module('recipe')
 	function getRecipeBook(userToRetrieveBookFor) {
 		var userId = userToRetrieveBookFor || userService.getLoggedInUser().userId;
 
-		var recipeBookPromise = $q.defer();
-		$http.get('/api/user/' + userId + '/recipe-book')
-		.success(function(recipeBook) {
-			recipeBookPromise.resolve(recipeBook);
-		})
-		.error(function(error) {
-			recipeBookPromise.reject(error);
+		return $http.get('/api/user/' + userId + '/recipe-book')
+		.then(function(response) {
+			return response.data;
 		});
-		return recipeBookPromise.promise;
 	}
 
 	function addToRecipeBook(recipeId) {
 		var userId = userService.getLoggedInUser().userId;
 		var url = '/api/user/' + userId + '/recipe-book';
 
-		var resultPromise = $q.defer();
-		$http.post(url, {recipeId: recipeId})
-		.success(function() {
-			resultPromise.resolve(getRecipeBook());
-		})
-		.error(function(error) {
-			resultPromise.reject(error);
+		return $http.post(url, {recipeId: recipeId})
+		.then(function() {
+			return getRecipeBook();
 		});
-		return resultPromise.promise;
 	}
 
 	function removeRecipeFromBook(recipeId) {
 		var userId = userService.getLoggedInUser().userId;
 		var url = '/api/user/' + userId + '/recipe-book/' + recipeId;
 
-		var resultPromise = $q.defer();
-		$http.delete(url)
-		.success(function() {
-			resultPromise.resolve(getRecipeBook());
-		})
-		.error(function(error) {
-			resultPromise.reject(error);
+		return $http.delete(url)
+		.then(function() {
+			return getRecipeBook();
 		});
-		return resultPromise.promise;
 	}
 
 	return {

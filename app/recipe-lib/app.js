@@ -12,6 +12,9 @@ angular.module('recipe', [
 	'ngImgCrop',
 	'angular-clipboard'
 ])
+.config(['$locationProvider', function($locationProvider) {
+	$locationProvider.hashPrefix('');
+}])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.otherwise({redirectTo: '/home'});
 }])

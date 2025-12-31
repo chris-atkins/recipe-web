@@ -23,12 +23,12 @@ angular.module('recipe')
 
 	var logIn = function (email) {
 		return $http.get('api/user?email=' + email)
-		.success(function (user) {
-			handleNewlyLoggedInUser(user);
-			return user;
+		.then(function (response) {
+			handleNewlyLoggedInUser(response.data);
+			return response;
 		})
-		.error(function () {
-			return {};
+		.catch(function () {
+			return {data: {}};
 		});
 	};
 
@@ -36,12 +36,12 @@ angular.module('recipe')
 		var userToSave = {userName: name, userEmail: email};
 
 		return $http.post('/api/user', userToSave)
-		.success(function (user) {
-			handleNewlyLoggedInUser(user);
-			return user;
+		.then(function (response) {
+			handleNewlyLoggedInUser(response.data);
+			return response;
 		})
-		.error(function () {
-			return {};
+		.catch(function () {
+			return {data: {}};
 		});
 	};
 

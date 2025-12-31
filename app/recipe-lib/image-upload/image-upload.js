@@ -37,10 +37,12 @@ angular.module('recipe')
 			$scope.loading = false;
 			$scope.result = JSON.parse(response.data.body);
 			$scope.imageSavedCallback($scope.result);
-		}, function (error) {
+			return response.data;
+		}).catch(function (error) {
 			$scope.loading = false;
 			if (error.status > 0)
 				$scope.errorMsg = "Error uploading image.";
+			throw error;
 		});
 	};
 });
