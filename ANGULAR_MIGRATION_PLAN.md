@@ -460,9 +460,9 @@ angular.module('recipe', [
   // ... other modules
 ])
 .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
-  // Use PathLocationStrategy compatible with Angular router
-  $locationProvider.html5Mode(true);
-  $locationProvider.hashPrefix('!');
+  // Keep hash-based routing for now (HTML5 mode breaks E2E tests)
+  // Will enable HTML5 mode in Week 19 after migration is complete
+  $locationProvider.hashPrefix('');
 
   // Keep existing routes for now
   $routeProvider
@@ -476,6 +476,8 @@ angular.module('recipe', [
 // Export for hybrid bootstrap
 window.angularApp = angular.module('recipe');
 ```
+
+**Note:** HTML5 mode (`$locationProvider.html5Mode(true)`) will be enabled in Week 19 (Phase 4) after the complete migration to Angular Router. Enabling it during the hybrid phase causes issues with Protractor E2E tests.
 
 **4.4 Create Proxy Configuration**
 
@@ -2639,16 +2641,18 @@ export class AppComponent {
 }
 ```
 
-#### 19.5 Update Index HTML
+#### 19.5 Enable HTML5 Mode for Clean URLs
 
-Update `src/index.html`:
+**Note:** This step completes the routing migration by enabling HTML5 mode, which was deferred from Week 4 to avoid breaking E2E tests during the hybrid phase.
+
+Update `src/index.html` (ensure `<base>` tag is present):
 ```html
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Recipe Connection</title>
-  <base href="/">
+  <base href="/">  <!-- Required for HTML5 mode -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -2658,6 +2662,20 @@ Update `src/index.html`:
 </body>
 </html>
 ```
+
+Verify Angular router is configured for HTML5 mode in `src/app/app-routing.module.ts`:
+```typescript
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { useHash: false })],  // HTML5 mode
+  exports: [RouterModule]
+})
+```
+
+**Testing:**
+- Verify all routes work without `#` in URLs
+- Test browser back/forward navigation
+- Test direct URL access and page refresh
+- Ensure all E2E tests pass with new URL format
 
 #### 19.6 Test Complete Angular App
 

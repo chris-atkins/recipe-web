@@ -88,4 +88,9 @@ angular.module('recipe', [
     });
 });
 
+// Export for hybrid bootstrap - allows Angular to bootstrap AngularJS
+if (typeof window !== 'undefined') {
+    window.angularApp = angular.module('recipe');
+}
+
 
