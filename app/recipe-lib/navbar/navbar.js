@@ -2,7 +2,7 @@
 
 angular.module('recipe')
 
-.controller('NavbarCtrl', function ($scope, $http, userService, $location, externalNavigationService) {
+.controller('NavbarCtrl', ['$scope', '$http', 'userService', '$location', 'externalNavigationService', function ($scope, $http, userService, $location, externalNavigationService) {
 
 	var loginHasBeenAttempted = false;
 
@@ -118,4 +118,4 @@ angular.module('recipe')
 			});
 		}
 	}
-});
+}]);

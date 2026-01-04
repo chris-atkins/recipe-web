@@ -23,9 +23,9 @@ var port = process.env.PORT || '8000';
 var app = express();
 
 app.set('port', port);
-app.use(express.static(path.join(__dirname, 'app')));
+// Serve the hybrid Angular + AngularJS app from dist
+app.use(express.static(path.join(__dirname, 'dist/recipe-web')));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
-app.use('/src', express.static(path.join(__dirname, 'src')));
 app.use(bodyParser.urlencoded({extended: 'true'}));
 app.use(bodyParser.json());
 app.use(cookieParser());

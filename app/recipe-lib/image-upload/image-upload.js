@@ -14,7 +14,7 @@ angular.module('recipe')
 	};
 })
 
-.controller('imageUploadCtrl', function ($scope, Upload) {
+.controller('imageUploadCtrl', ['$scope', 'Upload', function ($scope, Upload) {
 	$scope.loading = false;
 	$scope.processing = false;
 
@@ -45,5 +45,5 @@ angular.module('recipe')
 			throw error;
 		});
 	};
-});
+}]);
 

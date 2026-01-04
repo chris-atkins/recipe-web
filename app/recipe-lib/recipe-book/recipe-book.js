@@ -9,7 +9,7 @@ angular.module('recipe')
 	});
 }])
 
-.controller('RecipeBookCtrl', function ($scope, $routeParams, $http, recipeBookService, userService, recipeService, $location) {
+.controller('RecipeBookCtrl', ['$scope', '$routeParams', '$http', 'recipeBookService', 'userService', 'recipeService', '$location', function ($scope, $routeParams, $http, recipeBookService, userService, recipeService, $location) {
 
 	$scope.user = {};
 	$scope.recipeList = [];
@@ -65,4 +65,4 @@ angular.module('recipe')
 	$scope.navigateToRecipe = function(recipeId){
 		$location.url('/view-recipe/'+ recipeId);
 	};
-});
+}]);

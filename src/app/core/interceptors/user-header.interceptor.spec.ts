@@ -29,6 +29,7 @@ describe('UserHeaderInterceptor', () => {
 
   afterEach(() => {
     httpMock.verify();
+    localStorage.clear();
   });
 
   it('should add RequestingUser header when user is logged in', (done) => {
@@ -52,6 +53,10 @@ describe('UserHeaderInterceptor', () => {
   });
 
   it('should not add RequestingUser header when user is not logged in', () => {
+    // Ensure no user is logged in
+    localStorage.clear();
+    userService.logOut();
+
     httpClient.get('/api/test').subscribe();
 
     const req = httpMock.expectOne('/api/test');

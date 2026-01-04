@@ -18,4 +18,4 @@ angular.module('recipe')
 	};
 })
 
-.controller('recipeCardWallCtrl', function () {});
+.controller('recipeCardWallCtrl', [function () {}]);

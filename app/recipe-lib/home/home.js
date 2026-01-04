@@ -3,13 +3,18 @@
 angular.module('recipe')
 
 .config(['$routeProvider', function($routeProvider) {
+	// Angular handles /home - AngularJS renders empty template in ng-view
 	$routeProvider.when('/home', {
+		template: ''
+	});
+
+	$routeProvider.when('/home-legacy', {
 		templateUrl: 'recipe-lib/home/home.html',
 		controller: 'HomeCtrl'
 	});
 }])
 
-.controller('HomeCtrl', function($scope, $location, userService) {
+.controller('HomeCtrl', ['$scope', '$location', 'userService', function($scope, $location, userService) {
 
 	var userHasClickedLoginSensitiveButton = false;
 
@@ -18,7 +23,7 @@ angular.module('recipe')
 		if (!userService.isLoggedIn()) {
 			return;
 		}
-		
+
 		var currentUser = userService.getLoggedInUser();
 		var recipeBookUrl = '/user/' + currentUser.userId + '/recipe-book';
 		$location.url(recipeBookUrl);
@@ -44,4 +49,4 @@ angular.module('recipe')
 
 		$location.url('/new-recipe');
 	};
-});
+}]);

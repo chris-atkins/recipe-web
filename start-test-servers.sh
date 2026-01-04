@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pkill -f "node-app.js" && pkill -f "selenium-server" && echo "Killed node-app and selenium server"
+
 # Colors for output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -85,4 +87,4 @@ export WEB_IP=localhost:8000
 export GOOGLE_CLIENT_SECRET=NaN
 export GOOGLE_CLIENT_ID=NaN
 echo "Done!"
-npm start
+npm run build && npm start

@@ -1,0 +1,66 @@
+<app-navbar></app-navbar>
+
+<div class="container">
+  <div>
+    <h1><span id="page-title">Recipe Connection</span></h1>
+  </div>
+
+  <div>
+    <p class="lead">
+      <span id="greeting-message">What would you like to do?</span>
+    </p>
+  </div>
+</div>
+
+<div class="row imagetiles recipe-image-row">
+  <div class="recipe-image-holder col-3">
+    <img src="recipe-lib/images/pexels-photo-25273.jpg" class="img-fluid" alt="Recipe photo">
+  </div>
+  <div class="recipe-image-holder col-3">
+    <img src="recipe-lib/images/food-salad-healthy-lunch.jpg" class="img-fluid" alt="Recipe photo">
+  </div>
+  <div class="recipe-image-holder col-3">
+    <img src="recipe-lib/images/pexels-photo-196643.jpeg" class="img-fluid" alt="Recipe photo">
+  </div>
+  <div class="recipe-image-holder col-3">
+    <img src="recipe-lib/images/pexels-photo-64208.jpeg" class="img-fluid" alt="Recipe photo">
+  </div>
+</div>
+
+<div class="container">
+  <div class="card-deck home-nav-button-holder">
+    <div id="search-button" class="card text-center home-nav-button btn-light" (click)="navigateToSearch()" role="button">
+      <div class="card-body">
+        <h5 class="card-title">Browse Recipes</h5>
+        <p class="card-text">Look through all the recipes, or search for something specific.</p>
+      </div>
+    </div>
+    <div id="save-button" class="card text-center home-nav-button btn-light" (click)="navigateToSaveNewRecipe()" role="button">
+      <div class="card-body">
+        <h5 class="card-title">Save New Recipe</h5>
+        <p class="card-text">Add your own recipe to the growing set of available recipes.</p>
+      </div>
+    </div>
+    <div id="recipe-book-button" class="card text-center home-nav-button btn-light" (click)="navigateToRecipeBook()" role="button">
+      <div class="card-body">
+        <h5 class="card-title">My Recipe Book</h5>
+        <p class="card-text">Browse the list of recipes that you have selected for your recipe book.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger login-required-alert" *ngIf="shouldShowErrorMessage">
+    <button id="close-alert" type="button" class="close" aria-label="Close" (click)="hideErrorMessage()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <span id="alert-message" class="message">You must be logged in to perform this action.</span>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="version-message">Recipe Connection v<span class="version" app-version="show">1.0.0</span></div>
+  <div class="icon-trademark-info">
+    Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a
+      href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>
+  </div>
+</div>

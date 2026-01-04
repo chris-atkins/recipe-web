@@ -9,7 +9,7 @@ angular.module('recipe')
 	});
 }])
 
-.controller('SearchRecipesCtrl', function ($scope, $http, $routeParams, $location, userService, recipeBookService, recipeService) {
+.controller('SearchRecipesCtrl', ['$scope', '$http', '$routeParams', '$location', 'userService', 'recipeBookService', 'recipeService', function ($scope, $http, $routeParams, $location, userService, recipeBookService, recipeService) {
 
 	$scope.recipeList = [];
 	$scope.searchString = '';
@@ -62,7 +62,7 @@ angular.module('recipe')
 			console.log('Error getting recipes:', error);
 		});
 	}
-})
+}])
 
 .directive('focus', function ($timeout) {
 	return {

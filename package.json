@@ -85,6 +85,7 @@
     "cypress:headless": "cypress run",
     "pretest": "npm install",
     "test": "karma start karma.conf.js",
+    "test:ng": "ng test",
     "test:ngjs": "karma start karma.conf.js",
     "test-single-run": "npm install && karma start karma.conf.js  --single-run",
     "pretest-headless": "npm install",

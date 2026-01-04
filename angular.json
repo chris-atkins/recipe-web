@@ -21,9 +21,21 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "app/recipe-lib",
+                "output": "/recipe-lib"
+              },
+              {
+                "glob": "**/*",
+                "input": "app/bower_components",
+                "output": "/bower_components"
+              }
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.css",
+              "app/recipe-lib/app.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -70,14 +82,27 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "karmaConfig": "karma-angular.conf.js",
             "polyfills": [
               "src/polyfills.ts"
             ],
             "tsConfig": "tsconfig.spec.json",
             "assets": [
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "app/recipe-lib",
+                "output": "/recipe-lib"
+              },
+              {
+                "glob": "**/*",
+                "input": "app/bower_components",
+                "output": "/bower_components"
+              }
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.css",
+              "app/recipe-lib/app.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -85,5 +110,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

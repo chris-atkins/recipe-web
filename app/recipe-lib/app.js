@@ -82,11 +82,11 @@ angular.module('recipe', [
         getLastRoute: getLastRoute
     };
 })
-.run(function($rootScope, routeHistory) {
+.run(['$rootScope', 'routeHistory', function($rootScope, routeHistory) {
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
         routeHistory.registerRoute(current);
     });
-});
+}]);
 
 // Export for hybrid bootstrap - allows Angular to bootstrap AngularJS
 if (typeof window !== 'undefined') {

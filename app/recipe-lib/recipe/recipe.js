@@ -18,7 +18,7 @@ angular.module('recipe')
 	};
 })
 
-.controller('recipeCtrl', function ($scope, $location, recipeBookService, userService, _) {
+.controller('recipeCtrl', ['$scope', '$location', 'recipeBookService', 'userService', '_', function ($scope, $location, recipeBookService, userService, _) {
 
 	//$scope.recipe: '=',
 	//$scope.recipeBook: '=',
@@ -93,4 +93,4 @@ angular.module('recipe')
 	$scope.navigateToRecipePage = function (recipe) {
 		$location.url('/view-recipe/' + recipe.recipeId);
 	};
-});
+}]);

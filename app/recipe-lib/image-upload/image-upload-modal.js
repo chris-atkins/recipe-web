@@ -15,5 +15,5 @@ angular.module('recipe')
 	};
 })
 
-.controller('imageUploadModalCtrl', function () {});
+.controller('imageUploadModalCtrl', [function () {}]);
 

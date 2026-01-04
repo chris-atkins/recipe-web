@@ -1,25 +1,32 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { UpgradeModule, downgradeInjectable } from '@angular/upgrade/static';
+import { UpgradeModule, downgradeInjectable, downgradeComponent } from '@angular/upgrade/static';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { SharedModule } from './shared/shared.module';
+import { HomeComponent } from './features/home/home.component';
 import { RecipeService } from './core/services/recipe.service';
 import { UserService } from './core/services/user.service';
+import { RecipeBookService } from './core/services/recipe-book.service';
+import { ExternalNavigationService } from './core/services/external-navigation.service';
 import { UserHeaderInterceptor } from './core/interceptors/user-header.interceptor';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
 
 declare const angular: any;
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     UpgradeModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SharedModule
   ],
   providers: [
     {
@@ -30,15 +37,29 @@ declare const angular: any;
   ]
 })
 export class AppModule {
-  constructor(private upgrade: UpgradeModule) {}
+  constructor(private upgrade: UpgradeModule, private appRef: ApplicationRef) {}
 
   ngDoBootstrap() {
-    // Downgrade Angular services for AngularJS use
-    angular.module('recipe')
-      .factory('recipeService', downgradeInjectable(RecipeService))
-      .factory('userService', downgradeInjectable(UserService));
+    // Check if AngularJS is loaded (hybrid mode)
+    if (typeof angular !== 'undefined') {
+      // Downgrade Angular components for AngularJS use
+      angular.module('recipe')
+        .directive('appNavbar', downgradeComponent({
+          component: NavbarComponent
+        }) as any);
 
-    // Bootstrap AngularJS first within Angular
-    this.upgrade.bootstrap(document.body, ['recipe'], { strictDi: true });
+      // Downgrade Angular services for AngularJS use
+      angular.module('recipe')
+        .factory('recipeService', downgradeInjectable(RecipeService))
+        .factory('userService', downgradeInjectable(UserService))
+        .factory('recipeBookService', downgradeInjectable(RecipeBookService))
+        .factory('externalNavigationService', downgradeInjectable(ExternalNavigationService));
+
+      // Bootstrap AngularJS first within Angular
+      this.upgrade.bootstrap(document.body, ['recipe'], { strictDi: true });
+    }
+
+    // Always bootstrap Angular AppComponent (for both hybrid and standalone modes)
+    this.appRef.bootstrap(AppComponent);
   }
 }

@@ -2906,6 +2906,135 @@ find . -name "*.html" -exec sed -i '' 's/pr-/pe-/g' {} +
 
 **Recommendation:** Stay on Bootstrap 4 to reduce risk. Upgrade later if needed.
 
+#### 21.3 Migrate from Karma to Jest
+
+**Why Migrate:** Jest provides better IDE support (including WebStorm's green arrow for individual tests), faster test execution, built-in code coverage, and simpler configuration compared to Karma.
+
+Install Jest and required dependencies:
+```bash
+npm install --save-dev jest @types/jest jest-preset-angular
+npm uninstall karma karma-jasmine karma-chrome-launcher karma-jasmine-html-reporter karma-coverage
+```
+
+Create `setup-jest.ts`:
+```typescript
+import 'jest-preset-angular/setup-jest';
+```
+
+Create `jest.config.js`:
+```javascript
+module.exports = {
+  preset: 'jest-preset-angular',
+  setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/dist/'
+  ],
+  coverageDirectory: 'coverage',
+  collectCoverageFrom: [
+    'src/**/*.ts',
+    '!src/**/*.spec.ts',
+    '!src/test.ts',
+    '!src/main.ts',
+    '!src/polyfills.ts',
+    '!src/environments/*.ts'
+  ],
+  transform: {
+    '^.+\\.(ts|js|html)$': ['jest-preset-angular', {
+      tsconfig: '<rootDir>/tsconfig.spec.json',
+      stringifyContentPathRegex: '\\.html$'
+    }]
+  },
+  moduleFileExtensions: ['ts', 'html', 'js', 'json', 'mjs'],
+  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)']
+};
+```
+
+Update `tsconfig.spec.json`:
+```json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "types": ["jest", "node"],
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true
+  },
+  "files": [
+    "src/polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts"
+  ]
+}
+```
+
+Update `package.json` scripts:
+```json
+{
+  "scripts": {
+    "test:ng": "jest",
+    "test:ng:watch": "jest --watch",
+    "test:ng:coverage": "jest --coverage"
+  }
+}
+```
+
+Update all test files to use Jest syntax:
+```typescript
+// Before (Jasmine):
+it('should create', () => {
+  expect(component).toBeTruthy();
+});
+
+// After (Jest - same syntax, but with better matchers available):
+it('should create', () => {
+  expect(component).toBeTruthy();
+});
+
+// Jest provides additional matchers you can use:
+expect(value).toBeNull();
+expect(array).toHaveLength(3);
+expect(string).toMatch(/pattern/);
+```
+
+Remove Karma configuration files:
+```bash
+rm karma-angular.conf.js
+rm src/test.ts
+```
+
+Update `angular.json` to remove Karma test configuration:
+```json
+{
+  "projects": {
+    "recipe-web": {
+      "architect": {
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "tsconfig.spec.json"
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Run tests to verify migration:
+```bash
+npm run test:ng
+```
+
+**Benefits after migration:**
+- Run individual tests in WebStorm using the green arrow
+- Faster test execution with parallel test running
+- Snapshot testing capabilities
+- Better assertion messages
+- Built-in code coverage without additional plugins
+
 ### Week 22: Optimization & Final Testing
 
 #### 22.1 Bundle Optimization

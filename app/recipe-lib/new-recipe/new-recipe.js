@@ -9,7 +9,7 @@ angular.module('recipe')
 	});
 }])
 
-.controller('NewRecipeCtrl', function ($scope, $location, userService, recipeService) {
+.controller('NewRecipeCtrl', ['$scope', '$location', 'userService', 'recipeService', function ($scope, $location, userService, recipeService) {
 
 	$scope.newRecipeName = '';
 	$scope.newRecipeContent = '';
@@ -54,4 +54,4 @@ angular.module('recipe')
 
 		return recipeService.saveRecipe(recipeToSave);
 	}
-});
+}]);
