@@ -64,7 +64,7 @@ angular.module('recipe')
 	}
 }])
 
-.directive('focus', function ($timeout) {
+.directive('focus', ['$timeout', function ($timeout) {
 	return {
 		scope: {
 			trigger: '@focus'
@@ -79,4 +79,4 @@ angular.module('recipe')
 			});
 		}
 	};
-});
+}]);

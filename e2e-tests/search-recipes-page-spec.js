@@ -125,9 +125,8 @@ describe('the search recipes page', function() {
 				});
 		});
 
-		// Skip this test - focus directive behavior varies in hybrid Angular/AngularJS apps
-		xit('the page starts with the search input having focus', function() {
-			// Wait a moment for focus to be set
+		it('the page starts with the search input having focus', function() {
+			// Wait a moment for focus directive to take effect
 			return browser.sleep(500)
 				.then(function() {
 					return browser.driver.switchTo().activeElement().getAttribute('id');

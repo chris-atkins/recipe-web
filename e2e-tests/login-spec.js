@@ -220,12 +220,15 @@ describe('Login functionality from the home page', function() {
 	
 	describe('with a single existing user associated with the current client machine', function() {
 
+		var testEmail;
+
 		beforeAll(function() {
+			testEmail = dataUtils.randomEmail();
 			return clearLoginState()
 				.then(function() { return waitForLoginDropdown(); })
 				.then(function() { return loginDropdown.click(); })
 				.then(function() { return waitForDropdownOpen(); })
-				.then(function() { return loginEmailField.sendKeys(dataUtils.randomEmail()); })
+				.then(function() { return loginEmailField.sendKeys(testEmail); })
 				.then(function() { return loginButton.click(); })
 				.then(function() { return browser.wait(EC.visibilityOf(signupNameField), 5000); })
 				.then(function() { return signupNameField.sendKeys('UserAlreadySignedInFromThisBrowser'); })
@@ -237,8 +240,25 @@ describe('Login functionality from the home page', function() {
 		});
 
 		it('automatically logs the user in', function() {
-			return browser.refresh()
+			// First, re-login since beforeEach deleted the cookie
+			return browser.get('')
 				.then(function() { return waitForPageLoad(); })
+				.then(function() { return waitForLoginDropdown(); })
+				.then(function() { return loginDropdown.click(); })
+				.then(function() { return waitForDropdownOpen(); })
+				.then(function() { return loginEmailField.sendKeys(testEmail); })
+				.then(function() { return loginButton.click(); })
+				.then(function() { return waitForWelcomeMessage(); })
+				.then(function() {
+					expectLoggedInUserLinkToBe('Welcome, UserAlreadySignedInFromThisBrowser');
+					// Now refresh and verify the cookie persists
+					return browser.refresh();
+				})
+				.then(function() { return waitForPageLoad(); })
+				.then(function() {
+					// Wait for Angular/AngularJS to finish loading and reading the cookie
+					return browser.sleep(500);
+				})
 				.then(function() {
 					expectLoggedInUserLinkToBe('Welcome, UserAlreadySignedInFromThisBrowser');
 				});
