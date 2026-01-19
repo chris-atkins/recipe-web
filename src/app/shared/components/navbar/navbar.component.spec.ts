@@ -19,10 +19,11 @@ describe('NavbarComponent', () => {
     userSubject = new BehaviorSubject<User | null>(null);
     loggedInSubject = new BehaviorSubject<boolean>(false);
 
-    const userServiceSpy = jasmine.createSpyObj('UserService', ['logOut', 'getLoggedInUser'], {
+    const userServiceSpy = jasmine.createSpyObj('UserService', ['logOut', 'getLoggedInUser', 'isLoggedIn'], {
       user$: userSubject.asObservable(),
       loggedIn$: loggedInSubject.asObservable()
     });
+    userServiceSpy.isLoggedIn.and.returnValue(false);
 
     TestBed.configureTestingModule({
       declarations: [NavbarComponent],
@@ -82,23 +83,22 @@ describe('NavbarComponent', () => {
     });
   });
 
-  describe('navigateToRecipeBook', () => {
+  describe('navigateRecipeBook', () => {
     it('should navigate to recipe book when user is logged in', () => {
       userService.getLoggedInUser.and.returnValue(mockUser);
-      spyOn(router, 'navigate');
 
-      component.navigateToRecipeBook();
+      component.navigateRecipeBook();
 
-      expect(router.navigate).toHaveBeenCalledWith(['/recipe-book', '123']);
+      // Uses hash routing for AngularJS route (not yet migrated)
+      expect(window.location.hash).toBe('#/user/123/recipe-book');
     });
 
-    it('should not navigate when user is not logged in', () => {
+    it('should show alert when user is not logged in', () => {
       userService.getLoggedInUser.and.returnValue(null);
-      spyOn(router, 'navigate');
 
-      component.navigateToRecipeBook();
+      component.navigateRecipeBook();
 
-      expect(router.navigate).not.toHaveBeenCalled();
+      expect(component.alertVisible).toBe(true);
     });
   });
 });

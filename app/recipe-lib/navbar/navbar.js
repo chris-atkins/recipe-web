@@ -6,9 +6,8 @@ angular.module('recipe')
 
 	var loginHasBeenAttempted = false;
 
-	$scope.user = userService.getLoggedInUser();
-	$scope.isLoggedIn = userService.isLoggedIn();
-	$scope.loginMessage = buildLoginMessage();
+	// Update user status from cookie (handles login via Angular navbar)
+	updateUserStatus();
 
 	$scope.loginVisible = false;
 	$scope.logoutVisible = false;
@@ -28,7 +27,8 @@ angular.module('recipe')
 	};
 
 	$scope.navigateHome = function () {
-		$location.url('/home');
+		// Use window.location.hash to properly trigger Angular's router in hybrid app
+		window.location.hash = '#/home';
 	};
 
 	$scope.navigateBrowse = function () {

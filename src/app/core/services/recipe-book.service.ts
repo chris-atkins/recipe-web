@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { UserService } from './user.service';
 
 export interface RecipeBook {
@@ -18,35 +17,29 @@ export class RecipeBookService {
     private userService: UserService
   ) {}
 
-  getRecipeBook(userId?: string): Observable<RecipeBook> {
+  getRecipeBook(userId?: string): Promise<RecipeBook> {
     const id = userId || this.userService.getLoggedInUser()?.userId;
     if (!id) {
-      throw new Error('No user ID available');
+      return Promise.reject(new Error('No user ID available'));
     }
-    return this.http.get<RecipeBook>(`/api/user/${id}/recipe-book`);
+    return firstValueFrom(this.http.get<RecipeBook>(`/api/user/${id}/recipe-book`));
   }
 
-  addToRecipeBook(recipeId: string): Observable<RecipeBook> {
+  async addToRecipeBook(recipeId: string): Promise<RecipeBook> {
     const userId = this.userService.getLoggedInUser()?.userId;
     if (!userId) {
       throw new Error('User must be logged in');
     }
-    return this.http
-      .post(`/api/user/${userId}/recipe-book`, { recipeId })
-      .pipe(
-        switchMap(() => this.getRecipeBook())
-      );
+    await firstValueFrom(this.http.post(`/api/user/${userId}/recipe-book`, { recipeId }));
+    return this.getRecipeBook();
   }
 
-  removeRecipeFromBook(recipeId: string): Observable<RecipeBook> {
+  async removeRecipeFromBook(recipeId: string): Promise<RecipeBook> {
     const userId = this.userService.getLoggedInUser()?.userId;
     if (!userId) {
       throw new Error('User must be logged in');
     }
-    return this.http
-      .delete(`/api/user/${userId}/recipe-book/${recipeId}`)
-      .pipe(
-        switchMap(() => this.getRecipeBook())
-      );
+    await firstValueFrom(this.http.delete(`/api/user/${userId}/recipe-book/${recipeId}`));
+    return this.getRecipeBook();
   }
 }

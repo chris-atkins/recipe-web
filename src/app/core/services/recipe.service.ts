@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
+
+export interface RecipeImage {
+  imageUrl: string;
+}
 
 export interface Recipe {
   recipeId?: string;
   recipeName: string;
   recipeContent: string;
   imageUrl?: string;
+  image?: RecipeImage | null;
   editable?: boolean;
 }
 
@@ -18,32 +23,32 @@ export class RecipeService {
 
   constructor(private http: HttpClient) {}
 
-  findRecipe(recipeId: string): Observable<Recipe> {
-    return this.http.get<Recipe>(`${this.apiUrl}/${recipeId}`);
+  findRecipe(recipeId: string): Promise<Recipe> {
+    return firstValueFrom(this.http.get<Recipe>(`${this.apiUrl}/${recipeId}`));
   }
 
-  saveRecipe(recipe: Recipe): Observable<Recipe> {
+  saveRecipe(recipe: Recipe): Promise<Recipe> {
     if (recipe.recipeId) {
-      return this.http.put<Recipe>(`${this.apiUrl}/${recipe.recipeId}`, recipe);
+      return firstValueFrom(this.http.put<Recipe>(`${this.apiUrl}/${recipe.recipeId}`, recipe));
     }
-    return this.http.post<Recipe>(this.apiUrl, recipe);
+    return firstValueFrom(this.http.post<Recipe>(this.apiUrl, recipe));
   }
 
-  searchRecipes(searchString?: string): Observable<Recipe[]> {
+  searchRecipes(searchString?: string): Promise<Recipe[]> {
     const params: any = {};
     if (searchString) {
       params.searchString = searchString;
     }
-    return this.http.get<Recipe[]>(this.apiUrl, { params });
+    return firstValueFrom(this.http.get<Recipe[]>(this.apiUrl, { params }));
   }
 
-  allRecipesInUserBook(userId: string): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(this.apiUrl, {
+  allRecipesInUserBook(userId: string): Promise<Recipe[]> {
+    return firstValueFrom(this.http.get<Recipe[]>(this.apiUrl, {
       params: { recipeBook: userId }
-    });
+    }));
   }
 
-  getRecipeList(): Observable<Recipe[]> {
-    return this.http.get<Recipe[]>(this.apiUrl);
+  getRecipeList(): Promise<Recipe[]> {
+    return firstValueFrom(this.http.get<Recipe[]>(this.apiUrl));
   }
 }

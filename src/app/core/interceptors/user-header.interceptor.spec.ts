@@ -36,7 +36,11 @@ describe('UserHeaderInterceptor', () => {
     const mockUser = { userId: '123', userName: 'Test', userEmail: 'test@test.com' };
 
     // First log in the user
-    userService.logIn('test@test.com').subscribe(() => {
+    const loginPromise = userService.logIn('test@test.com');
+    const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
+    loginReq.flush(mockUser);
+
+    loginPromise.then(() => {
       // Now make a request and verify the header is added
       httpClient.get('/api/test').subscribe(() => {
         done();
@@ -47,9 +51,6 @@ describe('UserHeaderInterceptor', () => {
       expect(req.request.headers.get('RequestingUser')).toBe('123');
       req.flush({});
     });
-
-    const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
-    loginReq.flush(mockUser);
   });
 
   it('should not add RequestingUser header when user is not logged in', () => {
@@ -67,7 +68,11 @@ describe('UserHeaderInterceptor', () => {
   it('should not add header when user exists but has no userId', (done) => {
     const mockUser = { userId: '', userName: 'Test', userEmail: 'test@test.com' };
 
-    userService.logIn('test@test.com').subscribe(() => {
+    const loginPromise = userService.logIn('test@test.com');
+    const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
+    loginReq.flush(mockUser);
+
+    loginPromise.then(() => {
       httpClient.get('/api/test').subscribe(() => {
         done();
       });
@@ -76,8 +81,5 @@ describe('UserHeaderInterceptor', () => {
       expect(req.request.headers.has('RequestingUser')).toBe(false);
       req.flush({});
     });
-
-    const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
-    loginReq.flush(mockUser);
   });
 });

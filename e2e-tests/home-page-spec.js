@@ -55,16 +55,17 @@ describe('the home page', function () {
 	describe('has a navbar', function () {
 
 		beforeAll(function () {
-			pageUtils.login(email);
+			return pageUtils.login(email);
 		});
 
 		afterAll(function () {
-			pageUtils.logout();
+			return pageUtils.logout();
 		});
 
 		beforeEach(function() {
-			browser.get('');
-			expect(browser.getCurrentUrl()).toMatch('/home');
+			return browser.get('').then(function() {
+				expect(browser.getCurrentUrl()).toMatch('/home');
+			});
 		});
 
 		it('with a home button', function() {
@@ -100,11 +101,11 @@ describe('the home page', function () {
 		describe('when logged in ', function() {
 
 			beforeAll(function () {
-				pageUtils.login(email);
+				return pageUtils.login(email);
 			});
 
 			afterAll(function () {
-				pageUtils.logout();
+				return pageUtils.logout();
 			});
 
 			it('has a Search Recipes button that navigates to the search screen', function () {
@@ -130,6 +131,26 @@ describe('the home page', function () {
 		});
 
 		describe('when NOT logged in ', function() {
+
+			beforeEach(function () {
+				// First navigate to the page
+				return browser.get('/#/home')
+					.then(function() {
+						// Use JavaScript to clear all cookies and localStorage
+						return browser.executeScript(function() {
+							// Clear cookies
+							document.cookie.split(';').forEach(function(c) {
+								document.cookie = c.trim().split('=')[0] + '=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+							});
+							// Clear localStorage
+							localStorage.clear();
+						});
+					})
+					.then(function() {
+						// Refresh to make Angular pick up the cleared state
+						return browser.refresh();
+					});
+			});
 
 			it('the Search Recipes button navigates to the search screen', function () {
 				var searchButton = element(by.id('search-button'));

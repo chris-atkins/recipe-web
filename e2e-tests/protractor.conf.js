@@ -28,5 +28,16 @@ exports.config = {
 
 	jasmineNodeOpts: {
 		defaultTimeoutInterval: 15000
+	},
+
+	// Required for hybrid Angular/AngularJS apps using @angular/upgrade
+	// Tells Protractor to look for multiple Angular roots
+	useAllAngular2AppRoots: true,
+
+	onPrepare: function() {
+		// Disable Angular synchronization for hybrid apps
+		// This is necessary because @angular/upgrade manually bootstraps AngularJS
+		// and Protractor can't properly detect both frameworks
+		browser.waitForAngularEnabled(false);
 	}
 };

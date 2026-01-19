@@ -29,103 +29,133 @@ describe('RecipeBookService', () => {
   describe('getRecipeBook', () => {
     it('should get recipe book for logged in user', (done) => {
       // Log in the user first
-      userService.logIn('test@test.com').subscribe(() => {
-        service.getRecipeBook().subscribe(recipeBook => {
-          expect(recipeBook).toEqual(mockRecipeBook);
-          done();
-        });
+      const loginPromise = userService.logIn('test@test.com');
+      const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
+      loginReq.flush(mockUser);
 
+      loginPromise.then(() => {
+        const getPromise = service.getRecipeBook();
         const req = httpMock.expectOne('/api/user/123/recipe-book');
         expect(req.request.method).toBe('GET');
         req.flush(mockRecipeBook);
-      });
 
-      const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
-      loginReq.flush(mockUser);
+        getPromise.then(recipeBook => {
+          expect(recipeBook).toEqual(mockRecipeBook);
+          done();
+        });
+      });
     });
 
     it('should get recipe book for specified user', (done) => {
-      service.getRecipeBook('456').subscribe(recipeBook => {
-        expect(recipeBook).toEqual({ userId: '456', recipes: ['recipe3'] });
-        done();
-      });
-
+      const promise = service.getRecipeBook('456');
       const req = httpMock.expectOne('/api/user/456/recipe-book');
       expect(req.request.method).toBe('GET');
       req.flush({ userId: '456', recipes: ['recipe3'] });
+
+      promise.then(recipeBook => {
+        expect(recipeBook).toEqual({ userId: '456', recipes: ['recipe3'] });
+        done();
+      });
     });
 
-    it('should throw error when no user is logged in and no userId provided', () => {
+    it('should reject when no user is logged in and no userId provided', (done) => {
       // Ensure no user is logged in
       localStorage.clear();
       userService.logOut();
 
-      expect(() => {
-        service.getRecipeBook();
-      }).toThrowError('No user ID available');
+      service.getRecipeBook()
+        .then(() => {
+          fail('should have rejected');
+        })
+        .catch(error => {
+          expect(error.message).toBe('No user ID available');
+          done();
+        });
     });
   });
 
   describe('addToRecipeBook', () => {
     it('should add recipe to book and return updated book', (done) => {
       // Log in the user first
-      userService.logIn('test@test.com').subscribe(() => {
-        service.addToRecipeBook('newRecipe').subscribe(recipeBook => {
-          expect(recipeBook).toEqual(mockRecipeBook);
-          done();
-        });
+      const loginPromise = userService.logIn('test@test.com');
+      const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
+      loginReq.flush(mockUser);
+
+      loginPromise.then(() => {
+        const addPromise = service.addToRecipeBook('newRecipe');
 
         const postReq = httpMock.expectOne('/api/user/123/recipe-book');
         expect(postReq.request.method).toBe('POST');
         expect(postReq.request.body).toEqual({ recipeId: 'newRecipe' });
         postReq.flush({});
 
-        const getReq = httpMock.expectOne('/api/user/123/recipe-book');
-        expect(getReq.request.method).toBe('GET');
-        getReq.flush(mockRecipeBook);
-      });
+        // Wait for the POST to complete before expecting the GET
+        setTimeout(() => {
+          const getReq = httpMock.expectOne('/api/user/123/recipe-book');
+          expect(getReq.request.method).toBe('GET');
+          getReq.flush(mockRecipeBook);
 
-      const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
-      loginReq.flush(mockUser);
+          addPromise.then(recipeBook => {
+            expect(recipeBook).toEqual(mockRecipeBook);
+            done();
+          });
+        }, 0);
+      });
     });
 
-    it('should throw error when user is not logged in', () => {
+    it('should throw error when user is not logged in', async () => {
       // Ensure no user is logged in
       localStorage.clear();
       userService.logOut();
 
-      expect(() => service.addToRecipeBook('newRecipe')).toThrowError('User must be logged in');
+      try {
+        await service.addToRecipeBook('newRecipe');
+        fail('should have thrown');
+      } catch (error: any) {
+        expect(error.message).toBe('User must be logged in');
+      }
     });
   });
 
   describe('removeRecipeFromBook', () => {
     it('should remove recipe from book and return updated book', (done) => {
       // Log in the user first
-      userService.logIn('test@test.com').subscribe(() => {
-        service.removeRecipeFromBook('recipe1').subscribe(recipeBook => {
-          expect(recipeBook).toEqual({ userId: '123', recipes: ['recipe2'] });
-          done();
-        });
+      const loginPromise = userService.logIn('test@test.com');
+      const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
+      loginReq.flush(mockUser);
+
+      loginPromise.then(() => {
+        const removePromise = service.removeRecipeFromBook('recipe1');
 
         const deleteReq = httpMock.expectOne('/api/user/123/recipe-book/recipe1');
         expect(deleteReq.request.method).toBe('DELETE');
         deleteReq.flush({});
 
-        const getReq = httpMock.expectOne('/api/user/123/recipe-book');
-        expect(getReq.request.method).toBe('GET');
-        getReq.flush({ userId: '123', recipes: ['recipe2'] });
-      });
+        // Wait for the DELETE to complete before expecting the GET
+        setTimeout(() => {
+          const getReq = httpMock.expectOne('/api/user/123/recipe-book');
+          expect(getReq.request.method).toBe('GET');
+          getReq.flush({ userId: '123', recipes: ['recipe2'] });
 
-      const loginReq = httpMock.expectOne('/api/user?email=test%40test.com');
-      loginReq.flush(mockUser);
+          removePromise.then(recipeBook => {
+            expect(recipeBook).toEqual({ userId: '123', recipes: ['recipe2'] });
+            done();
+          });
+        }, 0);
+      });
     });
 
-    it('should throw error when user is not logged in', () => {
+    it('should throw error when user is not logged in', async () => {
       // Ensure no user is logged in
       localStorage.clear();
       userService.logOut();
 
-      expect(() => service.removeRecipeFromBook('recipe1')).toThrowError('User must be logged in');
+      try {
+        await service.removeRecipeFromBook('recipe1');
+        fail('should have thrown');
+      } catch (error: any) {
+        expect(error.message).toBe('User must be logged in');
+      }
     });
   });
 });

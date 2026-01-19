@@ -40,7 +40,8 @@ describe('the navbar module', function () {
 			expect(homePageLink.text()).toBe('Home Page');
 
 			SpecUtils.clickElement(homePageLink);
-			expect(location.url).toHaveBeenCalledWith('/home');
+			// navigateHome uses window.location.hash for hybrid Angular/AngularJS routing
+			expect(window.location.hash).toBe('#/home');
 		});
 
 		it('has a Browse Recipes link that navigates to the browse recipes page when clicked', function () {
@@ -85,7 +86,8 @@ describe('the navbar module', function () {
 		it('the Home Page link works the same as when the user is logged in', function () {
 			var homePageLink = $('.nav-home-page-link');
 			SpecUtils.clickElement(homePageLink);
-			expect(location.url).toHaveBeenCalledWith('/home');
+			// navigateHome uses window.location.hash for hybrid Angular/AngularJS routing
+			expect(window.location.hash).toBe('#/home');
 		});
 
 		it('the Browse Recipes link works the same as when the user is logged in', function () {

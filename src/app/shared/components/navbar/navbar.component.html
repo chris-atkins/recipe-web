@@ -14,13 +14,13 @@
 
   <div class="container user-nav-section-container">
     <div class="navbar-nav ml-auto user-nav-section">
-      <div class="nav-item dropdown" [class.show]="dropdownOpen">
-        <a class="nav-link dropdown-toggle login-dropdown" data-toggle="dropdown" aria-haspopup="true" [attr.aria-expanded]="dropdownOpen" style="cursor: pointer" (click)="loginClicked()">
+      <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle login-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer" (click)="loginClicked()">
           <small>{{ loginMessage }}</small>
         </a>
-        <div class="dropdown-menu dropdown-menu-right user-dropdown-menu" [class.show]="dropdownOpen" aria-labelledby="logoutLink">
+        <div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="logoutLink">
 
-          <div class="login-fields nav-item" *ngIf="shouldShowLogIn()">
+          <div class="login-fields nav-item" [hidden]="!shouldShowLogIn()">
             <div class="user-login-message">
               <small>Enter your email address to log in or sign up.</small>
             </div>
@@ -39,7 +39,7 @@
                    alt="Sign in with Google">
             </div>
           </div>
-          <div class="login-fields nav-item" *ngIf="shouldShowSignUp()">
+          <div class="login-fields nav-item" [hidden]="!shouldShowSignUp()">
             <div class="user-sign-up-message">
               <small>What name would you like to use?</small>
             </div>
@@ -48,7 +48,7 @@
               <button id="sign-up-user-button" class="btn btn-secondary btn-sm" (click)="signUp()">Sign Up</button>
             </div>
           </div>
-          <div class="logout-section nav navbar-form login-fields" *ngIf="isLoggedIn">
+          <div class="logout-section nav navbar-form login-fields" [hidden]="!isLoggedIn">
             <button id="log-out-button" class="btn btn-outline-secondary btn-sm mx-auto" (click)="logOut()">Log Out</button>
           </div>
         </div>

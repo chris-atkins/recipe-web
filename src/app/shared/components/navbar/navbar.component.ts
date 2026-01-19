@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService, User } from '../../../core/services/user.service';
 import { ExternalNavigationService } from '../../../core/services/external-navigation.service';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -20,7 +20,6 @@ export class NavbarComponent implements OnInit {
   alertVisible = false;
   email = '';
   name = '';
-  dropdownOpen = false;
 
   constructor(
     private userService: UserService,
@@ -68,11 +67,6 @@ export class NavbarComponent implements OnInit {
   // Login/logout methods
   loginClicked(): void {
     this.setAlertVisible(false);
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  closeDropdown(): void {
-    this.dropdownOpen = false;
   }
 
   googleAuthClicked(): void {
@@ -83,20 +77,18 @@ export class NavbarComponent implements OnInit {
   logIn(event: Event): void {
     event.stopImmediatePropagation();
     this.loginHasBeenAttempted = true;
-    firstValueFrom(this.userService.logIn(this.email)).then(() => {
+    this.userService.logIn(this.email).then(() => {
       this.updateUserStatus();
       if (this.isLoggedIn) {
-        this.closeDropdown();
+        // Trigger parent click to close Bootstrap dropdown
+        (event.target as HTMLElement)?.parentElement?.click();
       }
     });
   }
 
   signUp(): void {
-    firstValueFrom(this.userService.signUp(this.name, this.email)).then(() => {
+    this.userService.signUp(this.name, this.email).then(() => {
       this.updateUserStatus();
-      if (this.isLoggedIn) {
-        this.closeDropdown();
-      }
     });
   }
 
@@ -140,7 +132,7 @@ export class NavbarComponent implements OnInit {
 
   private handleExternalLoginIfUserIsAttemptingOne(): void {
     if (this.userService.isExternalLoginBeingAttempted()) {
-      firstValueFrom(this.userService.performExternalLogin()).then(() => {
+      this.userService.performExternalLogin().then(() => {
         this.updateUserStatus();
       });
     }

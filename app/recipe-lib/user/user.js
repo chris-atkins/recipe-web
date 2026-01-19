@@ -14,12 +14,27 @@ angular.module('recipe')
 	initializeUserAndLoggedInStatus();
 
 	var isLoggedIn = function () {
+		// Re-check cookie each time in case login happened through Angular navbar
+		refreshUserFromCookie();
 		return loggedIn;
 	};
 
 	var getLoggedInUser = function () {
+		// Re-check cookie each time in case login happened through Angular navbar
+		refreshUserFromCookie();
 		return loggedInUser;
 	};
+
+	function refreshUserFromCookie() {
+		var userFromCookie = $cookies.getObject(userCookieKey);
+		if (userFromCookie !== undefined) {
+			loggedIn = true;
+			loggedInUser = userFromCookie;
+		} else {
+			loggedIn = false;
+			loggedInUser = {};
+		}
+	}
 
 	var logIn = function (email) {
 		return $http.get('api/user?email=' + email)

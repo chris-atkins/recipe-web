@@ -47,7 +47,7 @@ EOF
 fi
 
 # Wait a moment for database to be ready
-sleep 2
+sleep 10
 
 # Start recipe-service
 if is_running "recipe-service"; then

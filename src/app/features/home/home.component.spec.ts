@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { UserService } from '../../core/services/user.service';
-import { ExternalNavigationService } from '../../core/services/external-navigation.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SharedModule } from '../../shared/shared.module';
 
@@ -10,26 +9,30 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let userService: jasmine.SpyObj<UserService>;
-  let externalNavigationService: jasmine.SpyObj<ExternalNavigationService>;
   let router: Router;
 
   beforeEach(() => {
-    const userServiceSpy = jasmine.createSpyObj('UserService', ['isLoggedIn', 'getLoggedInUser']);
-    const externalNavigationServiceSpy = jasmine.createSpyObj('ExternalNavigationService', ['navigateTo']);
+    const userServiceSpy = jasmine.createSpyObj('UserService', [
+      'isLoggedIn',
+      'getLoggedInUser',
+      'isExternalLoginBeingAttempted',
+      'performExternalLogin'
+    ]);
+    // Default return values needed for NavbarComponent which is in the template
+    userServiceSpy.isExternalLoginBeingAttempted.and.returnValue(false);
+    userServiceSpy.performExternalLogin.and.returnValue(Promise.resolve({}));
 
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
       imports: [RouterTestingModule, SharedModule],
       providers: [
-        { provide: UserService, useValue: userServiceSpy },
-        { provide: ExternalNavigationService, useValue: externalNavigationServiceSpy }
+        { provide: UserService, useValue: userServiceSpy }
       ]
     });
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     userService = TestBed.inject(UserService) as jasmine.SpyObj<UserService>;
-    externalNavigationService = TestBed.inject(ExternalNavigationService) as jasmine.SpyObj<ExternalNavigationService>;
     router = TestBed.inject(Router);
   });
 
@@ -41,56 +44,93 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should redirect to /search when user is logged in', () => {
-      userService.isLoggedIn.and.returnValue(true);
-
-      component.ngOnInit();
-
-      expect(externalNavigationService.navigateTo).toHaveBeenCalledWith('/search');
-    });
-
-    it('should not redirect when user is not logged in', () => {
-      userService.isLoggedIn.and.returnValue(false);
-
-      component.ngOnInit();
-
-      expect(externalNavigationService.navigateTo).not.toHaveBeenCalled();
-    });
-  });
-
   describe('navigateToSearch', () => {
-    it('should navigate to /search using ExternalNavigationService', () => {
+    it('should navigate to search-recipes using hash routing', () => {
       component.navigateToSearch();
 
-      expect(externalNavigationService.navigateTo).toHaveBeenCalledWith('/search');
+      expect(window.location.hash).toBe('#/search-recipes');
     });
   });
 
   describe('navigateToSaveNewRecipe', () => {
-    it('should navigate to /new-recipe using ExternalNavigationService', () => {
+    it('should navigate to new-recipe when user is logged in', () => {
+      userService.isLoggedIn.and.returnValue(true);
+
       component.navigateToSaveNewRecipe();
 
-      expect(externalNavigationService.navigateTo).toHaveBeenCalledWith('/new-recipe');
+      expect(window.location.hash).toBe('#/new-recipe');
+    });
+
+    it('should not navigate when user is not logged in', () => {
+      userService.isLoggedIn.and.returnValue(false);
+      const initialHash = window.location.hash;
+
+      component.navigateToSaveNewRecipe();
+
+      // Hash should remain unchanged when not logged in
+      expect(window.location.hash).toBe(initialHash);
+    });
+
+    it('should show error message when user is not logged in', () => {
+      userService.isLoggedIn.and.returnValue(false);
+
+      component.navigateToSaveNewRecipe();
+
+      expect(component.shouldShowErrorMessage).toBe(true);
     });
   });
 
   describe('navigateToRecipeBook', () => {
     it('should navigate to recipe book when user is logged in', () => {
       const mockUser = { userId: '123', userName: 'Test User', userEmail: 'test@test.com' };
+      userService.isLoggedIn.and.returnValue(true);
       userService.getLoggedInUser.and.returnValue(mockUser);
 
       component.navigateToRecipeBook();
 
-      expect(externalNavigationService.navigateTo).toHaveBeenCalledWith('/recipe-book/123');
+      expect(window.location.hash).toBe('#/user/123/recipe-book');
     });
 
     it('should not navigate when user is not logged in', () => {
-      userService.getLoggedInUser.and.returnValue(null);
+      userService.isLoggedIn.and.returnValue(false);
+      const initialHash = window.location.hash;
 
       component.navigateToRecipeBook();
 
-      expect(externalNavigationService.navigateTo).not.toHaveBeenCalled();
+      expect(window.location.hash).toBe(initialHash);
+    });
+
+    it('should show error message when user is not logged in', () => {
+      userService.isLoggedIn.and.returnValue(false);
+
+      component.navigateToRecipeBook();
+
+      expect(component.shouldShowErrorMessage).toBe(true);
+    });
+  });
+
+  describe('shouldShowErrorMessage', () => {
+    it('should be false initially', () => {
+      userService.isLoggedIn.and.returnValue(false);
+
+      expect(component.shouldShowErrorMessage).toBe(false);
+    });
+
+    it('should be true after clicking login-sensitive button when not logged in', () => {
+      userService.isLoggedIn.and.returnValue(false);
+
+      component.navigateToSaveNewRecipe();
+
+      expect(component.shouldShowErrorMessage).toBe(true);
+    });
+
+    it('should be false after hideErrorMessage is called', () => {
+      userService.isLoggedIn.and.returnValue(false);
+      component.navigateToSaveNewRecipe();
+
+      component.hideErrorMessage();
+
+      expect(component.shouldShowErrorMessage).toBe(false);
     });
   });
 

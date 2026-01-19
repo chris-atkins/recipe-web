@@ -23,7 +23,7 @@ describe('RecipeService', () => {
     const searchString = 'find me some food';
 
     it('calls the correct endpoint with the search string as a query parameter', () => {
-      service.searchRecipes(searchString).subscribe();
+      const promise = service.searchRecipes(searchString);
 
       const req = httpMock.expectOne('/api/recipe?searchString=find%20me%20some%20food');
       expect(req.request.method).toBe('GET');
@@ -31,38 +31,39 @@ describe('RecipeService', () => {
     });
 
     it('calls the endpoint with no query parameters if no searchString is passed', () => {
-      service.searchRecipes().subscribe();
+      const promise = service.searchRecipes();
 
       const req = httpMock.expectOne('/api/recipe');
       expect(req.request.method).toBe('GET');
       req.flush([]);
     });
 
-    it('returns an observable with the result of the recipe GET call', (done) => {
+    it('returns a promise with the result of the recipe GET call', (done) => {
       const expectedResponse = [{ expected: 'response' }];
 
-      service.searchRecipes(searchString).subscribe(data => {
+      const promise = service.searchRecipes(searchString);
+      const req = httpMock.expectOne('/api/recipe?searchString=find%20me%20some%20food');
+      req.flush(expectedResponse);
+
+      promise.then(data => {
         expect(data).toEqual(expectedResponse as any);
         done();
       });
-
-      const req = httpMock.expectOne('/api/recipe?searchString=find%20me%20some%20food');
-      req.flush(expectedResponse);
     });
 
     it('when an error is raised during recipe call, it can be caught', (done) => {
-      service.searchRecipes().subscribe(
-        () => {
-          fail('error should have occurred');
-        },
-        (error) => {
-          expect(error.error.message).toEqual('error');
-          done();
-        }
-      );
-
+      const promise = service.searchRecipes();
       const req = httpMock.expectOne('/api/recipe');
       req.flush({ message: 'error' }, { status: 500, statusText: 'Server Error' });
+
+      promise
+        .then(() => {
+          fail('error should have occurred');
+        })
+        .catch((error) => {
+          expect(error.error.message).toEqual('error');
+          done();
+        });
     });
   });
 
@@ -70,38 +71,39 @@ describe('RecipeService', () => {
     const userId = 'theBestUser';
 
     it('calls the correct endpoint', () => {
-      service.allRecipesInUserBook(userId).subscribe();
+      const promise = service.allRecipesInUserBook(userId);
 
       const req = httpMock.expectOne('/api/recipe?recipeBook=' + userId);
       expect(req.request.method).toBe('GET');
       req.flush([]);
     });
 
-    it('returns an observable with the result of the GET call', (done) => {
+    it('returns a promise with the result of the GET call', (done) => {
       const expectedResponse: Recipe[] = [{ recipeId: '1', recipeName: 'Test', recipeContent: 'Content' }];
 
-      service.allRecipesInUserBook(userId).subscribe(response => {
+      const promise = service.allRecipesInUserBook(userId);
+      const req = httpMock.expectOne('/api/recipe?recipeBook=' + userId);
+      req.flush(expectedResponse);
+
+      promise.then(response => {
         expect(response).toEqual(expectedResponse);
         done();
       });
-
-      const req = httpMock.expectOne('/api/recipe?recipeBook=' + userId);
-      req.flush(expectedResponse);
     });
 
     it('returns a catchable error if an error occurs during the GET request', (done) => {
-      service.allRecipesInUserBook(userId).subscribe(
-        () => {
-          fail('expected error');
-        },
-        (error) => {
-          expect(error.error.message).toBe('uh-oh');
-          done();
-        }
-      );
-
+      const promise = service.allRecipesInUserBook(userId);
       const req = httpMock.expectOne('/api/recipe?recipeBook=' + userId);
       req.flush({ message: 'uh-oh' }, { status: 500, statusText: 'Server Error' });
+
+      promise
+        .then(() => {
+          fail('expected error');
+        })
+        .catch((error) => {
+          expect(error.error.message).toBe('uh-oh');
+          done();
+        });
     });
   });
 
@@ -109,38 +111,39 @@ describe('RecipeService', () => {
     const recipeId = '1234567890';
 
     it('calls the correct endpoint', () => {
-      service.findRecipe(recipeId).subscribe();
+      const promise = service.findRecipe(recipeId);
 
       const req = httpMock.expectOne('/api/recipe/' + recipeId);
       expect(req.request.method).toBe('GET');
       req.flush({});
     });
 
-    it('returns an observable with the result of the GET call', (done) => {
+    it('returns a promise with the result of the GET call', (done) => {
       const expectedResponse: Recipe = { recipeId: '1', recipeName: 'name', recipeContent: 'content' };
 
-      service.findRecipe(recipeId).subscribe(response => {
+      const promise = service.findRecipe(recipeId);
+      const req = httpMock.expectOne('/api/recipe/' + recipeId);
+      req.flush(expectedResponse);
+
+      promise.then(response => {
         expect(response).toEqual(expectedResponse);
         done();
       });
-
-      const req = httpMock.expectOne('/api/recipe/' + recipeId);
-      req.flush(expectedResponse);
     });
 
     it('returns a catchable error if an error occurs during the GET request', (done) => {
-      service.findRecipe(recipeId).subscribe(
-        () => {
-          fail('expected error');
-        },
-        (error) => {
-          expect(error.error.message).toBe('uh-oh');
-          done();
-        }
-      );
-
+      const promise = service.findRecipe(recipeId);
       const req = httpMock.expectOne('/api/recipe/' + recipeId);
       req.flush({ message: 'uh-oh' }, { status: 500, statusText: 'Server Error' });
+
+      promise
+        .then(() => {
+          fail('expected error');
+        })
+        .catch((error) => {
+          expect(error.error.message).toBe('uh-oh');
+          done();
+        });
     });
   });
 
@@ -148,7 +151,7 @@ describe('RecipeService', () => {
     const recipe: Recipe = { recipeName: 'name', recipeContent: 'content' };
 
     it('calls the correct endpoint for new recipe (POST)', () => {
-      service.saveRecipe(recipe).subscribe();
+      const promise = service.saveRecipe(recipe);
 
       const req = httpMock.expectOne('/api/recipe');
       expect(req.request.method).toBe('POST');
@@ -158,7 +161,7 @@ describe('RecipeService', () => {
 
     it('calls the correct endpoint for existing recipe (PUT)', () => {
       const existingRecipe: Recipe = { ...recipe, recipeId: '123' };
-      service.saveRecipe(existingRecipe).subscribe();
+      const promise = service.saveRecipe(existingRecipe);
 
       const req = httpMock.expectOne('/api/recipe/123');
       expect(req.request.method).toBe('PUT');
@@ -166,56 +169,58 @@ describe('RecipeService', () => {
       req.flush(existingRecipe);
     });
 
-    it('returns an observable with the result of the POST call', (done) => {
+    it('returns a promise with the result of the POST call', (done) => {
       const expectedResponse: Recipe = { recipeId: '1', recipeName: 'name', recipeContent: 'content', editable: true };
 
-      service.saveRecipe(recipe).subscribe(response => {
+      const promise = service.saveRecipe(recipe);
+      const req = httpMock.expectOne('/api/recipe');
+      req.flush(expectedResponse);
+
+      promise.then(response => {
         expect(response).toEqual(expectedResponse);
         done();
       });
-
-      const req = httpMock.expectOne('/api/recipe');
-      req.flush(expectedResponse);
     });
 
     it('returns a catchable error if an error occurs during the POST request', (done) => {
-      service.saveRecipe(recipe).subscribe(
-        () => {
-          fail('expected error');
-        },
-        (error) => {
-          expect(error.error.message).toBe('uh-oh');
-          done();
-        }
-      );
-
+      const promise = service.saveRecipe(recipe);
       const req = httpMock.expectOne('/api/recipe');
       req.flush({ message: 'uh-oh' }, { status: 500, statusText: 'Server Error' });
+
+      promise
+        .then(() => {
+          fail('expected error');
+        })
+        .catch((error) => {
+          expect(error.error.message).toBe('uh-oh');
+          done();
+        });
     });
   });
 
   describe('getRecipeList', () => {
     it('calls the correct endpoint', () => {
-      service.getRecipeList().subscribe();
+      const promise = service.getRecipeList();
 
       const req = httpMock.expectOne('/api/recipe');
       expect(req.request.method).toBe('GET');
       req.flush([]);
     });
 
-    it('returns an observable with the recipe list', (done) => {
+    it('returns a promise with the recipe list', (done) => {
       const expectedResponse: Recipe[] = [
         { recipeId: '1', recipeName: 'Recipe 1', recipeContent: 'Content 1' },
         { recipeId: '2', recipeName: 'Recipe 2', recipeContent: 'Content 2' }
       ];
 
-      service.getRecipeList().subscribe(response => {
+      const promise = service.getRecipeList();
+      const req = httpMock.expectOne('/api/recipe');
+      req.flush(expectedResponse);
+
+      promise.then(response => {
         expect(response).toEqual(expectedResponse);
         done();
       });
-
-      const req = httpMock.expectOne('/api/recipe');
-      req.flush(expectedResponse);
     });
   });
 });
