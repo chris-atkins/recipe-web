@@ -2,5 +2,5 @@
 
 <div class="container">
 	<h2><span id="page-title">Recipe Book: {{user.userName}}</span></h2>
-	<div recipe-card-wall recipe-list="recipeList" recipe-book-mode="true" owning-user-id="{{user.userId}}" recipe-removal-callback="removeRecipeFromBook" class="recipe-card-wall"></div>
+	<app-recipe-card-wall [recipe-list]="recipeList" [recipe-book-mode]="true" [owning-user-id]="user.userId" (recipe-removed)="removeRecipeFromBook($event)"></app-recipe-card-wall>
 </div>

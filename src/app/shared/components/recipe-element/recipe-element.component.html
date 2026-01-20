@@ -1,0 +1,19 @@
+<div class="recipe card" [id]="recipe?.recipeId" (click)="navigateToRecipePage()">
+  <div class="card-body">
+    <img *ngIf="imageExists()" class="recipe-image" [src]="getImageUrl()" [alt]="'Image of ' + recipe?.recipeName" />
+    <h5 class="recipe-name card-title">{{ recipe?.recipeName }}</h5>
+    <p class="card-text"></p>
+  </div>
+
+  <div class="card-footer text-right">
+    <span *ngIf="recipeInRecipeBook" class="in-recipe-book-indicator badge badge-secondary">
+      <i class="fa fa-check" aria-hidden="true"></i> In Recipe Book
+    </span>
+    <span *ngIf="canAddToRecipeBook">
+      <a class="add-to-recipe-book-button btn btn-outline-secondary btn-sm" (click)="addToRecipeBook($event)" role="button">Add to Recipe Book</a>
+    </span>
+    <span *ngIf="removeAllowed()">
+      <a class="remove-recipe-from-book-button btn btn-outline-secondary btn-sm" (click)="removeRecipe($event)" role="button">Remove from Recipe Book</a>
+    </span>
+  </div>
+</div>

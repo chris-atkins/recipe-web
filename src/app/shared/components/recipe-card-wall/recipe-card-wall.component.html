@@ -1,0 +1,12 @@
+<div class="container">
+  <div id="recipe-list" class="card-columns recipe-card-holder">
+    <app-recipe-element
+      *ngFor="let recipe of _recipeListArray; trackBy: trackByRecipeId"
+      [recipe]="recipe"
+      [recipeBook]="recipeBook"
+      [recipeBookMode]="recipeBookMode"
+      [owningUserId]="owningUserId"
+      (recipeRemoved)="onRecipeRemoved($event)">
+    </app-recipe-element>
+  </div>
+</div>

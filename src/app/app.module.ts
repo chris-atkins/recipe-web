@@ -13,6 +13,7 @@ import { RecipeBookService } from './core/services/recipe-book.service';
 import { ExternalNavigationService } from './core/services/external-navigation.service';
 import { UserHeaderInterceptor } from './core/interceptors/user-header.interceptor';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { RecipeCardWallComponent } from './shared/components/recipe-card-wall/recipe-card-wall.component';
 
 declare const angular: any;
 
@@ -46,6 +47,9 @@ export class AppModule {
       angular.module('recipe')
         .directive('appNavbar', downgradeComponent({
           component: NavbarComponent
+        }) as any)
+        .directive('appRecipeCardWall', downgradeComponent({
+          component: RecipeCardWallComponent
         }) as any);
 
       // Downgrade Angular services for AngularJS use
