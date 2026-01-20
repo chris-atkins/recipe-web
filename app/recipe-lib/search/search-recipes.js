@@ -2,12 +2,13 @@
 
 angular.module('recipe')
 
-.config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/search-recipes', {
-		templateUrl: 'recipe-lib/search/search-recipes.html',
-		controller: 'SearchRecipesCtrl'
-	});
-}])
+// Route now handled by Angular - see src/app/features/search/search-recipes.component.ts
+// .config(['$routeProvider', function ($routeProvider) {
+// 	$routeProvider.when('/search-recipes', {
+// 		templateUrl: 'recipe-lib/search/search-recipes.html',
+// 		controller: 'SearchRecipesCtrl'
+// 	});
+// }])
 
 .controller('SearchRecipesCtrl', ['$scope', '$http', '$routeParams', '$location', 'userService', 'recipeBookService', 'recipeService', function ($scope, $http, $routeParams, $location, userService, recipeBookService, recipeService) {
 

@@ -65,18 +65,30 @@ export class UserService {
   }
 
   private initializeUser(): void {
+    this.refreshUserFromCookie();
+  }
+
+  // Re-check cookie each time in case login happened through AngularJS
+  private refreshUserFromCookie(): void {
     const user = this.getCookieObject<User>(this.USER_COOKIE_KEY);
     if (user) {
       this.userSubject.next(user);
       this.loggedInSubject.next(true);
+    } else {
+      this.userSubject.next(null);
+      this.loggedInSubject.next(false);
     }
   }
 
   isLoggedIn(): boolean {
+    // Re-check cookie each time in case login happened through AngularJS
+    this.refreshUserFromCookie();
     return this.loggedInSubject.value;
   }
 
   getLoggedInUser(): User | null {
+    // Re-check cookie each time in case login happened through AngularJS
+    this.refreshUserFromCookie();
     return this.userSubject.value;
   }
 

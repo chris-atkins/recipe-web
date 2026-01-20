@@ -41,8 +41,7 @@ export class NavbarComponent implements OnInit {
   }
 
   navigateBrowse(): void {
-    // Use AngularJS route for search-recipes (not yet migrated)
-    window.location.hash = '#/search-recipes';
+    this.router.navigate(['/search-recipes']);
   }
 
   navigateSave(): void {

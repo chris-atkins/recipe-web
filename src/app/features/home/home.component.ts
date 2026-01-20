@@ -26,7 +26,6 @@ export class HomeComponent implements OnInit {
   }
 
   navigateToSearch(): void {
-    // Use AngularJS route for search-recipes (not yet migrated)
     window.location.hash = '#/search-recipes';
   }
 

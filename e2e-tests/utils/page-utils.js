@@ -8,6 +8,13 @@ var signupNameField = element(by.id('sign-up-user-name'));
 var signupButton = element(by.id('sign-up-user-button'));
 
 function findRecipeWithName(recipeName, recipeElements) {
+	// Wait for at least one recipe to be present before searching
+	browser.wait(function() {
+		return recipeElements.count().then(function(count) {
+			return count > 0;
+		});
+	}, 10000, 'Waiting for recipes to load');
+
 	var matchingRecipes = recipeElements.filter(function(item) {
 		return item.element(by.className('recipe-name')).getText().then(function(recipeNameText) {
 			return (recipeNameText === recipeName);

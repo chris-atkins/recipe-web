@@ -16,6 +16,11 @@ angular.module('recipe', [
 	$locationProvider.hashPrefix('');
 }])
 .config(['$routeProvider', function($routeProvider) {
+	// Angular handles these routes - add empty route definitions to prevent 'otherwise' redirect
+	// The actual rendering happens in Angular's router-outlet
+	$routeProvider.when('/home', {template: ''});
+	$routeProvider.when('/search-recipes', {template: ''});
+
 	$routeProvider.otherwise({redirectTo: '/home'});
 }])
 

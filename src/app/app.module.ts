@@ -2,11 +2,13 @@ import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { UpgradeModule, downgradeInjectable, downgradeComponent } from '@angular/upgrade/static';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { HomeComponent } from './features/home/home.component';
+import { SearchRecipesComponent } from './features/search/search-recipes.component';
 import { RecipeService } from './core/services/recipe.service';
 import { UserService } from './core/services/user.service';
 import { RecipeBookService } from './core/services/recipe-book.service';
@@ -21,11 +23,13 @@ declare const angular: any;
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    SearchRecipesComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     UpgradeModule,
     AppRoutingModule,
     SharedModule
