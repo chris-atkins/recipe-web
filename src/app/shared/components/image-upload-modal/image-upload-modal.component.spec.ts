@@ -53,4 +53,34 @@ describe('ImageUploadModalComponent', () => {
     const imageUpload = fixture.nativeElement.querySelector('app-image-upload');
     expect(imageUpload).toBeTruthy();
   });
+
+  it('should display the modal title', () => {
+    fixture.detectChanges();
+    const title = fixture.nativeElement.querySelector('#image-upload-modal-title');
+    expect(title).toBeTruthy();
+    expect(title.textContent).toContain('Image Upload');
+  });
+
+  it('should have close button in header', () => {
+    fixture.detectChanges();
+    const closeX = fixture.nativeElement.querySelector('.close-upload-image-x');
+    expect(closeX).toBeTruthy();
+    expect(closeX.getAttribute('data-dismiss')).toBe('modal');
+  });
+
+  it('should have close button in footer', () => {
+    fixture.detectChanges();
+    const closeBtn = fixture.nativeElement.querySelector('.close-upload-image-button');
+    expect(closeBtn).toBeTruthy();
+    expect(closeBtn.textContent).toContain('Close');
+    expect(closeBtn.getAttribute('data-dismiss')).toBe('modal');
+  });
+
+  it('should have correct modal accessibility attributes', () => {
+    fixture.detectChanges();
+    const modal = fixture.nativeElement.querySelector('.image-upload-modal');
+    expect(modal.getAttribute('role')).toBe('dialog');
+    expect(modal.getAttribute('aria-labelledby')).toBe('image-upload-modal-title');
+    expect(modal.getAttribute('aria-hidden')).toBe('true');
+  });
 });

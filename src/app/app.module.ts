@@ -14,6 +14,7 @@ import { ExternalNavigationService } from './core/services/external-navigation.s
 import { UserHeaderInterceptor } from './core/interceptors/user-header.interceptor';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { RecipeCardWallComponent } from './shared/components/recipe-card-wall/recipe-card-wall.component';
+import { ImageUploadModalComponent } from './shared/components/image-upload-modal/image-upload-modal.component';
 
 declare const angular: any;
 
@@ -50,6 +51,9 @@ export class AppModule {
         }) as any)
         .directive('appRecipeCardWall', downgradeComponent({
           component: RecipeCardWallComponent
+        }) as any)
+        .directive('appImageUploadModal', downgradeComponent({
+          component: ImageUploadModalComponent
         }) as any);
 
       // Downgrade Angular services for AngularJS use
