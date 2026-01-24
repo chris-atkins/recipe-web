@@ -72,14 +72,7 @@ export class RecipeElementComponent implements OnChanges {
     if (!this.recipe || !this.recipeBook) {
       return false;
     }
-    // Handle both formats: array of recipe objects (AngularJS) or { recipes: string[] } (new format)
-    if (Array.isArray(this.recipeBook)) {
-      return (this.recipeBook as any[]).some(r => r.recipeId === this.recipe.recipeId);
-    }
-    if (this.recipeBook.recipes) {
-      return this.recipeBook.recipes.includes(this.recipe.recipeId || '');
-    }
-    return false;
+    return this.recipeBook.some(r => r.recipeId === this.recipe.recipeId);
   }
 
   addToRecipeBook(event: Event): void {

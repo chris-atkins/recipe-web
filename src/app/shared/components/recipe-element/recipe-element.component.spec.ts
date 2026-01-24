@@ -23,10 +23,7 @@ describe('RecipeElementComponent', () => {
     userEmail: 'test@test.com'
   };
 
-  const mockRecipeBook: RecipeBook = {
-    userId: 'user123',
-    recipes: ['recipe1', 'recipe2']
-  };
+  const mockRecipeBook: RecipeBook = [{ recipeId: 'recipe1' }, { recipeId: 'recipe2' }];
 
   beforeEach(() => {
     const recipeBookSpy = jasmine.createSpyObj('RecipeBookService', ['addToRecipeBook']);
@@ -111,7 +108,7 @@ describe('RecipeElementComponent', () => {
 
   describe('addToRecipeBook', () => {
     it('should call recipeBookService and update recipe book', (done) => {
-      const updatedBook: RecipeBook = { userId: 'user123', recipes: ['recipe1', 'recipe2', 'newRecipe'] };
+      const updatedBook: RecipeBook = [{ recipeId: 'recipe1' }, { recipeId: 'recipe2' }, { recipeId: 'newRecipe' }];
       recipeBookService.addToRecipeBook.and.returnValue(Promise.resolve(updatedBook));
 
       const mockEvent = new Event('click');
@@ -151,7 +148,7 @@ describe('RecipeElementComponent', () => {
     });
 
     it('should set canAddToRecipeBook to true when recipe is not in book', () => {
-      component.recipeBook = { userId: 'user123', recipes: ['otherRecipe'] };
+      component.recipeBook = [{ recipeId: 'otherRecipe' }];
       component.recipe = mockRecipe;
       component.recipeBookMode = false;
 

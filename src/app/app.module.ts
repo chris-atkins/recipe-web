@@ -1,6 +1,7 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { UpgradeModule, downgradeInjectable, downgradeComponent } from '@angular/upgrade/static';
+import { setUpLocationSync } from '@angular/router/upgrade';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -10,6 +11,8 @@ import { SharedModule } from './shared/shared.module';
 import { HomeComponent } from './features/home/home.component';
 import { SearchRecipesComponent } from './features/search/search-recipes.component';
 import { RecipeBookComponent } from './features/recipe-book/recipe-book.component';
+import { ViewRecipeComponent } from './features/view-recipe/view-recipe.component';
+import { QuillModule } from 'ngx-quill';
 import { RecipeService } from './core/services/recipe.service';
 import { UserService } from './core/services/user.service';
 import { RecipeBookService } from './core/services/recipe-book.service';
@@ -26,7 +29,8 @@ declare const angular: any;
     AppComponent,
     HomeComponent,
     SearchRecipesComponent,
-    RecipeBookComponent
+    RecipeBookComponent,
+    ViewRecipeComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +38,8 @@ declare const angular: any;
     FormsModule,
     UpgradeModule,
     AppRoutingModule,
-    SharedModule
+    SharedModule,
+    QuillModule.forRoot()
   ],
   providers: [
     {
@@ -71,6 +76,9 @@ export class AppModule {
 
       // Bootstrap AngularJS first within Angular
       this.upgrade.bootstrap(document.body, ['recipe'], { strictDi: true });
+
+      // Sync AngularJS $location with Angular router
+      setUpLocationSync(this.upgrade, 'hash');
     }
 
     // Always bootstrap Angular AppComponent (for both hybrid and standalone modes)

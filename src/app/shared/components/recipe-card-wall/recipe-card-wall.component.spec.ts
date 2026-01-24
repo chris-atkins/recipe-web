@@ -15,10 +15,7 @@ describe('RecipeCardWallComponent', () => {
     { recipeId: 'recipe3', recipeName: 'Recipe 3', recipeContent: 'Content 3' }
   ];
 
-  const mockRecipeBook: RecipeBook = {
-    userId: 'user123',
-    recipes: ['recipe1']
-  };
+  const mockRecipeBook: RecipeBook = [{ recipeId: 'recipe1' }];
 
   beforeEach(() => {
     const recipeBookSpy = jasmine.createSpyObj('RecipeBookService', ['addToRecipeBook']);

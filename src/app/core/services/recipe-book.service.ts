@@ -3,10 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { UserService } from './user.service';
 
-export interface RecipeBook {
-  userId: string;
-  recipes: string[];
+export interface RecipeBookItem {
+  recipeId: string;
 }
+
+// API returns array directly, not an object with userId/recipes properties
+export type RecipeBook = RecipeBookItem[];
 
 @Injectable({
   providedIn: 'root'

@@ -92,8 +92,8 @@ describe('the vew recipe page', function() {
 				expect(editRecipeButton.isPresent()).toBe(false);
 				expect(updateRecipeButton.isPresent()).toBe(false);
 
-				expect(recipeNameInput.isDisplayed()).toBe(false);
-				expect(recipeContentInput.isDisplayed()).toBe(false);
+				expect(recipeNameInput.isPresent()).toBe(false);
+				expect(recipeContentInput.isPresent()).toBe(false);
 			});
 		});
 
@@ -124,7 +124,7 @@ describe('the vew recipe page', function() {
 	var cancelEditButton = element(by.id('cancel-edit-button'));
 	var updateRecipeButton = element(by.id('update-recipe-button'));
 	var recipeNameInput = element(by.css('input#recipe-name-input'));
-	var recipeContentInput = element(by.css('trix-editor'));
+	var recipeContentInput = element(by.css('.ql-editor'));
 	var editRecipeTitle = element(by.id('edit-recipe-page-title'));
 
 	describe('when a user is logged who is the owner of the recipe', function() {
@@ -140,8 +140,8 @@ describe('the vew recipe page', function() {
 					return browser.wait(EC.presenceOf(recipeNameElement), 5000);
 				})
 				.then(function() {
-					// Wait for the edit button (indicates API loaded with editable=true)
-					return browser.wait(EC.presenceOf(editRecipeButton), 5000);
+					// Wait for the edit button to be clickable (indicates API loaded with editable=true)
+					return browser.wait(EC.elementToBeClickable(editRecipeButton), 5000);
 				});
 		});
 
@@ -166,6 +166,8 @@ describe('the vew recipe page', function() {
 			browser.wait(EC.presenceOf(editRecipeButton), 5000);
 
 			editRecipeButton.click();
+			// Wait for input fields to appear after clicking edit
+			browser.wait(EC.presenceOf(recipeNameInput), 5000);
 
 			expect(editRecipeButton.isDisplayed()).toBe(false);
 
@@ -183,13 +185,18 @@ describe('the vew recipe page', function() {
 
 			expect(recipeContentInput.isDisplayed()).toBe(true);
 			expect(recipeContentInput.getAttribute('value')).toContain('Recipe Being Tested - Content');
+
+			// Clean up: exit edit mode for next test
+			cancelEditButton.click();
 		});
 
 		it('editing can be cancelled without altering the recipe contents or title', function() {
 			browser.get('/#/view-recipe/' + recipeId);
-			// Wait for edit button to appear instead of waitForAngular
-			browser.wait(EC.presenceOf(editRecipeButton), 5000);
+			// Wait for edit button to be clickable
+			browser.wait(EC.elementToBeClickable(editRecipeButton), 5000);
 			editRecipeButton.click();
+			// Wait for input fields to appear after clicking edit
+			browser.wait(EC.presenceOf(recipeNameInput), 5000);
 
 			recipeNameInput.sendKeys('edited');
 			recipeContentInput.sendKeys('moreedited');
@@ -209,8 +216,8 @@ describe('the vew recipe page', function() {
 
 		it('the recipe can be updated', function() {
 			browser.get('/#/view-recipe/' + recipeId);
-			// Wait for edit button to appear instead of waitForAngular
-			browser.wait(EC.presenceOf(editRecipeButton), 5000);
+			// Wait for edit button to be clickable
+			browser.wait(EC.elementToBeClickable(editRecipeButton), 5000);
 			editRecipeButton.click();
 			// Wait for input fields to appear after clicking edit
 			browser.wait(EC.presenceOf(recipeNameInput), 5000);

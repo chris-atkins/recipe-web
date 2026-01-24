@@ -21,7 +21,7 @@ describe('SearchRecipesComponent', () => {
     mockRecipeBookService = jasmine.createSpyObj('RecipeBookService', ['getRecipeBook']);
 
     mockRecipeService.searchRecipes.and.returnValue(Promise.resolve([]));
-    mockRecipeBookService.getRecipeBook.and.returnValue(Promise.resolve({ userId: 'test', recipes: [] }));
+    mockRecipeBookService.getRecipeBook.and.returnValue(Promise.resolve([]));
 
     await TestBed.configureTestingModule({
       declarations: [SearchRecipesComponent],

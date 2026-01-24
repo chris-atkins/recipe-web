@@ -136,7 +136,7 @@ describe('RecipeBookComponent', () => {
 
     it('should remove recipe and refresh list', (done) => {
       const updatedRecipes = [testRecipes[1]];
-      mockRecipeBookService.removeRecipeFromBook.and.returnValue(Promise.resolve({ userId: '123', recipes: [] }));
+      mockRecipeBookService.removeRecipeFromBook.and.returnValue(Promise.resolve([]));
       mockRecipeService.allRecipesInUserBook.and.returnValue(Promise.resolve(updatedRecipes));
 
       component.removeRecipeFromBook(testRecipes[0]);

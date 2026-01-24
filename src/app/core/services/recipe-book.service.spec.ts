@@ -9,7 +9,7 @@ describe('RecipeBookService', () => {
   let userService: UserService;
 
   const mockUser: User = { userId: '123', userName: 'Test User', userEmail: 'test@test.com' };
-  const mockRecipeBook: RecipeBook = { userId: '123', recipes: ['recipe1', 'recipe2'] };
+  const mockRecipeBook: RecipeBook = [{ recipeId: 'recipe1' }, { recipeId: 'recipe2' }];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -50,10 +50,10 @@ describe('RecipeBookService', () => {
       const promise = service.getRecipeBook('456');
       const req = httpMock.expectOne('/api/user/456/recipe-book');
       expect(req.request.method).toBe('GET');
-      req.flush({ userId: '456', recipes: ['recipe3'] });
+      req.flush([{ recipeId: 'recipe3' }]);
 
       promise.then(recipeBook => {
-        expect(recipeBook).toEqual({ userId: '456', recipes: ['recipe3'] });
+        expect(recipeBook).toEqual([{ recipeId: 'recipe3' }]);
         done();
       });
     });
@@ -135,10 +135,10 @@ describe('RecipeBookService', () => {
         setTimeout(() => {
           const getReq = httpMock.expectOne('/api/user/123/recipe-book');
           expect(getReq.request.method).toBe('GET');
-          getReq.flush({ userId: '123', recipes: ['recipe2'] });
+          getReq.flush([{ recipeId: 'recipe2' }]);
 
           removePromise.then(recipeBook => {
-            expect(recipeBook).toEqual({ userId: '123', recipes: ['recipe2'] });
+            expect(recipeBook).toEqual([{ recipeId: 'recipe2' }]);
             done();
           });
         }, 0);
