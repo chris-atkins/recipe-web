@@ -3,7 +3,7 @@
 var browserName = process.env.SELENIUM_BROWSER ? process.env.SELENIUM_BROWSER : 'chrome';
 
 exports.config = {
-	allScriptsTimeout: 11000,
+	allScriptsTimeout: 3000,
 
 	chromeDriver: '../node_modules/chromedriver/lib/chromedriver/chromedriver',
 
@@ -30,7 +30,7 @@ exports.config = {
 	framework: 'jasmine2',
 
 	jasmineNodeOpts: {
-		defaultTimeoutInterval: 15000
+		defaultTimeoutInterval: 10000
 	},
 
 	// Required for hybrid Angular/AngularJS apps using @angular/upgrade

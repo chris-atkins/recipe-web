@@ -24,13 +24,8 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "app/recipe-lib",
-                "output": "/recipe-lib"
-              },
-              {
-                "glob": "**/*",
-                "input": "app/bower_components",
-                "output": "/bower_components"
+                "input": "app/recipe-lib/images",
+                "output": "/recipe-lib/images"
               }
             ],
             "styles": [
@@ -39,7 +34,10 @@
               "app/recipe-lib/app.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -92,13 +90,8 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "app/recipe-lib",
-                "output": "/recipe-lib"
-              },
-              {
-                "glob": "**/*",
-                "input": "app/bower_components",
-                "output": "/bower_components"
+                "input": "app/recipe-lib/images",
+                "output": "/recipe-lib/images"
               }
             ],
             "styles": [
