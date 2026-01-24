@@ -2,12 +2,13 @@
 
 angular.module('recipe')
 
-.config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/new-recipe', {
-		templateUrl: 'recipe-lib/new-recipe/new-recipe.html',
-		controller: 'NewRecipeCtrl'
-	});
-}])
+// Route now handled by Angular - see src/app/features/new-recipe/new-recipe.component.ts
+// .config(['$routeProvider', function ($routeProvider) {
+// 	$routeProvider.when('/new-recipe', {
+// 		templateUrl: 'recipe-lib/new-recipe/new-recipe.html',
+// 		controller: 'NewRecipeCtrl'
+// 	});
+// }])
 
 .controller('NewRecipeCtrl', ['$scope', '$location', 'userService', 'recipeService', function ($scope, $location, userService, recipeService) {
 

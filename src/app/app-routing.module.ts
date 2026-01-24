@@ -4,6 +4,7 @@ import { HomeComponent } from './features/home/home.component';
 import { SearchRecipesComponent } from './features/search/search-recipes.component';
 import { RecipeBookComponent } from './features/recipe-book/recipe-book.component';
 import { ViewRecipeComponent } from './features/view-recipe/view-recipe.component';
+import { NewRecipeComponent } from './features/new-recipe/new-recipe.component';
 
 // Custom URL handling strategy for hybrid routing
 // This allows Angular and AngularJS routers to coexist
@@ -17,6 +18,7 @@ export class Ng1Ng2UrlHandlingStrategy implements UrlHandlingStrategy {
            urlString === '' ||
            urlString.startsWith('/search-recipes') ||
            urlString.startsWith('/view-recipe/') ||
+           urlString.startsWith('/new-recipe') ||
            /^\/user\/[^/]+\/recipe-book/.test(urlString);
   }
 
@@ -34,7 +36,8 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'search-recipes', component: SearchRecipesComponent },
   { path: 'user/:userId/recipe-book', component: RecipeBookComponent },
-  { path: 'view-recipe/:recipeId', component: ViewRecipeComponent }
+  { path: 'view-recipe/:recipeId', component: ViewRecipeComponent },
+  { path: 'new-recipe', component: NewRecipeComponent }
 ];
 
 @NgModule({

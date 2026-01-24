@@ -22,6 +22,7 @@ angular.module('recipe', [
 	$routeProvider.when('/search-recipes', {template: ''});
 	$routeProvider.when('/user/:userId/recipe-book', {template: ''});
 	$routeProvider.when('/view-recipe/:recipeId', {template: ''});
+	$routeProvider.when('/new-recipe', {template: ''});
 
 	$routeProvider.otherwise({redirectTo: '/home'});
 }])

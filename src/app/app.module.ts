@@ -12,6 +12,7 @@ import { HomeComponent } from './features/home/home.component';
 import { SearchRecipesComponent } from './features/search/search-recipes.component';
 import { RecipeBookComponent } from './features/recipe-book/recipe-book.component';
 import { ViewRecipeComponent } from './features/view-recipe/view-recipe.component';
+import { NewRecipeComponent } from './features/new-recipe/new-recipe.component';
 import { QuillModule } from 'ngx-quill';
 import { RecipeService } from './core/services/recipe.service';
 import { UserService } from './core/services/user.service';
@@ -30,7 +31,8 @@ declare const angular: any;
     HomeComponent,
     SearchRecipesComponent,
     RecipeBookComponent,
-    ViewRecipeComponent
+    ViewRecipeComponent,
+    NewRecipeComponent
   ],
   imports: [
     BrowserModule,
