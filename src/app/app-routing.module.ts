@@ -2,6 +2,7 @@ import { NgModule, Injectable } from '@angular/core';
 import { RouterModule, Routes, UrlHandlingStrategy, UrlTree } from '@angular/router';
 import { HomeComponent } from './features/home/home.component';
 import { SearchRecipesComponent } from './features/search/search-recipes.component';
+import { RecipeBookComponent } from './features/recipe-book/recipe-book.component';
 
 // Custom URL handling strategy for hybrid routing
 // This allows Angular and AngularJS routers to coexist
@@ -13,7 +14,8 @@ export class Ng1Ng2UrlHandlingStrategy implements UrlHandlingStrategy {
     return urlString === '/home' ||
            urlString === '/' ||
            urlString === '' ||
-           urlString.startsWith('/search-recipes');
+           urlString.startsWith('/search-recipes') ||
+           /^\/user\/[^/]+\/recipe-book/.test(urlString);
   }
 
   extract(url: UrlTree): UrlTree {
@@ -28,7 +30,8 @@ export class Ng1Ng2UrlHandlingStrategy implements UrlHandlingStrategy {
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'search-recipes', component: SearchRecipesComponent }
+  { path: 'search-recipes', component: SearchRecipesComponent },
+  { path: 'user/:userId/recipe-book', component: RecipeBookComponent }
 ];
 
 @NgModule({

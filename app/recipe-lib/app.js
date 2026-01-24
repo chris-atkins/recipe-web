@@ -20,6 +20,7 @@ angular.module('recipe', [
 	// The actual rendering happens in Angular's router-outlet
 	$routeProvider.when('/home', {template: ''});
 	$routeProvider.when('/search-recipes', {template: ''});
+	$routeProvider.when('/user/:userId/recipe-book', {template: ''});
 
 	$routeProvider.otherwise({redirectTo: '/home'});
 }])

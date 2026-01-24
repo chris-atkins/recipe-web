@@ -1,0 +1,11 @@
+<app-navbar></app-navbar>
+
+<div class="container">
+  <h2><span id="page-title">Recipe Book: {{user?.userName}}</span></h2>
+  <app-recipe-card-wall
+    [recipeList]="recipeList"
+    [recipeBookMode]="true"
+    [owningUserId]="user?.userId || ''"
+    (recipeRemoved)="removeRecipeFromBook($event)">
+  </app-recipe-card-wall>
+</div>

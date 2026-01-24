@@ -76,6 +76,33 @@ describe('UserService', () => {
     expect(newService.getLoggedInUser()).toEqual(user);
   });
 
+  describe('getUserById', () => {
+    it('should fetch user by ID from API', (done) => {
+      const user: User = { userId: '123', userName: 'Test', userEmail: 'test@test.com' };
+
+      const promise = service.getUserById('123');
+      const req = httpMock.expectOne('/api/user/123');
+      expect(req.request.method).toBe('GET');
+      req.flush(user);
+
+      promise.then(result => {
+        expect(result).toEqual(user);
+        done();
+      });
+    });
+
+    it('should reject on error', (done) => {
+      const promise = service.getUserById('999');
+      const req = httpMock.expectOne('/api/user/999');
+      req.flush({}, { status: 404, statusText: 'Not Found' });
+
+      promise.catch(error => {
+        expect(error.status).toBe(404);
+        done();
+      });
+    });
+  });
+
   describe('logIn', () => {
     it('should log in user and store in cookie', (done) => {
       const user: User = { userId: '123', userName: 'Test', userEmail: 'test@test.com' };

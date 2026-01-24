@@ -92,6 +92,10 @@ export class UserService {
     return this.userSubject.value;
   }
 
+  getUserById(userId: string): Promise<User> {
+    return firstValueFrom(this.http.get<User>(`/api/user/${userId}`));
+  }
+
   logIn(email: string): Promise<any> {
     return firstValueFrom(
       this.http.get<User>(`/api/user?email=${encodeURIComponent(email)}`)

@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { HomeComponent } from './features/home/home.component';
 import { SearchRecipesComponent } from './features/search/search-recipes.component';
+import { RecipeBookComponent } from './features/recipe-book/recipe-book.component';
 import { RecipeService } from './core/services/recipe.service';
 import { UserService } from './core/services/user.service';
 import { RecipeBookService } from './core/services/recipe-book.service';
@@ -24,7 +25,8 @@ declare const angular: any;
   declarations: [
     AppComponent,
     HomeComponent,
-    SearchRecipesComponent
+    SearchRecipesComponent,
+    RecipeBookComponent
   ],
   imports: [
     BrowserModule,
