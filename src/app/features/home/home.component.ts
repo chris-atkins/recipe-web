@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
+import { VERSION } from '../../version';
 
 @Component({
   selector: 'app-home',
@@ -8,6 +9,7 @@ import { UserService } from '../../core/services/user.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  version = VERSION;
   private userHasClickedLoginSensitiveButton = false;
 
   constructor(
