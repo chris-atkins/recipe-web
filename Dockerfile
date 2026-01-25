@@ -6,5 +6,6 @@ RUN apk add libc6-compat
 COPY . /src
 COPY ./run-on-server.sh /
 RUN cd src && npm install --unsafe-perm --legacy-peer-deps
+RUN cd src && npm run build
 EXPOSE 8000
 CMD ["sh", "run-on-server.sh"]
