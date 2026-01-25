@@ -1,0 +1,42 @@
+<app-navbar></app-navbar>
+
+<div class="container">
+  <h2>
+    <span id="search-recipes-page-title">Search Recipes</span>
+  </h2>
+</div>
+
+<div class="container">
+  <div class="input-group form-group">
+    <input
+      id="search-input"
+      class="form-control"
+      placeholder="Search for..."
+      type="text"
+      [(ngModel)]="searchString"
+      (keyup.enter)="searchRecipes()"
+      [appAutoFocus]="true"
+    />
+    <span class="input-group-append">
+      <button id="search-button" class="btn btn-secondary" (click)="searchRecipes()">Search</button>
+    </span>
+    <span class="input-group-append">
+      <button id="show-all-recipes-button" class="btn btn-secondary" (click)="showAllRecipes()">Show All</button>
+    </span>
+  </div>
+</div>
+
+<div class="container form-group">
+  <span class="result-info-message">{{ resultInfoMessage }}</span>
+</div>
+
+<div id="no-search-results-message" class="container" *ngIf="recipeList.length === 0 && searchHasOccurred">
+  <p class="lead">
+    <span id="greeting-message">No recipes were found that match the search.</span>
+  </p>
+</div>
+
+<app-recipe-card-wall
+  [recipeList]="recipeList"
+  [recipeBook]="usersRecipeBook">
+</app-recipe-card-wall>

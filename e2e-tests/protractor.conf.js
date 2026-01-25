@@ -3,7 +3,7 @@
 var browserName = process.env.SELENIUM_BROWSER ? process.env.SELENIUM_BROWSER : 'chrome';
 
 exports.config = {
-	allScriptsTimeout: 11000,
+	allScriptsTimeout: 3000,
 
 	chromeDriver: '../node_modules/chromedriver/lib/chromedriver/chromedriver',
 
@@ -12,7 +12,10 @@ exports.config = {
 	],
 
 	capabilities: {
-		'browserName': browserName
+		'browserName': browserName,
+		'chromeOptions': {
+			'args': ['--window-size=1280,1024']
+		}
 	},
 
 	baseUrl: 'http://localhost:8000/',
@@ -27,6 +30,17 @@ exports.config = {
 	framework: 'jasmine2',
 
 	jasmineNodeOpts: {
-		defaultTimeoutInterval: 15000
+		defaultTimeoutInterval: 10000
+	},
+
+	// Required for hybrid Angular/AngularJS apps using @angular/upgrade
+	// Tells Protractor to look for multiple Angular roots
+	useAllAngular2AppRoots: true,
+
+	onPrepare: function() {
+		// Disable Angular synchronization for hybrid apps
+		// This is necessary because @angular/upgrade manually bootstraps AngularJS
+		// and Protractor can't properly detect both frameworks
+		browser.waitForAngularEnabled(false);
 	}
 };

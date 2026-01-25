@@ -1,0 +1,43 @@
+.select-image-button {
+  margin-bottom: 10px;
+}
+
+.cropArea {
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+.cropped-image-holder {
+  margin-top: 10px;
+}
+
+.cropped-image {
+  margin-bottom: 10px;
+}
+
+.cropped-image img {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+.upload-image-button {
+  margin-right: 10px;
+}
+
+.processing-message,
+.loading-message {
+  margin-left: 10px;
+}
+
+.success-message {
+  color: green;
+  margin-left: 10px;
+}
+
+.error-message {
+  color: red;
+  margin-left: 10px;
+}

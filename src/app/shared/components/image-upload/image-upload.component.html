@@ -1,0 +1,36 @@
+<form>
+  <div>
+    <input type="file" class="select-image-button" (change)="fileChangeEvent($event)" accept="image/*" />
+    <span class="processing-message" *ngIf="processing">
+      <i class="fa fa-spinner fa-pulse fa-fw"></i> Processing...
+    </span>
+  </div>
+
+  <div class="cropArea selected-image" *ngIf="imageChangedEvent">
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="1"
+      format="png"
+      output="base64"
+      (imageCropped)="imageCropped($event)"
+      (imageLoaded)="imageLoaded($event)"
+      (cropperReady)="cropperReady()"
+      (loadImageFailed)="loadImageFailed()">
+    </image-cropper>
+  </div>
+
+  <div class="cropped-image-holder" *ngIf="croppedImage">
+    <div class="cropped-image">
+      <img [src]="croppedImage" alt="Cropped image preview" />
+    </div>
+
+    <button type="button" class="upload-image-button" (click)="upload()" [disabled]="loading">Submit</button>
+
+    <span class="loading-message" *ngIf="loading">
+      <i class="fa fa-spinner fa-pulse fa-fw"></i> Working...
+    </span>
+    <span class="success-message" *ngIf="result">Image uploaded.</span>
+    <span class="error-message" *ngIf="errorMsg">{{ errorMsg }}</span>
+  </div>
+</form>

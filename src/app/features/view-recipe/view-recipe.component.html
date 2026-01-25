@@ -1,0 +1,44 @@
+<app-navbar></app-navbar>
+
+<div class="container view-recipe-page" [hidden]="inEditMode">
+  <div class="recipe-title-holder"><h2><span id="recipe-name">{{recipe.recipeName}}</span></h2></div>
+  <div class="alternate-url-holder"><button class="btn btn-secondary alternate-url-copy-button copy-button" title="Copy Import URL to Clipboard" (click)="copyAlternateUrlClicked()" role="button"><i class="fa fa-link" aria-hidden="true"></i><span>Copied</span></button></div>
+
+  <div class="serves-as-newline" *ngIf="imageExists()"></div>
+  <img class="recipe-image" *ngIf="imageExists()" [src]="recipe.image?.imageUrl"/>
+  <p><span id="recipe-content" class="recipe-ingredients show-line-breaks" [innerHTML]="recipeContentHtml"></span></p>
+</div>
+
+<div class="container edit-recipe-page" *ngIf="inEditMode">
+  <div class="page-header-row">
+    <div class="edit-recipe-title-holder"><h2><span id="edit-recipe-page-title">Edit Recipe</span></h2></div>
+    <div class="image-upload-holder">
+      <app-image-upload-modal (imageSaved)="imageSaved($event)"></app-image-upload-modal>
+    </div>
+  </div>
+
+  <div class="serves-as-newline" *ngIf="imageExists()"></div>
+  <img class="recipe-image" *ngIf="imageExists()" [src]="recipe.image?.imageUrl"/>
+
+  <div class="form-group">
+    <input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" [(ngModel)]="nameBeingEdited"/>
+  </div>
+  <div class="form-group recipe-content-editor-group">
+    <quill-editor
+      class="recipe-content-editor"
+      [(ngModel)]="contentBeingEdited"
+      placeholder="Recipe content...">
+    </quill-editor>
+  </div>
+</div>
+
+<div class="container hidden-print">
+  <a id="edit-recipe-button" class="btn btn-secondary" (click)="editClicked()" role="button" *ngIf="shouldShowEditButtons()" [hidden]="inEditMode">Edit Recipe</a>
+  <a id="cancel-edit-button" class="btn btn-secondary" (click)="cancelEdit()" role="button" *ngIf="shouldShowEditButtons()" [hidden]="!inEditMode">Cancel</a>
+  <a id="update-recipe-button" class="btn btn-secondary" (click)="saveClicked()" role="button" *ngIf="shouldShowEditButtons()" [hidden]="!inEditMode">Save Recipe</a>
+  <div class="pull-right">
+    <span id="in-recipe-book-marker" class="badge badge-secondary" [hidden]="!inRecipeBook()"><i class="fa fa-check" aria-hidden="true"></i> In Recipe Book</span>
+    <a class="remove-recipe-from-book-button btn btn-secondary btn-sm" [hidden]="!canRemoveFromRecipeBook()" (click)="removeRecipeFromBook()" role="button">Remove</a>
+  </div>
+  <a class="add-to-recipe-book-button btn btn-secondary pull-right floating-bottom-button" [hidden]="!canAddToRecipeBook()" (click)="addToRecipeBook()" role="button">Add to Recipe Book</a>
+</div>

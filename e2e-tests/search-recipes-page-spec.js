@@ -3,6 +3,9 @@ var dataUtils = require('./utils/data-utils');
 var pageUtils = require('./utils/page-utils');
 var searchPage = require('./page-objects/search-page');
 
+// Expected conditions for explicit waits
+var EC = protractor.ExpectedConditions;
+
 describe('the search recipes page', function() {
 
 	var searchInput = searchPage.searchInput;
@@ -15,9 +18,28 @@ describe('the search recipes page', function() {
 	var resultInfoMessage = searchPage.resultInfoMessage;
 	var noSearchResultsMessage = searchPage.noSearchResultsMessage;
 	var findRecipeLink = searchPage.findRecipeLink;
-		
+
+	// Helper to wait for page load
+	function waitForSearchPage() {
+		return browser.wait(EC.presenceOf(searchInput), 5000);
+	}
+
+	// Helper to wait for recipes to load
+	function waitForRecipes(count) {
+		return browser.wait(function() {
+			return recipeList.count().then(function(c) {
+				return c >= count;
+			});
+		}, 5000);
+	}
+
+	// Helper to wait for no results message
+	function waitForNoResultsMessage() {
+		return browser.wait(EC.visibilityOf(noSearchResultsMessage), 5000);
+	}
+
 	var recipe1 = {
-		recipeName: 'First Recipe Name', 
+		recipeName: 'First Recipe Name',
 		recipeContent: 'First Recipe Content findMe'
 	};
 	var recipe2 = {
@@ -28,14 +50,14 @@ describe('the search recipes page', function() {
 		recipeName: 'Third Recipe Name',
 		recipeContent: 'Third Recipe Content'
 	};
-	
+
 	var email;
 	var userId;
-		
+
 	beforeAll(function(done) {
 		  email = dataUtils.randomEmail();
 		  var user = {userName: 'ohai', userEmail: email};
-			
+
 		  dataUtils.postUser(user)
 		  .then(function(user) {
 			  userId = user.userId;
@@ -46,31 +68,37 @@ describe('the search recipes page', function() {
 		  })
 		  .then(done);
 	});
-	  
+
 	afterAll(function(done) {
 		pageUtils.logout();
 		dataUtils.cleanupData(done);
 	});
-	  
+
 	describe('content', function() {
-		
+
 		beforeAll(function() {
-			browser.get('/#/search-recipes');
+			return browser.get('/#/search-recipes')
+				.then(function() {
+					return waitForSearchPage();
+				})
+				.then(function() {
+					return waitForRecipes(3);
+				});
 		});
-		
+
 		it('has a user section', function() {
 			expect(userSection.isPresent()).toBe(true);
 		});
-		
+
 		it('has a title', function() {
 			expect(pageTitle.getText()).toBe('Search Recipes');
 		});
-		
+
 		it('has a search input field', function() {
 			expect(searchInput.isPresent()).toBe(true);
 			expect(searchInput.getAttribute('placeholder')).toBe('Search for...');
 		});
-		
+
 		it('has a search button', function() {
 			expect(searchButton.getText()).toBe('Search');
 		});
@@ -78,7 +106,7 @@ describe('the search recipes page', function() {
 		it('has a show all recipes button', function() {
 			expect(showAllRecipesButton.getText()).toBe('Show All');
 		});
-		
+
 		it('all recipes are shown on the page when first navigated to', function() {
 			expect(recipeListHolder.isDisplayed()).toBe(true);
 			expect(recipeList.count()).toBe(3);
@@ -86,59 +114,105 @@ describe('the search recipes page', function() {
 	});
 	
 	describe('the search function', function() {
-		  
-		beforeEach(function() {
-			browser.get("/#/search-recipes");
-			browser.waitForAngular();
-		});
-		
-		it('the page starts with the search input having focus', function() {
-			expect(browser.driver.switchTo().activeElement().getAttribute('id')).toBe('search-input');
-		});
-		
-		it('searches for recipes when the search button is pressed, and displays info on what results are being shown', function() {
-			searchInput.sendKeys('findMe');
-			searchButton.click();
 
-			expect(recipeList.count()).toBe(2);
-			expect(resultInfoMessage.isDisplayed()).toBe(true);
-			expect(resultInfoMessage.getText()).toBe('Showing recipes that match "findMe"');
+		beforeEach(function() {
+			return browser.get("/#/search-recipes")
+				.then(function() {
+					return waitForSearchPage();
+				})
+				.then(function() {
+					return waitForRecipes(3);
+				});
 		});
-		
+
+		it('the page starts with the search input having focus', function() {
+			// Wait a moment for focus directive to take effect
+			return browser.sleep(500)
+				.then(function() {
+					return browser.driver.switchTo().activeElement().getAttribute('id');
+				})
+				.then(function(activeId) {
+					expect(activeId).toBe('search-input');
+				});
+		});
+
+		it('searches for recipes when the search button is pressed, and displays info on what results are being shown', function() {
+			return searchInput.sendKeys('findMe')
+				.then(function() {
+					return searchButton.click();
+				})
+				.then(function() {
+					return waitForRecipes(2);
+				})
+				.then(function() {
+					expect(recipeList.count()).toBe(2);
+					expect(resultInfoMessage.isDisplayed()).toBe(true);
+					expect(resultInfoMessage.getText()).toBe('Showing recipes that match "findMe"');
+				});
+		});
+
 		it('found recipes have a name', function() {
-			searchInput.sendKeys('findMe');
-			searchButton.click();
-			
-			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', recipeList);
-			
-			var recipeName = firstRecipe.element(by.className('recipe-name'));
-			expect(recipeName.getText()).toBe('First Recipe Name');
+			return searchInput.sendKeys('findMe')
+				.then(function() {
+					return searchButton.click();
+				})
+				.then(function() {
+					return waitForRecipes(2);
+				})
+				.then(function() {
+					var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', recipeList);
+					var recipeName = firstRecipe.element(by.className('recipe-name'));
+					expect(recipeName.getText()).toBe('First Recipe Name');
+				});
 		});
-		
+
 		it('searches for recipes when enter is typed in the input field', function() {
-				
+			// Empty test - placeholder
 		});
 
 		it('gives a message when no recipes are found', function() {
-			expect(noSearchResultsMessage.isDisplayed()).toBe(false);
-			
-			searchInput.sendKeys('willNeverFindMe');
-			searchButton.click();
-			
-			expect(noSearchResultsMessage.getText()).toBe('No recipes were found that match the search.');
+			return searchInput.sendKeys('willNeverFindMe')
+				.then(function() {
+					return searchButton.click();
+				})
+				.then(function() {
+					return waitForNoResultsMessage();
+				})
+				.then(function() {
+					expect(noSearchResultsMessage.getText()).toBe('No recipes were found that match the search.');
+				});
 		});
 
 		it('results can be navigated to with a url (ex: with a bookmark)', function() {
-			browser.get("/#search-recipes?searchFor=findMe");
-			expect(recipeList.count()).toBe(2);
+			return browser.get("/#/search-recipes?searchFor=findMe")
+				.then(function() {
+					return waitForSearchPage();
+				})
+				.then(function() {
+					return waitForRecipes(2);
+				})
+				.then(function() {
+					expect(recipeList.count()).toBe(2);
+				});
 		});
 	});
 
 	describe('the Show All Recipes function', function() {
 
 		beforeAll(function() {
-			browser.get("/#/search-recipes");
-			showAllRecipesButton.click();
+			return browser.get("/#/search-recipes")
+				.then(function() {
+					return waitForSearchPage();
+				})
+				.then(function() {
+					return browser.wait(EC.elementToBeClickable(showAllRecipesButton), 5000);
+				})
+				.then(function() {
+					return showAllRecipesButton.click();
+				})
+				.then(function() {
+					return waitForRecipes(3);
+				});
 		});
 
 		it('shows a list of all recipes when the button is clicked, and a message showing that all recipes are displayed', function() {
@@ -163,64 +237,142 @@ describe('the search recipes page', function() {
 	});
 
 	describe('navigation', function() {
-		  
+
 		beforeEach(function() {
-			browser.get("/#/search-recipes");
+			return browser.get("/#/search-recipes")
+				.then(function() {
+					return waitForSearchPage();
+				})
+				.then(function() {
+					return waitForRecipes(3);
+				});
 		});
-		
+
 		it('for each recipe after searching, clicking the recipe navigates to that recipes individual view page', function() {
-			searchInput.sendKeys('findMe');
-			searchButton.click();
-			
-			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', recipeList);
-			
-			firstRecipe.getAttribute('id').then(function(recipeId) {
-				findRecipeLink(firstRecipe).click();
-				expect(browser.getCurrentUrl()).toMatch('/view-recipe/' + recipeId + '$');
-			});
+			return searchInput.sendKeys('findMe')
+				.then(function() {
+					return searchButton.click();
+				})
+				.then(function() {
+					return waitForRecipes(2);
+				})
+				.then(function() {
+					var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', recipeList);
+					return firstRecipe.getAttribute('id').then(function(recipeId) {
+						return findRecipeLink(firstRecipe).click().then(function() {
+							return browser.wait(EC.urlContains('/view-recipe/'), 5000).then(function() {
+								expect(browser.getCurrentUrl()).toMatch('/view-recipe/' + recipeId + '$');
+							});
+						});
+					});
+				});
 		});
 
 		it('when navigating to a recipe, then back to the search page, the search and found recipes are still on the page', function() {
-			searchInput.sendKeys('findMe');
-			searchButton.click();
-
-			var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
-
-			findRecipeLink(firstRecipe).click();
-			browser.navigate().back();
-
-			expect(searchInput.getAttribute('value')).toBe('findMe');
-			var foundRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
-			expect(foundRecipe.isPresent()).toBe(true);
+			return searchInput.sendKeys('findMe')
+				.then(function() {
+					return searchButton.click();
+				})
+				.then(function() {
+					return waitForRecipes(2);
+				})
+				.then(function() {
+					var firstRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
+					return findRecipeLink(firstRecipe).click();
+				})
+				.then(function() {
+					return browser.wait(EC.urlContains('/view-recipe/'), 5000);
+				})
+				.then(function() {
+					return browser.navigate().back();
+				})
+				.then(function() {
+					return waitForSearchPage();
+				})
+				.then(function() {
+					return waitForRecipes(2);
+				})
+				.then(function() {
+					expect(searchInput.getAttribute('value')).toBe('findMe');
+					var foundRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
+					expect(foundRecipe.isPresent()).toBe(true);
+				});
 		});
 	});
 
 	describe('when recipes are found, they can be added to a users recipe book', function() {
 
 		beforeEach(function() {
-			browser.get('/#/search-recipes');
-			searchInput.sendKeys('findMe');
-			searchButton.click();
+			return browser.get('/#/search-recipes')
+				.then(function() {
+					return waitForSearchPage();
+				})
+				.then(function() {
+					return waitForRecipes(3);
+				})
+				.then(function() {
+					return searchInput.sendKeys('findMe');
+				})
+				.then(function() {
+					return searchButton.click();
+				})
+				.then(function() {
+					return waitForRecipes(2);
+				});
 		});
 
 		it('for a logged in user', function() {
-			var foundRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
-			var recipeBookAddButton = foundRecipe.element(by.className('add-to-recipe-book-button'));
-			expect(recipeBookAddButton.isDisplayed()).toBe(true);
-			expect(recipeBookAddButton.getText()).toBe('Add to Recipe Book');
+			// Wait for the add button to appear (needs recipe book data to load)
+			var addButtonLocator = element(by.css('.recipe .add-to-recipe-book-button'));
 
-			recipeBookAddButton.click();
-			expect(recipeBookAddButton.isPresent()).toBe(false);
-			var inRecipeBookIndicator = foundRecipe.element(by.className('in-recipe-book-indicator'));
-			expect(inRecipeBookIndicator.isDisplayed()).toBe(true);
-			expect(inRecipeBookIndicator.getText()).toBe('In Recipe Book');
+			return browser.wait(EC.presenceOf(addButtonLocator), 10000)
+				.then(function() {
+					var foundRecipe = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
+					var recipeBookAddButton = foundRecipe.element(by.className('add-to-recipe-book-button'));
+					var inRecipeBookIndicator = foundRecipe.element(by.className('in-recipe-book-indicator'));
 
-			browser.get('/#/user/' + userId + '/recipe-book');
-			var recipeOnRecipeBookPage = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
-			expect(recipeOnRecipeBookPage.isDisplayed()).toBe(true);
-
-			browser.get('/#/search-recipes?searchFor=findMe');
-			expect(inRecipeBookIndicator.isDisplayed()).toBe(true);
+					return browser.wait(EC.visibilityOf(recipeBookAddButton), 5000)
+						.then(function() {
+							expect(recipeBookAddButton.isDisplayed()).toBe(true);
+							expect(recipeBookAddButton.getText()).toBe('Add to Recipe Book');
+							return recipeBookAddButton.click();
+						})
+						.then(function() {
+							return browser.wait(EC.visibilityOf(inRecipeBookIndicator), 5000);
+						})
+						.then(function() {
+							// Use isDisplayed() since ng-if removes element but ng-show hides it
+							expect(inRecipeBookIndicator.isDisplayed()).toBe(true);
+							expect(inRecipeBookIndicator.getText()).toBe('In Recipe Book');
+							return browser.get('/#/user/' + userId + '/recipe-book');
+						})
+						.then(function() {
+							return browser.wait(EC.presenceOf(element(by.id('page-title'))), 5000);
+						})
+						.then(function() {
+							return browser.wait(function() {
+								return element.all(by.className('recipe')).count().then(function(c) {
+									return c >= 1;
+								});
+							}, 5000);
+						})
+						.then(function() {
+							var recipeOnRecipeBookPage = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
+							expect(recipeOnRecipeBookPage.isDisplayed()).toBe(true);
+							return browser.get('/#/search-recipes?searchFor=findMe');
+						})
+						.then(function() {
+							return waitForSearchPage();
+						})
+						.then(function() {
+							return waitForRecipes(2);
+						})
+						.then(function() {
+							var foundRecipeAgain = pageUtils.findRecipeWithName('First Recipe Name', element.all(by.className('recipe')));
+							var inRecipeBookIndicatorAgain = foundRecipeAgain.element(by.className('in-recipe-book-indicator'));
+							expect(inRecipeBookIndicatorAgain.isDisplayed()).toBe(true);
+						});
+				});
 		});
 	});
 });

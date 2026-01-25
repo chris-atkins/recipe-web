@@ -9,3 +9,5 @@ tmp
 .tern-project
 npm-debug.log
 recipe-web.iml
+.angular/
+dist/

@@ -1,0 +1,29 @@
+<app-navbar></app-navbar>
+<div class="container new-recipe-page">
+  <div class="page-header-row">
+    <div class="save-recipe-title-holder"><h2><span id="new-recipe-page-title">New Recipe</span></h2></div>
+    <div class="image-upload-holder">
+      <app-image-upload-modal (imageSaved)="imageSaved($event)"></app-image-upload-modal>
+    </div>
+  </div>
+
+  <div class="serves-as-newline" *ngIf="hasImage()"></div>
+  <img class="recipe-image" *ngIf="hasImage()" [src]="newImage?.imageUrl"/>
+
+  <div class="form-group">
+    <input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" [(ngModel)]="newRecipeName"/>
+  </div>
+  <div class="form-group recipe-content-editor-group">
+    <quill-editor
+      class="recipe-content-editor"
+      [(ngModel)]="newRecipeContent"
+      placeholder="Recipe Content">
+    </quill-editor>
+  </div>
+
+  <a class="save-button btn btn-secondary" role="button" (click)="saveRecipeAndNavigate()">Save Recipe</a>
+</div>
+
+<div class="container">
+  <p class="save-error-message recipe-error-message alert alert-danger" [hidden]="!shouldShowErrorMessage()">In order to save a recipe you must be logged in. Click the 'Log In' link in the top right corner and enter your email address.</p>
+</div>

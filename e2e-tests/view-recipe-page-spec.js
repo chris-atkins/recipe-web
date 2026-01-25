@@ -4,6 +4,7 @@ var pageUtils = require('./utils/page-utils');
 
 describe('the vew recipe page', function() {
 
+	var EC = protractor.ExpectedConditions;
 	var recipeName = 'Recipe Being Tested - Name';
 	var recipeContent = 'Recipe Being Tested - Content';
 
@@ -40,7 +41,7 @@ describe('the vew recipe page', function() {
 	describe('there is an alternate non-angular recipe page', function() {
 
 		afterAll(function () {
-			browser.waitForAngularEnabled(true);
+			// Don't re-enable Angular waiting in hybrid app - keep it disabled
 			pageUtils.logout();
 		});
 
@@ -48,16 +49,21 @@ describe('the vew recipe page', function() {
 			var originalPageText;
 			browser.get('/#/view-recipe/' + recipeId);
 
-			element(by.className('recipe-ingredients')).getText()
+			// Wait for the recipe content to load
+			var recipeIngredients = element(by.className('recipe-ingredients'));
+			browser.wait(EC.textToBePresentInElement(recipeIngredients, 'Recipe Being Tested'), 5000)
+			.then(function() {
+				return recipeIngredients.getText();
+			})
 			.then(function(firstText) {
 				originalPageText = firstText;
 			}).then(function() {
-				browser.waitForAngularEnabled(false);
+				// Already disabled from protractor.conf.js onPrepare
 				browser.get('/recipe/' + recipeId);
 				return element(by.className('recipe-ingredients')).getText();
 			}).then(function(alternatePageText) {
 				expect(originalPageText).toEqual(alternatePageText);
-				browser.waitForAngularEnabled(true);
+				// Don't re-enable Angular waiting in hybrid app
 			}).then(done, done.fail);
 		});
 	});
@@ -86,8 +92,8 @@ describe('the vew recipe page', function() {
 				expect(editRecipeButton.isPresent()).toBe(false);
 				expect(updateRecipeButton.isPresent()).toBe(false);
 
-				expect(recipeNameInput.isDisplayed()).toBe(false);
-				expect(recipeContentInput.isDisplayed()).toBe(false);
+				expect(recipeNameInput.isPresent()).toBe(false);
+				expect(recipeContentInput.isPresent()).toBe(false);
 			});
 		});
 
@@ -106,6 +112,8 @@ describe('the vew recipe page', function() {
 			it('shows the content on separate lines', function () {
 				browser.get('/#/view-recipe/' + multilineRecipeId);
 				var recipeContentElement = element(by.id('recipe-content'));
+				// Wait for content to load
+				browser.wait(EC.textToBePresentInElement(recipeContentElement, 'First Line'), 5000);
 
 				expect(recipeContentElement.getText()).toBe('First Line\nSecond Line');
 			});
@@ -116,7 +124,7 @@ describe('the vew recipe page', function() {
 	var cancelEditButton = element(by.id('cancel-edit-button'));
 	var updateRecipeButton = element(by.id('update-recipe-button'));
 	var recipeNameInput = element(by.css('input#recipe-name-input'));
-	var recipeContentInput = element(by.css('trix-editor'));
+	var recipeContentInput = element(by.css('.ql-editor'));
 	var editRecipeTitle = element(by.id('edit-recipe-page-title'));
 
 	describe('when a user is logged who is the owner of the recipe', function() {
@@ -126,8 +134,15 @@ describe('the vew recipe page', function() {
 		});
 
 		beforeAll(function() {
-			browser.get('/#/view-recipe/' + recipeId);
-			browser.waitForAngular();
+			return browser.get('/#/view-recipe/' + recipeId)
+				.then(function() {
+					// Wait for the recipe name to appear
+					return browser.wait(EC.presenceOf(recipeNameElement), 5000);
+				})
+				.then(function() {
+					// Wait for the edit button to be clickable (indicates API loaded with editable=true)
+					return browser.wait(EC.elementToBeClickable(editRecipeButton), 5000);
+				});
 		});
 
 		afterAll(function () {
@@ -135,6 +150,7 @@ describe('the vew recipe page', function() {
 		});
 
 		it('a recipe edit button appears on the page', function() {
+			// Button was already verified present in beforeAll
 			expect(editRecipeButton.isPresent()).toBe(true);
 			expect(editRecipeButton.isDisplayed()).toBe(true);
 			expect(editRecipeButton.getText()).toBe('Edit Recipe');
@@ -146,8 +162,12 @@ describe('the vew recipe page', function() {
 			browser.get('/#/search-recipes?searchFor=all');
 			var recipe = pageUtils.findRecipeWithName('Recipe Being Tested - Name', element.all(by.className('recipe')));
 			recipe.click();
+			// Wait for view-recipe page to load and show edit button
+			browser.wait(EC.presenceOf(editRecipeButton), 5000);
 
 			editRecipeButton.click();
+			// Wait for input fields to appear after clicking edit
+			browser.wait(EC.presenceOf(recipeNameInput), 5000);
 
 			expect(editRecipeButton.isDisplayed()).toBe(false);
 
@@ -164,13 +184,19 @@ describe('the vew recipe page', function() {
 			expect(recipeNameInput.getAttribute('value')).toBe('Recipe Being Tested - Name');
 
 			expect(recipeContentInput.isDisplayed()).toBe(true);
-			expect(recipeContentInput.getAttribute('value')).toContain('Recipe Being Tested - Content');
+			expect(recipeContentInput.getText()).toContain('Recipe Being Tested - Content');
+
+			// Clean up: exit edit mode for next test
+			cancelEditButton.click();
 		});
 
 		it('editing can be cancelled without altering the recipe contents or title', function() {
 			browser.get('/#/view-recipe/' + recipeId);
-			browser.waitForAngular();
+			// Wait for edit button to be clickable
+			browser.wait(EC.elementToBeClickable(editRecipeButton), 5000);
 			editRecipeButton.click();
+			// Wait for input fields to appear after clicking edit
+			browser.wait(EC.presenceOf(recipeNameInput), 5000);
 
 			recipeNameInput.sendKeys('edited');
 			recipeContentInput.sendKeys('moreedited');
@@ -190,9 +216,11 @@ describe('the vew recipe page', function() {
 
 		it('the recipe can be updated', function() {
 			browser.get('/#/view-recipe/' + recipeId);
-			browser.waitForAngular();
+			// Wait for edit button to be clickable
+			browser.wait(EC.elementToBeClickable(editRecipeButton), 5000);
 			editRecipeButton.click();
-			browser.waitForAngular();
+			// Wait for input fields to appear after clicking edit
+			browser.wait(EC.presenceOf(recipeNameInput), 5000);
 
 			recipeNameInput.sendKeys(protractor.Key.END);
 			recipeNameInput.sendKeys('edited');
@@ -203,6 +231,8 @@ describe('the vew recipe page', function() {
 			// recipeContentInput.sendKeys('moreedited');
 
 			updateRecipeButton.click();
+			// Wait for the update to complete and UI to refresh
+			browser.wait(EC.textToBePresentInElement(recipeNameElement, 'Recipe Being Tested - Nameedited'), 5000);
 
 			expect(recipeNameElement.getText()).toBe('Recipe Being Tested - Nameedited');
 			expect(recipeContentElement.getText()).toBe('Recipe Being Tested - Contentmoreedited');

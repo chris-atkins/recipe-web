@@ -1,7 +1,6 @@
 'use strict';
 
 var rs = require('request-promise');
-var Promise = require('bluebird');
 var config = browser.params;
 var dataUtils = require('./../utils/data-utils');
 
@@ -308,16 +307,18 @@ describe('the endpoint', function() {
 				}).then(done);
 			});
 			
-			it('will respond with editable set to false if a GET is performe on a recipe that was ' + 
+			it('will respond with editable set to false if a GET is performe on a recipe that was ' +
 					'created with a different user than made the GET request', function(done) {
 				var user = {userName: 'ohai', userEmail: dataUtils.randomEmail()};
 				var recipe = {'recipeName': 'The greatest recipe ever', 'recipeContent': 'believe me'};
-				
-				Promise.props({
-					recipe: performRecipePOST(recipe),
-					newUser: dataUtils.postUser(user)
-				}).then(function(props) {
-					return performRecipeGET(props.recipe.recipeId, {userId: props.newUser.userId});
+
+				Promise.all([
+					performRecipePOST(recipe),
+					dataUtils.postUser(user)
+				]).then(function(results) {
+					var recipeResult = results[0];
+					var newUser = results[1];
+					return performRecipeGET(recipeResult.recipeId, {userId: newUser.userId});
 				}).then(function(response) {
 					expect(response.recipeName).toBe('The greatest recipe ever');
 					expect(response.recipeContent).toBe('believe me');

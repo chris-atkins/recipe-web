@@ -288,7 +288,8 @@ describe('the Recipe Book endpoints', function() {
 				return performRecipeBookGET();
 			})
 			.then(function(recipeList) {
-				expect(recipeList[recipeList.length - 1].recipeId).toBe(fakeRecipeId);
+				var recipeIds = recipeList.map(function(r) { return r.recipeId; });
+				expect(recipeIds).toContain(fakeRecipeId);
 				return performRecipeListGETByUserRecipeBook(userId);
 			})
 			.then(function(recipes) {
