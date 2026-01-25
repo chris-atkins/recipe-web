@@ -11,19 +11,17 @@ var bodyParser = require('body-parser');
 var rs = require('request-promise');
 
 var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth20').Strategy;	
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var LocalStrategy = require('passport-local').Strategy;
-// var jwt = require('jsonwebtoken');
 
 var serviceIp = process.env.SERVICE_IP || '127.0.0.1';
-// var webIp = process.env.WEB_IP || 'localhost';
 var serviceRoot = 'http://' + serviceIp + ':5555/api';
 var port = process.env.PORT || '8000';
 
 var app = express();
 
 app.set('port', port);
-// Serve the hybrid Angular + AngularJS app from dist
+// Serve the Angular app from dist
 app.use(express.static(path.join(__dirname, 'dist/recipe-web')));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.use(bodyParser.urlencoded({extended: 'true'}));
@@ -39,22 +37,11 @@ passport.deserializeUser(function(userName, done) {
 		done({userName: 'Chris :)'}); //not used but required for passport
 });
 
-// var auth = function(req, res, next) {
-// 	if (!req.isAuthenticated()) {
-// 		res.send(401);
-// 	}
-// 	else {
-// 		next();
-// 	}
-// 	//- See more at: https://vickev.com/#!/article/authentication-in-single-page-applications-node-js-passportjs-angularjs
-// };
-
 passport.use(new GoogleStrategy({
-	//see https://console.developers.google.com to get the clientID and clientSecret
+	// See https://console.developers.google.com to get the clientID and clientSecret
 		clientID: process.env.GOOGLE_CLIENT_ID,
 		clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 		callbackURL: '/auth/google/callback'
-		//add this to the html:  <a href="/auth/google" class="btn btn-info"><span class="fa fa-google-plus"></span> Google</a>
 	},
 	function(accessToken, refreshToken, profile, cb) {
 		return cb(null, {userName: profile.name.givenName, userEmail: profile.emails[0].value});
@@ -365,9 +352,9 @@ app.get('/api/user/:userId', function(request, response) {
 });
 
 app.post('/login', passport.authenticate('local-login', {
-    successRedirect : '/', // redirect to the secure profile section
-    failureRedirect : '/login', // redirect back to the signup page if there is an error
-    failureFlash : true // allow flash messages
+    successRedirect : '/',
+    failureRedirect : '/login',
+    failureFlash : true
 }));
 
 app.get('/api/user/:userId/recipe-book', function(request, response) {
