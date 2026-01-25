@@ -1,2 +1,57 @@
 /* New Recipe page specific styles */
-/* Most styles are in the global app.css */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px); /* Account for navbar */
+}
+
+.new-recipe-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.recipe-content-editor-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.recipe-content-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe-content-editor ::ng-deep .ql-toolbar {
+  order: 2;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.recipe-content-editor ::ng-deep .ql-container {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid #ccc !important;
+  font-size: 16px;
+  max-height: calc(100vh - 385px);
+}
+
+.recipe-content-editor ::ng-deep .ql-editor.ql-blank::before {
+  color: #bbb !important;
+  font-style: normal !important;
+}
+
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.save-button {
+  align-self: flex-start;
+}

@@ -40,6 +40,7 @@ class MockQuillEditorComponent implements ControlValueAccessor {
   @Input() modules: any;
   @Input() format: string = 'html';
   @Input() placeholder: string = '';
+  @Input() styles: any;
 
   value: any = '';
   onChange: any = () => {};

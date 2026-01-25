@@ -10,25 +10,25 @@
 </div>
 
 <div class="container edit-recipe-page" *ngIf="inEditMode">
-  <div class="edit-recipe-title-holder"><h2><span id="edit-recipe-page-title">Edit Recipe</span></h2></div>
+  <div class="page-header-row">
+    <div class="edit-recipe-title-holder"><h2><span id="edit-recipe-page-title">Edit Recipe</span></h2></div>
+    <div class="image-upload-holder">
+      <app-image-upload-modal (imageSaved)="imageSaved($event)"></app-image-upload-modal>
+    </div>
+  </div>
 
   <div class="serves-as-newline" *ngIf="imageExists()"></div>
   <img class="recipe-image" *ngIf="imageExists()" [src]="recipe.image?.imageUrl"/>
-  <div class="image-upload-holder">
-    <div class="image-upload-toggle-spacer" *ngIf="imageExists()"></div>
-    <app-image-upload-modal (imageSaved)="imageSaved($event)"></app-image-upload-modal>
-  </div>
 
   <div class="form-group">
     <input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" [(ngModel)]="nameBeingEdited"/>
   </div>
-  <div class="form-group">
-    <textarea
-      class="form-control ql-editor"
+  <div class="form-group recipe-content-editor-group">
+    <quill-editor
+      class="recipe-content-editor"
       [(ngModel)]="contentBeingEdited"
-      placeholder="Recipe content..."
-      rows="10">
-    </textarea>
+      placeholder="Recipe content...">
+    </quill-editor>
   </div>
 </div>
 

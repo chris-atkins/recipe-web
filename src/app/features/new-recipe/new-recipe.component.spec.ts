@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 import { NewRecipeComponent } from './new-recipe.component';
 import { RecipeService, Recipe, RecipeImage } from '../../core/services/recipe.service';
 import { UserService } from '../../core/services/user.service';
@@ -40,7 +41,7 @@ describe('NewRecipeComponent', () => {
         MockNavbarComponent,
         MockImageUploadModalComponent
       ],
-      imports: [FormsModule],
+      imports: [FormsModule, QuillModule.forRoot()],
       providers: [
         { provide: RecipeService, useValue: mockRecipeService },
         { provide: UserService, useValue: mockUserService },
@@ -244,10 +245,9 @@ describe('NewRecipeComponent', () => {
       expect(nameInput.getAttribute('placeholder')).toBe('Recipe Name');
     });
 
-    it('should have recipe content textarea', () => {
-      const contentTextarea = fixture.nativeElement.querySelector('.ql-editor');
-      expect(contentTextarea).toBeTruthy();
-      expect(contentTextarea.getAttribute('placeholder')).toBe('Recipe Content');
+    it('should have recipe content editor', () => {
+      const contentEditor = fixture.nativeElement.querySelector('quill-editor');
+      expect(contentEditor).toBeTruthy();
     });
 
     it('should have save button', () => {

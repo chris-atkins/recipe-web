@@ -1,4 +1,5 @@
 'use strict';
+/* global localStorage */
 var pageUtils = require('./utils/page-utils');
 var dataUtils = require('./utils/data-utils');
 
@@ -95,7 +96,7 @@ describe('the new recipe page,', function () {
 
             it('has text area to enter the recipe content', function () {
                 expect(recipeContentInput.isPresent()).toBe(true);
-                expect(recipeContentInput.getAttribute('placeholder')).toBe('Recipe Content');
+                expect(recipeContentInput.getAttribute('data-placeholder')).toBe('Recipe Content');
             });
 
             it('has a save button', function () {
@@ -124,6 +125,7 @@ describe('the new recipe page,', function () {
             });
 
             it('takes the user to the view page for the newly saved recipe', function () {
+                var recipeNameElement = element(by.id('recipe-name'));
                 return browser.wait(EC.elementToBeClickable(recipeNameInput), 5000)
                     .then(function() {
                         return recipeNameInput.sendKeys('test name');
@@ -139,7 +141,10 @@ describe('the new recipe page,', function () {
                     })
                     .then(function() {
                         expect(browser.getCurrentUrl()).toContain('/view-recipe/');
-                        var recipeNameElement = element(by.id('recipe-name'));
+                        // Wait for recipe name to be rendered
+                        return browser.wait(EC.textToBePresentInElement(recipeNameElement, 'test name'), 5000);
+                    })
+                    .then(function() {
                         expect(recipeNameElement.getText()).toBe('test name');
                         var recipeContentElement = element(by.id('recipe-content'));
                         expect(recipeContentElement.getText()).toBe('test content');

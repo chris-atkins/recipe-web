@@ -54,7 +54,11 @@ export class ViewRecipeComponent implements OnInit {
   private recipeRetrieved(recipe: Recipe): void {
     this.recipe = recipe;
     this.initialContent = recipe.recipeContent;
-    this.recipeContentHtml = this.sanitizer.bypassSecurityTrustHtml(recipe.recipeContent);
+    // Replace &nbsp; with regular spaces for proper word wrapping
+    let processedContent = recipe.recipeContent.replace(/&nbsp;/g, ' ');
+    // Convert newlines to <br> tags for proper line breaks in HTML
+    processedContent = processedContent.replace(/\n/g, '<br>');
+    this.recipeContentHtml = this.sanitizer.bypassSecurityTrustHtml(processedContent);
   }
 
   private loadRecipeBook(): void {
@@ -107,6 +111,7 @@ export class ViewRecipeComponent implements OnInit {
       .then((recipe: Recipe) => {
         this.recipeRetrieved(recipe);
         this.inEditMode = false;
+        this.cdr.detectChanges();
       })
       .catch((error: any) => {
         console.error('Error saving recipe:', error);

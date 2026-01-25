@@ -14,6 +14,15 @@ import { NewRecipeComponent } from './features/new-recipe/new-recipe.component';
 import { QuillModule } from 'ngx-quill';
 import { UserHeaderInterceptor } from './core/interceptors/user-header.interceptor';
 
+const quillToolbarConfig = [
+  ['bold', 'italic'],
+  ['link'],
+  [{ 'header': 1 }, { 'header': 2 }, { 'header': false }],
+  ['blockquote'],
+  [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+  [{ 'indent': '-1' }, { 'indent': '+1' }]
+];
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +38,11 @@ import { UserHeaderInterceptor } from './core/interceptors/user-header.intercept
     FormsModule,
     AppRoutingModule,
     SharedModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot({
+      modules: {
+        toolbar: quillToolbarConfig
+      }
+    })
   ],
   providers: [
     {

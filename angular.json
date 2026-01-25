@@ -22,16 +22,13 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/assets",
-              {
-                "glob": "**/*",
-                "input": "app/recipe-lib/images",
-                "output": "/recipe-lib/images"
-              }
+              "src/favicon.ico"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",
+              "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/quill/dist/quill.snow.css",
-              "app/recipe-lib/app.css",
+              "src/styles/legacy.css",
               "src/styles.css"
             ],
             "scripts": [
@@ -88,15 +85,12 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/assets",
-              {
-                "glob": "**/*",
-                "input": "app/recipe-lib/images",
-                "output": "/recipe-lib/images"
-              }
+              "src/favicon.ico"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",
-              "app/recipe-lib/app.css",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "src/styles/legacy.css",
               "src/styles.css"
             ],
             "scripts": []

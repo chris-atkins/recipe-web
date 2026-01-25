@@ -184,7 +184,7 @@ describe('the vew recipe page', function() {
 			expect(recipeNameInput.getAttribute('value')).toBe('Recipe Being Tested - Name');
 
 			expect(recipeContentInput.isDisplayed()).toBe(true);
-			expect(recipeContentInput.getAttribute('value')).toContain('Recipe Being Tested - Content');
+			expect(recipeContentInput.getText()).toContain('Recipe Being Tested - Content');
 
 			// Clean up: exit edit mode for next test
 			cancelEditButton.click();
