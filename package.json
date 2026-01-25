@@ -38,17 +38,14 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.21",
-    "underscore": "^1.8.3",
     "@angular/cli": "^18.2.21",
     "@types/jasmine": "^5.1.13",
     "chromedriver": "^143.0.3",
     "concurrently": "^9.2.1",
-    "continuation-local-storage": "^3.2.1",
     "cypress": "^14.5.4",
     "geckodriver": "^4.5.1",
     "http-server": "^14.1.1",
     "jasmine-core": "^3.3.0",
-    "jasmine-jquery": "^2.1.1",
     "jshint": "^2.13.6",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
@@ -57,12 +54,9 @@
     "karma-jasmine": "^4.0.2",
     "karma-jasmine-html-reporter": "^1.7.0",
     "karma-junit-reporter": "^2.0.1",
-    "karma-ng-html2js-preprocessor": "^1.0.0",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "phantomjs-prebuilt": "^2.1.16",
     "protractor": "^7.0.0",
-    "shelljs": "^0.8.5",
-    "typescript": "~5.4.0"
+    "typescript": "~5.4.0",
+    "underscore": "^1.8.3"
   },
   "scripts": {
     "ng": "ng",
@@ -74,15 +68,10 @@
     "build:prod": "ng build --configuration production",
     "cypress": "cypress open",
     "cypress:headless": "cypress run",
-    "pretest": "npm install",
-    "test": "karma start karma.conf.js",
-    "test:ng": "ng test",
-    "test:ngjs": "karma start karma.conf.js",
-    "test-single-run": "npm install && karma start karma.conf.js --single-run",
-    "pretest-headless": "npm install",
-    "test-headless": "karma start karma-headless.conf.js --single-run",
+    "test": "ng test",
+    "test:watch": "ng test",
+    "test:headless": "ng test --no-watch --browsers=ChromeHeadless",
     "lint": "jshint e2e-tests/*.js e2e-tests/**/*.js node-app.js",
-    "posttest-headless": "npm run lint",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
@@ -92,6 +81,6 @@
     "prod-protractor": "npm run update-webdriver && protractor prod-monitoring/prod.monitoring.protractor.conf.js",
     "presingle-file-e2e": "./start-test-servers.sh",
     "single-file-e2e": "protractor e2e-tests/protractor.conf.js --specs=e2e-tests/login-spec.js",
-    "allTests": "npm run lint && npm run test-single-run && npm run protractor"
+    "allTests": "npm run lint && npm run test:headless && npm run protractor"
   }
 }

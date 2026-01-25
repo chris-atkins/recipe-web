@@ -1,5 +1,5 @@
 'use strict';
-
+/* global localStorage */
 var dataUtils = require('./utils/data-utils');
 
 // Expected conditions for explicit waits
@@ -37,14 +37,6 @@ describe('Login functionality from the home page', function() {
 	// Helper to delete just the login cookie (can be called before navigation)
 	function deleteCookie() {
 		return browser.manage().deleteCookie('myrecipeconnection.com.usersLoggedInFromThisBrowser');
-	}
-
-	// Helper to clear localStorage (must be called after page is loaded)
-	function clearLocalStorage() {
-		return browser.executeScript(function() {
-			localStorage.removeItem('myrecipeconnection.com.usersLoggedInFromThisBrowser');
-			localStorage.removeItem('RecipeConnectionGoogleAuth');
-		});
 	}
 
 	// Helper to fully clear login state - clears all cookies and localStorage via JavaScript

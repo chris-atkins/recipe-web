@@ -188,10 +188,10 @@ describe('HomeComponent', () => {
       const compiled = fixture.nativeElement;
       const images = compiled.querySelectorAll('.recipe-image-row img');
 
-      expect(images[0].getAttribute('src')).toBe('recipe-lib/images/pexels-photo-25273.jpg');
-      expect(images[1].getAttribute('src')).toBe('recipe-lib/images/food-salad-healthy-lunch.jpg');
-      expect(images[2].getAttribute('src')).toBe('recipe-lib/images/pexels-photo-196643.jpeg');
-      expect(images[3].getAttribute('src')).toBe('recipe-lib/images/pexels-photo-64208.jpeg');
+      expect(images[0].getAttribute('src')).toBe('assets/images/pexels-photo-25273.jpg');
+      expect(images[1].getAttribute('src')).toBe('assets/images/food-salad-healthy-lunch.jpg');
+      expect(images[2].getAttribute('src')).toBe('assets/images/pexels-photo-196643.jpeg');
+      expect(images[3].getAttribute('src')).toBe('assets/images/pexels-photo-64208.jpeg');
     });
 
     it('should render images with img-fluid class', () => {

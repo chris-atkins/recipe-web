@@ -1,4 +1,5 @@
 'use strict';
+/* global localStorage */
 var pageUtils = require('./utils/page-utils');
 var dataUtils = require('./utils/data-utils');
 

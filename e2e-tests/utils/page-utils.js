@@ -1,11 +1,11 @@
 'use strict';
+/* global localStorage */
 
 var EC = protractor.ExpectedConditions;
 var loginDropdown = element(by.className('login-dropdown'));
 var loginButton = element(by.id('log-in-user-button'));
 var loginEmailField = element(by.id('sign-up-user-email'));
 var signupNameField = element(by.id('sign-up-user-name'));
-var signupButton = element(by.id('sign-up-user-button'));
 
 function findRecipeWithName(recipeName, recipeElements) {
 	// Wait for at least one recipe to be present before searching
