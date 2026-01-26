@@ -1,4 +1,4 @@
-FROM node:alpine3.22
+FROM node:22-alpine
 RUN apk update
 RUN apk add bzip2
 RUN apk add git
