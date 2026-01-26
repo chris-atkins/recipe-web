@@ -48,7 +48,7 @@ describe('the home page', function () {
 			var iconTMInfo = footer.element(by.className('icon-trademark-info'));
 
 			expect(versionMessage.getText()).toMatch(/^Recipe Connection v.*/);
-			expect(version.getAttribute('app-version')).toBe('show');
+			expect(version.isDisplayed()).toBe(true);
 			expect(iconTMInfo.isDisplayed()).toBe(true);
 		});
 	});
