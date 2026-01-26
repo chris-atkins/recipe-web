@@ -39,6 +39,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.21",
     "@angular/cli": "^18.2.21",
+    "@angular/compiler-cli": "^18.2.14",
     "@types/jasmine": "^5.1.13",
     "chromedriver": "^143.0.3",
     "concurrently": "^9.2.1",
