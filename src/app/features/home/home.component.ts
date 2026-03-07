@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   }
 
   navigateToSearch(): void {
-    window.location.hash = '#/search-recipes';
+    this.router.navigate(['/search-recipes']);
   }
 
   navigateToSaveNewRecipe(): void {
@@ -36,8 +36,7 @@ export class HomeComponent implements OnInit {
     if (!this.userService.isLoggedIn()) {
       return;
     }
-    // Use AngularJS route for new-recipe (not yet migrated)
-    window.location.hash = '#/new-recipe';
+    this.router.navigate(['/new-recipe']);
   }
 
   navigateToRecipeBook(): void {
@@ -47,8 +46,7 @@ export class HomeComponent implements OnInit {
     }
     const user = this.userService.getLoggedInUser();
     if (user) {
-      // Use AngularJS route for recipe-book (not yet migrated)
-      window.location.hash = `#/user/${user.userId}/recipe-book`;
+      this.router.navigate(['/user', user.userId, 'recipe-book']);
     }
   }
 }

@@ -45,30 +45,32 @@ describe('HomeComponent', () => {
   });
 
   describe('navigateToSearch', () => {
-    it('should navigate to search-recipes using hash routing', () => {
+    it('should navigate to search-recipes', () => {
+      spyOn(router, 'navigate');
+
       component.navigateToSearch();
 
-      expect(window.location.hash).toBe('#/search-recipes');
+      expect(router.navigate).toHaveBeenCalledWith(['/search-recipes']);
     });
   });
 
   describe('navigateToSaveNewRecipe', () => {
     it('should navigate to new-recipe when user is logged in', () => {
+      spyOn(router, 'navigate');
       userService.isLoggedIn.and.returnValue(true);
 
       component.navigateToSaveNewRecipe();
 
-      expect(window.location.hash).toBe('#/new-recipe');
+      expect(router.navigate).toHaveBeenCalledWith(['/new-recipe']);
     });
 
     it('should not navigate when user is not logged in', () => {
+      spyOn(router, 'navigate');
       userService.isLoggedIn.and.returnValue(false);
-      const initialHash = window.location.hash;
 
       component.navigateToSaveNewRecipe();
 
-      // Hash should remain unchanged when not logged in
-      expect(window.location.hash).toBe(initialHash);
+      expect(router.navigate).not.toHaveBeenCalled();
     });
 
     it('should show error message when user is not logged in', () => {
@@ -82,22 +84,23 @@ describe('HomeComponent', () => {
 
   describe('navigateToRecipeBook', () => {
     it('should navigate to recipe book when user is logged in', () => {
+      spyOn(router, 'navigate');
       const mockUser = { userId: '123', userName: 'Test User', userEmail: 'test@test.com' };
       userService.isLoggedIn.and.returnValue(true);
       userService.getLoggedInUser.and.returnValue(mockUser);
 
       component.navigateToRecipeBook();
 
-      expect(window.location.hash).toBe('#/user/123/recipe-book');
+      expect(router.navigate).toHaveBeenCalledWith(['/user', '123', 'recipe-book']);
     });
 
     it('should not navigate when user is not logged in', () => {
+      spyOn(router, 'navigate');
       userService.isLoggedIn.and.returnValue(false);
-      const initialHash = window.location.hash;
 
       component.navigateToRecipeBook();
 
-      expect(window.location.hash).toBe(initialHash);
+      expect(router.navigate).not.toHaveBeenCalled();
     });
 
     it('should show error message when user is not logged in', () => {

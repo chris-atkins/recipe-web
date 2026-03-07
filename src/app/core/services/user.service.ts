@@ -26,7 +26,7 @@ export class UserService {
     this.initializeUser();
   }
 
-  // Cookie utility methods (matching AngularJS $cookies behavior)
+  // Cookie utility methods
   private getCookie(name: string): string | null {
     const nameEq = name + '=';
     const cookies = document.cookie.split(';');
@@ -68,7 +68,7 @@ export class UserService {
     this.refreshUserFromCookie();
   }
 
-  // Re-check cookie each time in case login happened through AngularJS
+  // Re-check cookie each time in case login happened in another tab
   private refreshUserFromCookie(): void {
     const user = this.getCookieObject<User>(this.USER_COOKIE_KEY);
     if (user) {
@@ -81,13 +81,13 @@ export class UserService {
   }
 
   isLoggedIn(): boolean {
-    // Re-check cookie each time in case login happened through AngularJS
+    // Re-check cookie each time in case login happened in another tab
     this.refreshUserFromCookie();
     return this.loggedInSubject.value;
   }
 
   getLoggedInUser(): User | null {
-    // Re-check cookie each time in case login happened through AngularJS
+    // Re-check cookie each time in case login happened in another tab
     this.refreshUserFromCookie();
     return this.userSubject.value;
   }
@@ -101,7 +101,7 @@ export class UserService {
       this.http.get<User>(`/api/user?email=${encodeURIComponent(email)}`)
         .pipe(tap(user => this.handleLogin(user)))
     ).catch(() => {
-      // Return empty object on error (matching AngularJS behavior)
+      // Return empty object on error
       return { data: {} };
     });
   }
@@ -112,7 +112,7 @@ export class UserService {
       this.http.post<User>('/api/user', userToSave)
         .pipe(tap(user => this.handleLogin(user)))
     ).catch(() => {
-      // Return empty object on error (matching AngularJS behavior)
+      // Return empty object on error
       return { data: {} };
     });
   }
@@ -127,7 +127,7 @@ export class UserService {
   private handleLogin(user: User): void {
     this.userSubject.next(user);
     this.loggedInSubject.next(true);
-    // Set cookie to expire in 100 years (matching AngularJS behavior)
+    // Set cookie to expire in 100 years for persistent login
     const now = new Date();
     const expiresDate = new Date(now.getFullYear() + 100, now.getMonth(), now.getDate());
     this.setCookieObject(this.USER_COOKIE_KEY, user, expiresDate);

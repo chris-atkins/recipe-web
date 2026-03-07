@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { RecipeElementComponent } from './recipe-element.component';
 import { RecipeBookService, RecipeBook } from '../../../core/services/recipe-book.service';
 import { UserService, User } from '../../../core/services/user.service';
@@ -9,6 +11,7 @@ describe('RecipeElementComponent', () => {
   let fixture: ComponentFixture<RecipeElementComponent>;
   let recipeBookService: jasmine.SpyObj<RecipeBookService>;
   let userService: jasmine.SpyObj<UserService>;
+  let router: Router;
 
   const mockRecipe: Recipe = {
     recipeId: 'recipe1',
@@ -31,6 +34,7 @@ describe('RecipeElementComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [RecipeElementComponent],
+      imports: [RouterTestingModule],
       providers: [
         { provide: RecipeBookService, useValue: recipeBookSpy },
         { provide: UserService, useValue: userSpy }
@@ -41,6 +45,7 @@ describe('RecipeElementComponent', () => {
     component = fixture.componentInstance;
     recipeBookService = TestBed.inject(RecipeBookService) as jasmine.SpyObj<RecipeBookService>;
     userService = TestBed.inject(UserService) as jasmine.SpyObj<UserService>;
+    router = TestBed.inject(Router);
 
     component.recipe = mockRecipe;
   });
@@ -126,12 +131,13 @@ describe('RecipeElementComponent', () => {
   });
 
   describe('navigateToRecipePage', () => {
-    it('should navigate to recipe page using hash routing', () => {
+    it('should navigate to recipe page using router', () => {
+      spyOn(router, 'navigate');
       component.recipe = mockRecipe;
 
       component.navigateToRecipePage();
 
-      expect(window.location.hash).toBe('#/view-recipe/recipe1');
+      expect(router.navigate).toHaveBeenCalledWith(['/view-recipe', 'recipe1']);
     });
   });
 

@@ -46,8 +46,7 @@ export class NavbarComponent implements OnInit {
 
   navigateSave(): void {
     if (this.userService.isLoggedIn()) {
-      // Use AngularJS route for new-recipe (not yet migrated)
-      window.location.hash = '#/new-recipe';
+      this.router.navigate(['/new-recipe']);
     } else {
       this.setAlertVisible(true);
     }
@@ -56,8 +55,7 @@ export class NavbarComponent implements OnInit {
   navigateRecipeBook(): void {
     const user = this.userService.getLoggedInUser();
     if (user) {
-      // Use AngularJS route for recipe-book (not yet migrated)
-      window.location.hash = `#/user/${user.userId}/recipe-book`;
+      this.router.navigate(['/user', user.userId, 'recipe-book']);
     } else {
       this.setAlertVisible(true);
     }

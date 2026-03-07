@@ -85,12 +85,12 @@ describe('NavbarComponent', () => {
 
   describe('navigateRecipeBook', () => {
     it('should navigate to recipe book when user is logged in', () => {
+      spyOn(router, 'navigate');
       userService.getLoggedInUser.and.returnValue(mockUser);
 
       component.navigateRecipeBook();
 
-      // Uses hash routing for AngularJS route (not yet migrated)
-      expect(window.location.hash).toBe('#/user/123/recipe-book');
+      expect(router.navigate).toHaveBeenCalledWith(['/user', '123', 'recipe-book']);
     });
 
     it('should show alert when user is not logged in', () => {

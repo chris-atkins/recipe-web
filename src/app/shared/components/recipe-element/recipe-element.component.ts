@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { Recipe } from '../../../core/services/recipe.service';
 import { RecipeBook, RecipeBookService } from '../../../core/services/recipe-book.service';
 import { UserService } from '../../../core/services/user.service';
@@ -20,7 +21,8 @@ export class RecipeElementComponent implements OnChanges {
 
   constructor(
     private recipeBookService: RecipeBookService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -94,8 +96,7 @@ export class RecipeElementComponent implements OnChanges {
 
   navigateToRecipePage(): void {
     if (this.recipe?.recipeId) {
-      // Use AngularJS route until view-recipe page is migrated
-      window.location.hash = `#/view-recipe/${this.recipe.recipeId}`;
+      this.router.navigate(['/view-recipe', this.recipe.recipeId]);
     }
   }
 }
