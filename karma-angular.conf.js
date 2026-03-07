@@ -29,7 +29,7 @@ module.exports = function(config) {
         { type: 'text-summary' }
       ]
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['progress', 'kjhtml', 'coverage'],
     browsers: ['Chrome'],
     port: 9876,
     colors: true,

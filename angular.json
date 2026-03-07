@@ -93,7 +93,8 @@
               "src/styles/legacy.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "codeCoverage": true
           }
         }
       }
