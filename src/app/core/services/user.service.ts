@@ -15,6 +15,7 @@ export interface User {
 export class UserService {
   private readonly USER_COOKIE_KEY = 'myrecipeconnection.com.usersLoggedInFromThisBrowser';
   private readonly GOOGLE_AUTH_KEY = 'RecipeConnectionGoogleAuth';
+  private readonly COOKIE_EXPIRY_YEARS = 100;
 
   private loggedInSubject = new BehaviorSubject<boolean>(false);
   private userSubject = new BehaviorSubject<User | null>(null);
@@ -127,9 +128,8 @@ export class UserService {
   private handleLogin(user: User): void {
     this.userSubject.next(user);
     this.loggedInSubject.next(true);
-    // Set cookie to expire in 100 years for persistent login
     const now = new Date();
-    const expiresDate = new Date(now.getFullYear() + 100, now.getMonth(), now.getDate());
+    const expiresDate = new Date(now.getFullYear() + this.COOKIE_EXPIRY_YEARS, now.getMonth(), now.getDate());
     this.setCookieObject(this.USER_COOKIE_KEY, user, expiresDate);
   }
 
