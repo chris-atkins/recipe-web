@@ -37,8 +37,9 @@ passport.deserializeUser(function(userName, done) {
 		done({userName: 'Chris :)'}); //not used but required for passport
 });
 
-passport.use(new GoogleStrategy({
-	// See https://console.developers.google.com to get the clientID and clientSecret
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+	passport.use(new GoogleStrategy({
+		// See https://console.developers.google.com to get the clientID and clientSecret
 		clientID: process.env.GOOGLE_CLIENT_ID,
 		clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 		callbackURL: '/auth/google/callback'
@@ -46,7 +47,10 @@ passport.use(new GoogleStrategy({
 	function(accessToken, refreshToken, profile, cb) {
 		return cb(null, {userName: profile.name.givenName, userEmail: profile.emails[0].value});
 	}
-));
+	));
+} else {
+	console.log('Google OAuth credentials not set - Google Sign-In will be unavailable');
+}
 
 
 passport.use('local-login', new LocalStrategy({
