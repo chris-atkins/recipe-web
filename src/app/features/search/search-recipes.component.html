@@ -37,6 +37,10 @@
   <span class="result-info-message">{{ resultInfoMessage }}</span>
 </div>
 
+<div class="container" *ngIf="recipeList.length > 0">
+  <small class="sample-data-note">Ratings, tags &amp; nutrition are sample data for now — we're working on the real values.</small>
+</div>
+
 <div id="no-search-results-message" class="container" *ngIf="filteredRecipeList.length === 0 && searchHasOccurred">
   <p class="lead">
     <span id="greeting-message">{{ recipeList.length > 0 ? 'No recipes match the selected filters.' : 'No recipes were found that match the search.' }}</span>

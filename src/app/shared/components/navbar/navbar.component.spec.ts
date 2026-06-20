@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavbarComponent } from './navbar.component';
 import { UserService, User } from '../../../core/services/user.service';
@@ -19,15 +21,16 @@ describe('NavbarComponent', () => {
     userSubject = new BehaviorSubject<User | null>(null);
     loggedInSubject = new BehaviorSubject<boolean>(false);
 
-    const userServiceSpy = jasmine.createSpyObj('UserService', ['logOut', 'getLoggedInUser', 'isLoggedIn'], {
+    const userServiceSpy = jasmine.createSpyObj('UserService', ['logOut', 'getLoggedInUser', 'isLoggedIn', 'isExternalLoginBeingAttempted'], {
       user$: userSubject.asObservable(),
       loggedIn$: loggedInSubject.asObservable()
     });
     userServiceSpy.isLoggedIn.and.returnValue(false);
+    userServiceSpy.isExternalLoginBeingAttempted.and.returnValue(false);
 
     TestBed.configureTestingModule({
       declarations: [NavbarComponent],
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, CommonModule, FormsModule],
       providers: [
         { provide: UserService, useValue: userServiceSpy }
       ]
@@ -99,6 +102,20 @@ describe('NavbarComponent', () => {
       component.navigateRecipeBook();
 
       expect(component.alertVisible).toBe(true);
+    });
+  });
+
+  describe('brand', () => {
+    it('renders the brand and navigates home when clicked', () => {
+      spyOn(router, 'navigate');
+      fixture.detectChanges();
+
+      const brand = fixture.nativeElement.querySelector('.recipe-brand');
+      expect(brand).toBeTruthy();
+      expect(brand.textContent).toContain('Recipe Connection');
+
+      brand.click();
+      expect(router.navigate).toHaveBeenCalledWith(['/home']);
     });
   });
 });

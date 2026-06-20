@@ -20,7 +20,6 @@
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.16);
   padding: 26px;
   position: relative;
-  font-family: 'DM Sans', sans-serif;
   animation: previewIn 0.2s ease-out;
 }
 
@@ -43,7 +42,6 @@
 .preview-close:hover { color: var(--text); }
 
 .preview-title {
-  font-family: 'DM Serif Display', serif;
   font-size: 22px;
   font-weight: 400;
   line-height: 1.2;

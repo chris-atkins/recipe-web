@@ -127,4 +127,26 @@ describe('SearchRecipesComponent', () => {
     const noResults = fixture.nativeElement.querySelector('#no-search-results-message');
     expect(noResults).toBeFalsy();
   });
+
+  it('shows the sample-data note when recipes are present', async () => {
+    mockRecipeService.searchRecipes.and.returnValue(Promise.resolve([
+      { recipeId: '1', recipeName: 'Test', recipeContent: 'Content', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4, ingredients: ['1 cup flour'] }
+    ]));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const note = fixture.nativeElement.querySelector('.sample-data-note');
+    expect(note).toBeTruthy();
+    expect(note.textContent.toLowerCase()).toContain('sample data');
+  });
+
+  it('does not show the sample-data note when there are no recipes', async () => {
+    mockRecipeService.searchRecipes.and.returnValue(Promise.resolve([]));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.sample-data-note')).toBeFalsy();
+  });
 });

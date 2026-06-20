@@ -4,7 +4,6 @@
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.18s, box-shadow 0.18s;
-  font-family: 'DM Sans', sans-serif;
 }
 
 .recipe.card:hover {
@@ -28,7 +27,7 @@
 }
 
 .recipe-name.card-title {
-  font-family: 'DM Serif Display', serif;
+  font-family: var(--font-serif);
   font-size: 18px;
   font-weight: 400;
   line-height: 1.25;

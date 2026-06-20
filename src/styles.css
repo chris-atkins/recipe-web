@@ -16,4 +16,23 @@
 
   /* Shape */
   --radius-pill: 999px;
+
+  /* Fonts — single source of truth */
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'DM Serif Display', serif;
+}
+
+/* App-wide typography + base surface. styles.css loads after Bootstrap, so this wins. */
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Page titles are <h1>/<h2>; leaving h3–h6 on the sans body font avoids
+   restyling Bootstrap's <h5> modal/card titles. */
+h1, h2 {
+  font-family: var(--font-serif);
+  font-weight: 400;
 }
