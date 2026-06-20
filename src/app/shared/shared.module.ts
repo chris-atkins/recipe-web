@@ -10,6 +10,7 @@ import { ImageUploadModalComponent } from './components/image-upload-modal/image
 import { RecipeElementComponent } from './components/recipe-element/recipe-element.component';
 import { RecipeCardWallComponent } from './components/recipe-card-wall/recipe-card-wall.component';
 import { RecipePreviewComponent } from './components/recipe-preview/recipe-preview.component';
+import { CategoryTagFilterComponent } from './components/category-tag-filter/category-tag-filter.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { RecipePreviewComponent } from './components/recipe-preview/recipe-previ
     ImageUploadModalComponent,
     RecipeElementComponent,
     RecipeCardWallComponent,
-    RecipePreviewComponent
+    RecipePreviewComponent,
+    CategoryTagFilterComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +36,8 @@ import { RecipePreviewComponent } from './components/recipe-preview/recipe-previ
     ImageUploadModalComponent,
     RecipeElementComponent,
     RecipeCardWallComponent,
-    RecipePreviewComponent
+    RecipePreviewComponent,
+    CategoryTagFilterComponent
   ]
 })
 export class SharedModule { }

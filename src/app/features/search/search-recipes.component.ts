@@ -11,6 +11,7 @@ import { RecipeBook, RecipeBookService } from '../../core/services/recipe-book.s
 })
 export class SearchRecipesComponent implements OnInit, OnDestroy {
   recipeList: RecipeCardView[] = [];
+  filteredRecipeList: RecipeCardView[] = [];
   searchString = '';
   searchHasOccurred = false;
   usersRecipeBook: RecipeBook | null = null;
@@ -81,11 +82,13 @@ export class SearchRecipesComponent implements OnInit, OnDestroy {
     // This prevents flashing empty state during initial page load
     if (clearFirst) {
       this.recipeList = [];
+      this.filteredRecipeList = [];
     }
 
     this.recipeService.searchRecipes(searchString)
       .then((data: RecipeCardView[]) => {
         this.recipeList = data;
+        this.filteredRecipeList = data;
         this.searchHasOccurred = true;
         this.resultInfoMessage = searchString === undefined
           ? 'Showing all recipes'

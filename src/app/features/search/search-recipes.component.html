@@ -26,18 +26,25 @@
   </div>
 </div>
 
+<div class="container">
+  <app-category-tag-filter
+    [recipes]="recipeList"
+    (filteredChange)="filteredRecipeList = $event">
+  </app-category-tag-filter>
+</div>
+
 <div class="container form-group">
   <span class="result-info-message">{{ resultInfoMessage }}</span>
 </div>
 
-<div id="no-search-results-message" class="container" *ngIf="recipeList.length === 0 && searchHasOccurred">
+<div id="no-search-results-message" class="container" *ngIf="filteredRecipeList.length === 0 && searchHasOccurred">
   <p class="lead">
-    <span id="greeting-message">No recipes were found that match the search.</span>
+    <span id="greeting-message">{{ recipeList.length > 0 ? 'No recipes match the selected filters.' : 'No recipes were found that match the search.' }}</span>
   </p>
 </div>
 
 <app-recipe-card-wall
-  [recipeList]="recipeList"
+  [recipeList]="filteredRecipeList"
   [recipeBook]="usersRecipeBook"
   [enablePreview]="true">
 </app-recipe-card-wall>

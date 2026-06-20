@@ -1,0 +1,22 @@
+<div class="filter-section" *ngIf="categories.length">
+  <div class="filter-label">Categories</div>
+  <div class="category-row">
+    <button
+      *ngFor="let cat of categories"
+      type="button"
+      class="cat-pill"
+      [class.selected]="isCategorySelected(cat)"
+      [class.dimmed]="selectedCategory && !isCategorySelected(cat)"
+      [style.background-color]="getCategoryColor(cat)"
+      (click)="selectCategory(cat)">{{ cat }}</button>
+  </div>
+
+  <div class="tag-row" *ngIf="selectedCategory">
+    <button
+      *ngFor="let tag of subTags"
+      type="button"
+      class="tag-pill"
+      [class.selected]="isTagSelected(tag)"
+      (click)="toggleTag(tag)">{{ tag }}</button>
+  </div>
+</div>
