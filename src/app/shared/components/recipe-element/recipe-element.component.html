@@ -1,8 +1,29 @@
-<div class="recipe card" [id]="recipe?.recipeId" (click)="navigateToRecipePage()">
-  <div class="card-body">
-    <img *ngIf="imageExists()" class="recipe-image" [src]="getImageUrl()" [alt]="'Image of ' + recipe?.recipeName" />
-    <h5 class="recipe-name card-title">{{ recipe?.recipeName }}</h5>
-    <p class="card-text"></p>
+<div class="recipe card" [id]="recipe?.recipeId" (click)="onCardClick()">
+  <div class="card-body recipe-card-body">
+    <div class="recipe-header">
+      <div class="recipe-header-text">
+        <h5 class="recipe-name card-title">{{ recipe?.recipeName }}</h5>
+        <div class="recipe-rating">
+          <span class="stars" aria-hidden="true">
+            <i *ngFor="let s of starTypes()" class="fa"
+               [class.fa-star]="s === 'full'"
+               [class.fa-star-half-o]="s === 'half'"
+               [class.fa-star-o]="s === 'empty'"></i>
+          </span>
+          <span class="rating-num">{{ recipe?.rating?.average | number:'1.1-1' }}</span>
+          <span class="rating-count">({{ recipe?.rating?.count }})</span>
+        </div>
+      </div>
+      <div class="recipe-thumb">
+        <img *ngIf="imageExists()" class="recipe-image" [src]="getImageUrl()" [alt]="'Image of ' + recipe?.recipeName" />
+        <span *ngIf="!imageExists()" class="recipe-thumb-placeholder" aria-hidden="true">{{ getCategoryEmoji() }}</span>
+      </div>
+    </div>
+
+    <div class="recipe-tags">
+      <span class="card-cat-pill" [style.background-color]="getCategoryColor()">{{ recipe?.category }}</span>
+      <span class="card-tag-pill" *ngFor="let tag of recipe?.tags">{{ tag }}</span>
+    </div>
   </div>
 
   <div class="card-footer text-right">

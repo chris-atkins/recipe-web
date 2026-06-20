@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef, NgZone } from '@angular/core';
-import { Recipe } from '../../../core/services/recipe.service';
+import { Recipe, RecipeCardView } from '../../../core/services/recipe.service';
 import { RecipeBook } from '../../../core/services/recipe-book.service';
 
 @Component({
@@ -8,14 +8,18 @@ import { RecipeBook } from '../../../core/services/recipe-book.service';
   styleUrls: ['./recipe-card-wall.component.css']
 })
 export class RecipeCardWallComponent implements OnInit, OnChanges {
-  @Input() recipeList: Recipe[] = [];
+  @Input() recipeList: RecipeCardView[] = [];
   @Input() recipeBook: RecipeBook | null = null;
   @Input() recipeBookMode: boolean = false;
   @Input() owningUserId: string = '';
   @Output() recipeRemoved = new EventEmitter<Recipe>();
+  @Input() enablePreview = false;
+
+  previewRecipe: RecipeCardView | null = null;
+  previewOpen = false;
 
   // Internal copy of recipeList that we know is an array
-  _recipeListArray: Recipe[] = [];
+  _recipeListArray: RecipeCardView[] = [];
 
   constructor(private cdr: ChangeDetectorRef, private zone: NgZone) {}
 
@@ -45,6 +49,11 @@ export class RecipeCardWallComponent implements OnInit, OnChanges {
 
   onRecipeRemoved(recipe: Recipe): void {
     this.recipeRemoved.emit(recipe);
+  }
+
+  openPreview(recipe: RecipeCardView): void {
+    this.previewRecipe = recipe;
+    this.previewOpen = true;
   }
 
   trackByRecipeId(index: number, recipe: Recipe): string {

@@ -3,7 +3,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RecipeBookComponent } from './recipe-book.component';
 import { UserService, User } from '../../core/services/user.service';
-import { RecipeService, Recipe } from '../../core/services/recipe.service';
+import { RecipeService, Recipe, RecipeCardView } from '../../core/services/recipe.service';
 import { RecipeBookService } from '../../core/services/recipe-book.service';
 
 // Mock Navbar component
@@ -35,9 +35,9 @@ describe('RecipeBookComponent', () => {
   let mockActivatedRoute: any;
 
   const testUser: User = { userId: '123', userName: 'Test User', userEmail: 'test@test.com' };
-  const testRecipes: Recipe[] = [
-    { recipeId: 'r1', recipeName: 'Recipe 1', recipeContent: 'Content 1' },
-    { recipeId: 'r2', recipeName: 'Recipe 2', recipeContent: 'Content 2' }
+  const testRecipes: RecipeCardView[] = [
+    { recipeId: 'r1', recipeName: 'Recipe 1', recipeContent: 'Content 1', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4, ingredients: ['1 cup flour'] },
+    { recipeId: 'r2', recipeName: 'Recipe 2', recipeContent: 'Content 2', rating: { average: 4.2, count: 8 }, category: 'Dessert', tags: ['Quick & Easy'], calories: 250, activeTimeMinutes: 15, totalTimeMinutes: 30, servings: 6, ingredients: ['2 eggs'] }
   ];
 
   beforeEach(async () => {

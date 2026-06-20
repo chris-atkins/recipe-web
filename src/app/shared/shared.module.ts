@@ -9,6 +9,7 @@ import { ImageUploadComponent } from './components/image-upload/image-upload.com
 import { ImageUploadModalComponent } from './components/image-upload-modal/image-upload-modal.component';
 import { RecipeElementComponent } from './components/recipe-element/recipe-element.component';
 import { RecipeCardWallComponent } from './components/recipe-card-wall/recipe-card-wall.component';
+import { RecipePreviewComponent } from './components/recipe-preview/recipe-preview.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { RecipeCardWallComponent } from './components/recipe-card-wall/recipe-ca
     ImageUploadComponent,
     ImageUploadModalComponent,
     RecipeElementComponent,
-    RecipeCardWallComponent
+    RecipeCardWallComponent,
+    RecipePreviewComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +33,8 @@ import { RecipeCardWallComponent } from './components/recipe-card-wall/recipe-ca
     ImageUploadComponent,
     ImageUploadModalComponent,
     RecipeElementComponent,
-    RecipeCardWallComponent
+    RecipeCardWallComponent,
+    RecipePreviewComponent
   ]
 })
 export class SharedModule { }

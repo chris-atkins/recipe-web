@@ -1,18 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { RecipeCardWallComponent } from './recipe-card-wall.component';
 import { RecipeElementComponent } from '../recipe-element/recipe-element.component';
+import { RecipePreviewComponent } from '../recipe-preview/recipe-preview.component';
 import { RecipeBookService, RecipeBook } from '../../../core/services/recipe-book.service';
 import { UserService } from '../../../core/services/user.service';
-import { Recipe } from '../../../core/services/recipe.service';
+import { Recipe, RecipeCardView } from '../../../core/services/recipe.service';
 
 describe('RecipeCardWallComponent', () => {
   let component: RecipeCardWallComponent;
   let fixture: ComponentFixture<RecipeCardWallComponent>;
 
-  const mockRecipes: Recipe[] = [
-    { recipeId: 'recipe1', recipeName: 'Recipe 1', recipeContent: 'Content 1' },
-    { recipeId: 'recipe2', recipeName: 'Recipe 2', recipeContent: 'Content 2' },
-    { recipeId: 'recipe3', recipeName: 'Recipe 3', recipeContent: 'Content 3' }
+  const mockRecipes: RecipeCardView[] = [
+    { recipeId: 'recipe1', recipeName: 'Recipe 1', recipeContent: 'Content 1', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4, ingredients: ['1 cup flour'] },
+    { recipeId: 'recipe2', recipeName: 'Recipe 2', recipeContent: 'Content 2', rating: { average: 4.0, count: 8 }, category: 'Dessert', tags: ['Quick & Easy'], calories: 250, activeTimeMinutes: 15, totalTimeMinutes: 30, servings: 6, ingredients: ['2 eggs'] },
+    { recipeId: 'recipe3', recipeName: 'Recipe 3', recipeContent: 'Content 3', rating: { average: 3.8, count: 5 }, category: 'Side Dish', tags: ['High Protein'], calories: 400, activeTimeMinutes: 25, totalTimeMinutes: 45, servings: 2, ingredients: ['1 tsp salt'] }
   ];
 
   const mockRecipeBook: RecipeBook = [{ recipeId: 'recipe1' }];
@@ -22,7 +24,8 @@ describe('RecipeCardWallComponent', () => {
     const userSpy = jasmine.createSpyObj('UserService', ['getLoggedInUser']);
 
     TestBed.configureTestingModule({
-      declarations: [RecipeCardWallComponent, RecipeElementComponent],
+      declarations: [RecipeCardWallComponent, RecipeElementComponent, RecipePreviewComponent],
+      imports: [RouterTestingModule],
       providers: [
         { provide: RecipeBookService, useValue: recipeBookSpy },
         { provide: UserService, useValue: userSpy }
@@ -42,6 +45,21 @@ describe('RecipeCardWallComponent', () => {
     expect(component.recipeBook).toBeNull();
     expect(component.recipeBookMode).toBe(false);
     expect(component.owningUserId).toBe('');
+  });
+
+  describe('preview', () => {
+    it('defaults to preview disabled and closed', () => {
+      expect(component.enablePreview).toBe(false);
+      expect(component.previewOpen).toBe(false);
+      expect(component.previewRecipe).toBeNull();
+    });
+
+    it('opens the preview with the selected recipe', () => {
+      component.openPreview(mockRecipes[0]);
+
+      expect(component.previewRecipe).toBe(mockRecipes[0]);
+      expect(component.previewOpen).toBe(true);
+    });
   });
 
   describe('onRecipeRemoved', () => {
@@ -79,7 +97,7 @@ describe('RecipeCardWallComponent', () => {
     it('should render recipe-list container', () => {
       const container = fixture.nativeElement.querySelector('#recipe-list');
       expect(container).toBeTruthy();
-      expect(container.classList.contains('card-columns')).toBe(true);
+      expect(container.classList.contains('recipe-grid')).toBe(true);
     });
 
     it('should render correct number of recipe elements', () => {

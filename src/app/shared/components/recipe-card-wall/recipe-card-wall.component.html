@@ -1,12 +1,20 @@
 <div class="container">
-  <div id="recipe-list" class="card-columns recipe-card-holder">
+  <div id="recipe-list" class="recipe-grid recipe-card-holder">
     <app-recipe-element
       *ngFor="let recipe of _recipeListArray; trackBy: trackByRecipeId"
       [recipe]="recipe"
       [recipeBook]="recipeBook"
       [recipeBookMode]="recipeBookMode"
       [owningUserId]="owningUserId"
-      (recipeRemoved)="onRecipeRemoved($event)">
+      [previewMode]="enablePreview"
+      (recipeRemoved)="onRecipeRemoved($event)"
+      (recipeSelected)="openPreview($event)">
     </app-recipe-element>
   </div>
 </div>
+
+<app-recipe-preview
+  [recipe]="previewRecipe"
+  [open]="previewOpen"
+  (closed)="previewOpen = false">
+</app-recipe-preview>

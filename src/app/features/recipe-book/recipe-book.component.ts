@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService, User } from '../../core/services/user.service';
-import { RecipeService, Recipe } from '../../core/services/recipe.service';
+import { RecipeService, Recipe, RecipeCardView } from '../../core/services/recipe.service';
 import { RecipeBookService } from '../../core/services/recipe-book.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { RecipeBookService } from '../../core/services/recipe-book.service';
 })
 export class RecipeBookComponent implements OnInit {
   user: User | null = null;
-  recipeList: Recipe[] = [];
+  recipeList: RecipeCardView[] = [];
 
   private userId: string = '';
 
@@ -44,7 +44,7 @@ export class RecipeBookComponent implements OnInit {
     if (!this.userId) return;
 
     this.recipeService.allRecipesInUserBook(this.userId)
-      .then((recipeList: Recipe[]) => {
+      .then((recipeList: RecipeCardView[]) => {
         this.recipeList = recipeList;
       })
       .catch((error: any) => {

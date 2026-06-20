@@ -1,0 +1,51 @@
+<div class="modal-overlay" *ngIf="open && recipe" (click)="onBackdropClick($event)">
+  <div class="preview-panel" role="dialog" aria-modal="true">
+    <button class="preview-close" type="button" aria-label="Close" (click)="close()">&times;</button>
+
+    <h2 class="preview-title">{{ recipe.recipeName }}</h2>
+
+    <div class="preview-rating">
+      <span class="stars" aria-hidden="true">
+        <i *ngFor="let s of starTypes()" class="fa"
+           [class.fa-star]="s === 'full'"
+           [class.fa-star-half-o]="s === 'half'"
+           [class.fa-star-o]="s === 'empty'"></i>
+      </span>
+      <span class="preview-rating-meta">{{ recipe.rating.average | number:'1.1-1' }} ({{ recipe.rating.count }} ratings)</span>
+    </div>
+
+    <div class="preview-tags">
+      <span class="card-cat-pill" [style.background-color]="getCategoryColor()">{{ recipe.category }}</span>
+      <span class="card-tag-pill" *ngFor="let tag of recipe.tags">{{ tag }}</span>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-cell">
+        <div class="stat-value">{{ recipe.calories }}</div>
+        <div class="stat-label">Calories</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value">{{ recipe.activeTimeMinutes }} min</div>
+        <div class="stat-label">Active</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value">{{ recipe.totalTimeMinutes }} min</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-value">{{ recipe.servings }}</div>
+        <div class="stat-label">Servings</div>
+      </div>
+    </div>
+    <p class="stats-disclaimer">Calorie, time &amp; serving values are sample data — we're working to update them soon.</p>
+
+    <div class="section-divider"></div>
+    <div class="section-title">Recipe</div>
+    <div class="preview-recipe-content" [innerHTML]="recipeContentHtml"></div>
+
+    <div class="preview-actions">
+      <button type="button" class="btn-primary" (click)="viewFullRecipe()">View Full Recipe</button>
+      <button type="button" class="btn-outline" (click)="addToRecipeBook()">+ Add to Recipe Book</button>
+    </div>
+  </div>
+</div>

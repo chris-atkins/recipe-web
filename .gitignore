@@ -11,3 +11,4 @@ npm-debug.log
 recipe-web.iml
 .angular/
 dist/
+coverage/

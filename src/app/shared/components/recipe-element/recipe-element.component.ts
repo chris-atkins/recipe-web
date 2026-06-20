@@ -1,8 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { Recipe } from '../../../core/services/recipe.service';
+import { Recipe, RecipeCardView } from '../../../core/services/recipe.service';
 import { RecipeBook, RecipeBookService } from '../../../core/services/recipe-book.service';
 import { UserService } from '../../../core/services/user.service';
+import { StarType, starTypesFor, categoryColor, categoryEmoji } from '../../recipe-display';
 
 @Component({
   selector: 'app-recipe-element',
@@ -10,11 +11,13 @@ import { UserService } from '../../../core/services/user.service';
   styleUrls: ['./recipe-element.component.css']
 })
 export class RecipeElementComponent implements OnChanges {
-  @Input() recipe!: Recipe;
+  @Input() recipe!: RecipeCardView;
   @Input() recipeBook: RecipeBook | any[] | null = null;
   @Input() recipeBookMode: boolean = false;
   @Input() owningUserId: string = '';
   @Output() recipeRemoved = new EventEmitter<Recipe>();
+  @Input() previewMode = false;
+  @Output() recipeSelected = new EventEmitter<RecipeCardView>();
 
   recipeInRecipeBook = false;
   canAddToRecipeBook = false;
@@ -29,6 +32,18 @@ export class RecipeElementComponent implements OnChanges {
     if (changes['recipeBook'] || changes['recipe']) {
       this.updateRecipeBookFlags();
     }
+  }
+
+  starTypes(): StarType[] {
+    return starTypesFor(this.recipe?.rating?.average ?? 0);
+  }
+
+  getCategoryColor(): string {
+    return categoryColor(this.recipe?.category);
+  }
+
+  getCategoryEmoji(): string {
+    return categoryEmoji(this.recipe?.category);
   }
 
   removeAllowed(): boolean {
@@ -92,6 +107,14 @@ export class RecipeElementComponent implements OnChanges {
       .catch((error) => {
         console.error('Error adding recipe to book:', error);
       });
+  }
+
+  onCardClick(): void {
+    if (this.previewMode) {
+      this.recipeSelected.emit(this.recipe);
+    } else {
+      this.navigateToRecipePage();
+    }
   }
 
   navigateToRecipePage(): void {

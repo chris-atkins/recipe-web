@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Recipe, RecipeService } from '../../core/services/recipe.service';
+import { RecipeCardView, RecipeService } from '../../core/services/recipe.service';
 import { RecipeBook, RecipeBookService } from '../../core/services/recipe-book.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { RecipeBook, RecipeBookService } from '../../core/services/recipe-book.s
   styleUrls: ['./search-recipes.component.css']
 })
 export class SearchRecipesComponent implements OnInit, OnDestroy {
-  recipeList: Recipe[] = [];
+  recipeList: RecipeCardView[] = [];
   searchString = '';
   searchHasOccurred = false;
   usersRecipeBook: RecipeBook | null = null;
@@ -84,7 +84,7 @@ export class SearchRecipesComponent implements OnInit, OnDestroy {
     }
 
     this.recipeService.searchRecipes(searchString)
-      .then((data: Recipe[]) => {
+      .then((data: RecipeCardView[]) => {
         this.recipeList = data;
         this.searchHasOccurred = true;
         this.resultInfoMessage = searchString === undefined
