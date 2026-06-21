@@ -2,6 +2,9 @@
 
 <div class="container view-recipe-page" [hidden]="inEditMode">
   <div class="recipe-title-holder"><h2><span id="recipe-name">{{recipe.recipeName}}</span></h2></div>
+  <div class="recipe-rating-holder">
+    <app-rating-stars [rating]="recipe.rating" [recipeId]="recipe.recipeId" [interactive]="true"></app-rating-stars>
+  </div>
   <div class="alternate-url-holder"><button class="btn btn-secondary alternate-url-copy-button copy-button" title="Copy Import URL to Clipboard" (click)="copyAlternateUrlClicked()" role="button"><i class="fa fa-link" aria-hidden="true"></i><span>Copied</span></button></div>
 
   <div class="serves-as-newline" *ngIf="imageExists()"></div>

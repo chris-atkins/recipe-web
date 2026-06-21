@@ -13,6 +13,7 @@ import { RecipePreviewComponent } from './components/recipe-preview/recipe-previ
 import { CategoryTagFilterComponent } from './components/category-tag-filter/category-tag-filter.component';
 import { CategoryPickerComponent } from './components/category-picker/category-picker.component';
 import { TagInputComponent } from './components/tag-input/tag-input.component';
+import { RatingStarsComponent } from './components/rating-stars/rating-stars.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { TagInputComponent } from './components/tag-input/tag-input.component';
     RecipePreviewComponent,
     CategoryTagFilterComponent,
     CategoryPickerComponent,
-    TagInputComponent
+    TagInputComponent,
+    RatingStarsComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +45,8 @@ import { TagInputComponent } from './components/tag-input/tag-input.component';
     RecipePreviewComponent,
     CategoryTagFilterComponent,
     CategoryPickerComponent,
-    TagInputComponent
+    TagInputComponent,
+    RatingStarsComponent
   ]
 })
 export class SharedModule { }

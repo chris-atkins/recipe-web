@@ -5,13 +5,11 @@
     <h2 class="preview-title">{{ recipe.recipeName }}</h2>
 
     <div class="preview-rating">
-      <span class="stars" aria-hidden="true">
-        <i *ngFor="let s of starTypes()" class="fa"
-           [class.fa-star]="s === 'full'"
-           [class.fa-star-half-o]="s === 'half'"
-           [class.fa-star-o]="s === 'empty'"></i>
-      </span>
-      <span class="preview-rating-meta">{{ recipe.rating.average | number:'1.1-1' }} ({{ recipe.rating.count }} ratings)</span>
+      <app-rating-stars
+        [rating]="recipe.rating"
+        [recipeId]="recipe.recipeId"
+        [interactive]="true"
+        (ratingChange)="onRatingChange($event)"></app-rating-stars>
     </div>
 
     <div class="preview-tags">

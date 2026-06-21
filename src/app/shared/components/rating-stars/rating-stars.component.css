@@ -1,0 +1,33 @@
+:host { display: inline-block; }
+
+.rating { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* Two layered star rows: grey base + gold fill clipped to --pct width (smooth fractional). */
+.stars { position: relative; display: inline-block; line-height: 1; font-size: 18px; }
+.stars-row { display: block; white-space: nowrap; }
+.stars-row.base { color: var(--star-empty, #d8d5cf); }
+.stars-row.fill {
+  color: var(--gold, #f0b30f);
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: var(--pct, 0%);
+  transition: width 0.06s;
+}
+.stars-row .fa { margin-right: 2px; }
+.stars-row .fa:last-child { margin-right: 0; }
+
+/* Transparent per-star hit targets (interactive only) */
+.stars-hits { position: absolute; inset: 0; display: flex; }
+.stars-hits button { flex: 1; background: none; border: none; padding: 0; margin: 0; cursor: pointer; }
+.rating.interactive .stars { cursor: pointer; }
+
+.avg { font-weight: 700; font-size: 14px; }
+.count { color: var(--text-muted, #8a8a8a); font-size: 12.5px; }
+.not-rated { color: var(--text-secondary, #555); font-size: 13.5px; font-style: italic; }
+
+.cue { font-size: 12.5px; }
+.cue .muted { color: var(--text-muted, #8a8a8a); }
+.cue .action { color: var(--navy, #001f3f); font-weight: 600; }
+.cue .done { color: #2e9e6a; font-weight: 600; }

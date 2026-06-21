@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, ParamMap } from '@angular/router';
 import { of } from 'rxjs';
 import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { FormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ViewRecipeComponent } from './view-recipe.component';
 import { RecipeService, Recipe, RecipeImage } from '../../core/services/recipe.service';
@@ -76,6 +77,14 @@ class MockTagInputComponent {
   @Input() suggestionCategory: string | null = null;
 }
 
+@Component({ selector: 'app-rating-stars', template: '' })
+class MockRatingStarsComponent {
+  @Input() rating: any;
+  @Input() recipeId?: string;
+  @Input() interactive = false;
+  @Output() ratingChange = new EventEmitter<any>();
+}
+
 describe('ViewRecipeComponent', () => {
   let component: ViewRecipeComponent;
   let fixture: ComponentFixture<ViewRecipeComponent>;
@@ -91,6 +100,7 @@ describe('ViewRecipeComponent', () => {
     editable: true,
     category: 'Main Dish',
     tags: ['Vegan'],
+    rating: { average: 4.5, count: 10 },
     image: { imageUrl: 'http://example.com/image.jpg' }
   };
 
@@ -117,7 +127,8 @@ describe('ViewRecipeComponent', () => {
         MockImageUploadModalComponent,
         MockQuillEditorComponent,
         MockCategoryPickerComponent,
-        MockTagInputComponent
+        MockTagInputComponent,
+        MockRatingStarsComponent
       ],
       imports: [FormsModule],
       providers: [
@@ -477,6 +488,14 @@ describe('ViewRecipeComponent', () => {
     it('should display recipe name', () => {
       const nameElement = fixture.nativeElement.querySelector('#recipe-name');
       expect(nameElement.textContent).toBe('Test Recipe');
+    });
+
+    it('shows the interactive rating widget bound to the recipe', () => {
+      const stars = fixture.debugElement.query(By.css('app-rating-stars'));
+      expect(stars).toBeTruthy();
+      expect(stars.componentInstance.rating).toEqual({ average: 4.5, count: 10 });
+      expect(stars.componentInstance.recipeId).toBe('recipe123');
+      expect(stars.componentInstance.interactive).toBe(true);
     });
 
     it('should display recipe content', () => {

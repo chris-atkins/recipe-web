@@ -6,6 +6,15 @@ import { RecipePreviewComponent } from '../recipe-preview/recipe-preview.compone
 import { RecipeBookService, RecipeBook } from '../../../core/services/recipe-book.service';
 import { UserService } from '../../../core/services/user.service';
 import { Recipe, RecipeCardView } from '../../../core/services/recipe.service';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({ selector: 'app-rating-stars', template: '' })
+class MockRatingStarsComponent {
+  @Input() rating: any;
+  @Input() recipeId?: string;
+  @Input() interactive = false;
+  @Output() ratingChange = new EventEmitter<any>();
+}
 
 describe('RecipeCardWallComponent', () => {
   let component: RecipeCardWallComponent;
@@ -24,7 +33,7 @@ describe('RecipeCardWallComponent', () => {
     const userSpy = jasmine.createSpyObj('UserService', ['getLoggedInUser']);
 
     TestBed.configureTestingModule({
-      declarations: [RecipeCardWallComponent, RecipeElementComponent, RecipePreviewComponent],
+      declarations: [RecipeCardWallComponent, RecipeElementComponent, RecipePreviewComponent, MockRatingStarsComponent],
       imports: [RouterTestingModule],
       providers: [
         { provide: RecipeBookService, useValue: recipeBookSpy },

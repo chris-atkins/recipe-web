@@ -1,0 +1,26 @@
+<div class="rating" [class.interactive]="canRate">
+  <span class="stars" [style.--pct]="fillPercent + '%'" (mouseleave)="onLeave()">
+    <span class="stars-row base"><i class="fa fa-star" *ngFor="let s of slots"></i></span>
+    <span class="stars-row fill"><i class="fa fa-star" *ngFor="let s of slots"></i></span>
+    <span class="stars-hits" *ngIf="canRate">
+      <button
+        type="button"
+        *ngFor="let s of slots"
+        (mouseenter)="onHover(s)"
+        (click)="rate(s)"
+        [attr.aria-label]="'Rate ' + s + (s === 1 ? ' star' : ' stars')"></button>
+    </span>
+  </span>
+
+  <span class="meta" *ngIf="hasRatings; else notRated">
+    <span class="avg">{{ average | number:'1.1-1' }}</span>
+    <span class="count">({{ count }})</span>
+  </span>
+  <ng-template #notRated><span class="not-rated">Not yet rated</span></ng-template>
+
+  <span class="cue" *ngIf="interactive">
+    <span *ngIf="!loggedIn" class="muted">Log in to rate</span>
+    <span *ngIf="loggedIn && justRated > 0" class="done">✓ You rated {{ justRated }}★ · tap to change</span>
+    <span *ngIf="loggedIn && justRated === 0" class="action">{{ hasRatings ? 'Click a star to rate' : 'Tap a star to be the first' }}</span>
+  </span>
+</div>

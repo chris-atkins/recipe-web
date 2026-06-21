@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter, HostListener, OnChanges, SimpleChanges } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { RecipeCardView } from '../../../core/services/recipe.service';
+import { RecipeCardView, RecipeRating } from '../../../core/services/recipe.service';
 import { RecipeBookService } from '../../../core/services/recipe-book.service';
-import { StarType, starTypesFor, categoryColor } from '../../recipe-display';
+import { categoryColor } from '../../recipe-display';
 
 @Component({
   selector: 'app-recipe-preview',
@@ -38,12 +38,14 @@ export class RecipePreviewComponent implements OnChanges {
     return this.sanitizer.bypassSecurityTrustHtml(processed);
   }
 
-  starTypes(): StarType[] {
-    return starTypesFor(this.recipe?.rating?.average ?? 0);
-  }
-
   getCategoryColor(): string {
     return categoryColor(this.recipe?.category);
+  }
+
+  onRatingChange(rating: RecipeRating): void {
+    if (this.recipe) {
+      this.recipe.rating = rating;
+    }
   }
 
   close(): void {

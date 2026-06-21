@@ -1,10 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RecipeElementComponent } from './recipe-element.component';
 import { RecipeBookService, RecipeBook } from '../../../core/services/recipe-book.service';
 import { UserService, User } from '../../../core/services/user.service';
 import { RecipeCardView } from '../../../core/services/recipe.service';
+
+@Component({ selector: 'app-rating-stars', template: '' })
+class MockRatingStarsComponent {
+  @Input() rating: any;
+  @Input() recipeId?: string;
+  @Input() interactive = false;
+  @Output() ratingChange = new EventEmitter<any>();
+}
 
 describe('RecipeElementComponent', () => {
   let component: RecipeElementComponent;
@@ -40,7 +50,7 @@ describe('RecipeElementComponent', () => {
     const userSpy = jasmine.createSpyObj('UserService', ['getLoggedInUser']);
 
     TestBed.configureTestingModule({
-      declarations: [RecipeElementComponent],
+      declarations: [RecipeElementComponent, MockRatingStarsComponent],
       imports: [RouterTestingModule],
       providers: [
         { provide: RecipeBookService, useValue: recipeBookSpy },
@@ -82,28 +92,6 @@ describe('RecipeElementComponent', () => {
     it('should return empty string when no image', () => {
       component.recipe = { ...mockRecipe, image: null as any };
       expect(component.getImageUrl()).toBe('');
-    });
-  });
-
-  describe('starTypes', () => {
-    it('returns 4 full + 1 half for 4.3', () => {
-      component.recipe = { ...mockRecipe, rating: { average: 4.3, count: 5 } };
-      expect(component.starTypes()).toEqual(['full', 'full', 'full', 'full', 'half']);
-    });
-
-    it('returns 3 full + 1 half + 1 empty for 3.5', () => {
-      component.recipe = { ...mockRecipe, rating: { average: 3.5, count: 5 } };
-      expect(component.starTypes()).toEqual(['full', 'full', 'full', 'half', 'empty']);
-    });
-
-    it('returns 5 full for 5.0', () => {
-      component.recipe = { ...mockRecipe, rating: { average: 5, count: 5 } };
-      expect(component.starTypes()).toEqual(['full', 'full', 'full', 'full', 'full']);
-    });
-
-    it('returns 5 empty stars when no rating is present', () => {
-      component.recipe = { ...mockRecipe, rating: undefined as any };
-      expect(component.starTypes()).toEqual(['empty', 'empty', 'empty', 'empty', 'empty']);
     });
   });
 
@@ -294,21 +282,11 @@ describe('RecipeElementComponent', () => {
       expect(image.getAttribute('src')).toBe('https://example.com/image.jpg');
     });
 
-    it('should render the star rating (4 full + 1 half for 4.3)', () => {
-      const stars = fixture.nativeElement.querySelector('.stars');
-      expect(stars.querySelectorAll('.fa-star').length).toBe(4);
-      expect(stars.querySelectorAll('.fa-star-half-o').length).toBe(1);
-      expect(stars.querySelectorAll('.fa-star-o').length).toBe(0);
-    });
-
-    it('should render the numeric rating to one decimal', () => {
-      const num = fixture.nativeElement.querySelector('.rating-num');
-      expect(num.textContent.trim()).toBe('4.3');
-    });
-
-    it('should render the rating count', () => {
-      const count = fixture.nativeElement.querySelector('.rating-count');
-      expect(count.textContent).toContain('12');
+    it('renders the rating widget bound to the recipe rating (read-only)', () => {
+      const stars = fixture.debugElement.query(By.css('app-rating-stars'));
+      expect(stars).toBeTruthy();
+      expect(stars.componentInstance.rating).toEqual({ average: 4.3, count: 12 });
+      expect(stars.componentInstance.interactive).toBeFalsy();
     });
 
     it('should render the category pill with the category name', () => {

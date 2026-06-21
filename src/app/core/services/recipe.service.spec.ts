@@ -19,15 +19,13 @@ describe('RecipeService', () => {
     httpMock.verify();
   });
 
-  // Shared assertion: the synthetic rating is present and well-shaped.
-  // (category/tags are real now — asserted per-test where flushed.)
+  // Shared assertion: rating + tags are present and well-shaped (both real now).
   function expectDecorated(view: RecipeCardView): void {
     expect(view.rating).toBeTruthy();
-    expect(view.rating.average).toBeGreaterThanOrEqual(3.5);
+    expect(view.rating.average).toBeGreaterThanOrEqual(0);
     expect(view.rating.average).toBeLessThanOrEqual(5);
-    expect(Math.round(view.rating.average * 10) / 10).toBe(view.rating.average); // one decimal
     expect(Number.isInteger(view.rating.count)).toBe(true);
-    expect(view.rating.count).toBeGreaterThanOrEqual(1);
+    expect(view.rating.count).toBeGreaterThanOrEqual(0);
     expect(Array.isArray(view.tags)).toBe(true);
   }
 
@@ -228,40 +226,24 @@ describe('RecipeService', () => {
       });
     });
 
-    it('computes the lower rating bound when the RNG returns its minimum', (done) => {
-      spyOn(service as any, 'nextRandom').and.returnValues(0, 0);
+    it('passes the real rating aggregate through unchanged', (done) => {
+      const recipe: Recipe = { recipeId: '1', recipeName: 'R', recipeContent: 'C', rating: { average: 4.5, count: 10 } };
 
       const promise = service.getRecipeList();
-      httpMock.expectOne('/api/recipe').flush([{ recipeId: '1', recipeName: 'R', recipeContent: 'C' }]);
+      httpMock.expectOne('/api/recipe').flush([recipe]);
 
       promise.then(response => {
-        expect(response[0].rating.average).toBe(3.5);
-        expect(response[0].rating.count).toBe(5);
+        expect(response[0].rating).toEqual({ average: 4.5, count: 10 });
         done();
       });
     });
 
-    it('computes the upper rating bound when the RNG returns near its maximum', (done) => {
-      spyOn(service as any, 'nextRandom').and.returnValues(0.999999, 0.999999);
-
+    it('defaults the rating to {0,0} when the backend omits it', (done) => {
       const promise = service.getRecipeList();
       httpMock.expectOne('/api/recipe').flush([{ recipeId: '1', recipeName: 'R', recipeContent: 'C' }]);
 
       promise.then(response => {
-        expect(response[0].rating.average).toBe(5);
-        expect(response[0].rating.count).toBe(300);
-        done();
-      });
-    });
-
-    it('rounds the rating average to a single decimal place', (done) => {
-      spyOn(service as any, 'nextRandom').and.returnValue(0.5);
-
-      const promise = service.getRecipeList();
-      httpMock.expectOne('/api/recipe').flush([{ recipeId: '1', recipeName: 'R', recipeContent: 'C' }]);
-
-      promise.then(response => {
-        expect(response[0].rating.average).toBe(4.3); // round((3.5 + 0.5 * 1.5) * 10) / 10
+        expect(response[0].rating).toEqual({ average: 0, count: 0 });
         done();
       });
     });
@@ -352,6 +334,23 @@ describe('RecipeService', () => {
 
       promise.then(tags => {
         expect(tags).toEqual(['Vegetarian', 'Quick']);
+        done();
+      });
+    });
+  });
+
+  describe('rateRecipe', () => {
+    it('PUTs the rating value and resolves with the updated recipe', (done) => {
+      const updated: Recipe = { recipeId: 'r1', recipeName: 'R', recipeContent: 'C', rating: { average: 4.5, count: 6 } };
+      const promise = service.rateRecipe('r1', 5);
+
+      const req = httpMock.expectOne('/api/recipe/r1/rating');
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toEqual({ value: 5 });
+      req.flush(updated);
+
+      promise.then(recipe => {
+        expect(recipe.rating).toEqual({ average: 4.5, count: 6 });
         done();
       });
     });

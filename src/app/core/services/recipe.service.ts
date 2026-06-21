@@ -15,11 +15,12 @@ export interface Recipe {
   editable?: boolean;
   category?: string | null;   // real + writable (set on the save form)
   tags?: string[];            // real + writable
+  rating?: RecipeRating;      // real, read-only aggregate (set by the backend on reads)
 }
 
 export interface RecipeRating {
-  average: number;   // 3.5–5.0, rounded to one decimal
-  count: number;     // faked integer >= 1 (real backend: 0 = "not yet rated")
+  average: number;   // 0.0–5.0, rounded to one decimal
+  count: number;     // number of ratings (0 = "not yet rated")
 }
 
 /**
@@ -63,6 +64,11 @@ export class RecipeService {
     }));
   }
 
+  /** Submit the current user's rating (1–5); resolves with the updated recipe (fresh aggregate). */
+  rateRecipe(recipeId: string, value: number): Promise<Recipe> {
+    return firstValueFrom(this.http.put<Recipe>(`${this.apiUrl}/${recipeId}/rating`, { value }));
+  }
+
   searchRecipes(searchString?: string): Promise<RecipeCardView[]> {
     const params: any = {};
     if (searchString) {
@@ -84,9 +90,8 @@ export class RecipeService {
   }
 
   // --- Synthetic fake-data decoration (READ path only) -----------------------
-  // Category + tags are now REAL (passed through verbatim from the backend).
-  // Rating + nutrition are still faked here so the redesigned UI has values to
-  // show; nothing here is ever written back. Remove as the backend grows them.
+  // Category, tags, and rating are REAL now (passed through from the backend).
+  // Only nutrition is still faked here; nothing here is ever written back.
 
   private decorateList(list: Recipe[] | null): RecipeCardView[] {
     return (list ?? []).map(recipe => this.decorate(recipe));
@@ -97,20 +102,12 @@ export class RecipeService {
     return {
       ...recipe,
       tags: recipe.tags ?? [],
-      rating: this.fakeRating(),
+      rating: recipe.rating ?? { average: 0, count: 0 },
       calories: 150 + this.stableIndex(recipe, 38) * 10,             // 150–520
       activeTimeMinutes,
       totalTimeMinutes: activeTimeMinutes + 10 + this.stableIndex(recipe, 5) * 5, // active + 10–30
       servings: 2 + this.stableIndex(recipe, 7)                      // 2–8
     };
-  }
-
-  // Random, generated once per fetch (not memoized, not in a template getter)
-  // so it stays stable within a view but re-randomizes on a fresh fetch.
-  private fakeRating(): RecipeRating {
-    const average = Math.round((3.5 + this.nextRandom() * 1.5) * 10) / 10; // 3.5–5.0, one decimal
-    const count = Math.floor(this.nextRandom() * 296) + 5;                 // 5–300
-    return { average, count };
   }
 
   // Stable hash of the recipe identity (recipeId, falling back to recipeName).
@@ -121,10 +118,5 @@ export class RecipeService {
       hash = (hash + key.charCodeAt(i)) % 100000;
     }
     return hash % mod;
-  }
-
-  /** Seam for deterministic tests; wraps Math.random so specs can stub it. */
-  protected nextRandom(): number {
-    return Math.random();
   }
 }

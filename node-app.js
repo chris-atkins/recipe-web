@@ -124,6 +124,18 @@ function performTagSuggestionsGET(category, request) {
 	return rs.get(getOptions);
 }
 
+function performRatingPUT(recipeId, body, request) {
+	var putOptions = {
+		uri : serviceRoot + '/recipe/' + recipeId + '/rating',
+		headers : headersFromRequest(request),  // forwards RequestingUser (the rater)
+		json : true,
+		body : body,
+		simple: false,
+		resolveWithFullResponse: true
+	};
+	return rs.put(putOptions);
+}
+
 function performRecipePOST(recipe, request) {
 	var postOptions = {
 		uri : serviceRoot + '/recipe',
@@ -270,11 +282,21 @@ app.get('/api/recipe/tag-suggestions', function(request, response) {
 app.get('/api/recipe/:recipeId', function(request, response) {
 	var recipeId = request.params.recipeId;
 	performRecipeGET(recipeId, request).then(function(data) {
-		response.statusCode = data.statusCode;	
+		response.statusCode = data.statusCode;
 		response.json(data.body);
 	})
 	.catch(function(error) {
 		console.log('Error getting recipe with id ' + recipeId + ': ', error);
+	});
+});
+
+app.put('/api/recipe/:recipeId/rating', function(request, response) {
+	performRatingPUT(request.params.recipeId, request.body, request).then(function(data) {
+		response.statusCode = data.statusCode;
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Error rating recipe with id ' + request.params.recipeId + ': ', error);
 	});
 });
 

@@ -1,9 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RecipePreviewComponent } from './recipe-preview.component';
 import { RecipeBookService } from '../../../core/services/recipe-book.service';
 import { RecipeCardView } from '../../../core/services/recipe.service';
+
+@Component({ selector: 'app-rating-stars', template: '' })
+class MockRatingStarsComponent {
+  @Input() rating: any;
+  @Input() recipeId?: string;
+  @Input() interactive = false;
+  @Output() ratingChange = new EventEmitter<any>();
+}
 
 describe('RecipePreviewComponent', () => {
   let component: RecipePreviewComponent;
@@ -28,7 +38,7 @@ describe('RecipePreviewComponent', () => {
     const recipeBookSpy = jasmine.createSpyObj('RecipeBookService', ['addToRecipeBook']);
 
     TestBed.configureTestingModule({
-      declarations: [RecipePreviewComponent],
+      declarations: [RecipePreviewComponent, MockRatingStarsComponent],
       imports: [RouterTestingModule],
       providers: [
         { provide: RecipeBookService, useValue: recipeBookSpy }
@@ -55,16 +65,12 @@ describe('RecipePreviewComponent', () => {
       expect(title.textContent).toContain('Test Recipe');
     });
 
-    it('renders the star rating split for 4.3 (4 full + 1 half)', () => {
-      const stars = fixture.nativeElement.querySelector('.stars');
-      expect(stars.querySelectorAll('.fa-star').length).toBe(4);
-      expect(stars.querySelectorAll('.fa-star-half-o').length).toBe(1);
-    });
-
-    it('renders the rating average and count', () => {
-      const meta = fixture.nativeElement.querySelector('.preview-rating-meta');
-      expect(meta.textContent).toContain('4.3');
-      expect(meta.textContent).toContain('12');
+    it('renders the interactive rating widget bound to the recipe', () => {
+      const stars = fixture.debugElement.query(By.css('app-rating-stars'));
+      expect(stars).toBeTruthy();
+      expect(stars.componentInstance.rating).toEqual({ average: 4.3, count: 12 });
+      expect(stars.componentInstance.recipeId).toBe('recipe1');
+      expect(stars.componentInstance.interactive).toBe(true);
     });
 
     it('renders the category pill and tag pills', () => {
@@ -197,11 +203,15 @@ describe('RecipePreviewComponent', () => {
   });
 
   describe('defensive defaults', () => {
-    it('returns safe values from the display helpers when recipe is null', () => {
+    it('returns a safe category colour when recipe is null', () => {
       component.recipe = null;
-
-      expect(component.starTypes().length).toBe(5);
       expect(component.getCategoryColor()).toBe('#666666');
+    });
+
+    it('updates the recipe rating when the widget reports a new rating', () => {
+      component.recipe = { ...mockRecipe };
+      component.onRatingChange({ average: 4.8, count: 13 });
+      expect(component.recipe!.rating).toEqual({ average: 4.8, count: 13 });
     });
   });
 });

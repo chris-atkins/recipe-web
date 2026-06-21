@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Recipe, RecipeCardView } from '../../../core/services/recipe.service';
 import { RecipeBook, RecipeBookService } from '../../../core/services/recipe-book.service';
 import { UserService } from '../../../core/services/user.service';
-import { StarType, starTypesFor, categoryColor, categoryEmoji } from '../../recipe-display';
+import { categoryColor, categoryEmoji } from '../../recipe-display';
 
 @Component({
   selector: 'app-recipe-element',
@@ -32,10 +32,6 @@ export class RecipeElementComponent implements OnChanges {
     if (changes['recipeBook'] || changes['recipe']) {
       this.updateRecipeBookFlags();
     }
-  }
-
-  starTypes(): StarType[] {
-    return starTypesFor(this.recipe?.rating?.average ?? 0);
   }
 
   getCategoryColor(): string {
