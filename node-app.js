@@ -113,6 +113,17 @@ function performRecipeGET(recipeId, request) {
 	return rs.get(getOptions);
 }
 
+function performTagSuggestionsGET(category, request) {
+	var getOptions = {
+		uri : serviceRoot + '/recipe/tag-suggestions?category=' + encodeURIComponent(category || ''),
+		headers: headersFromRequest(request),
+		json : true,
+		simple: false,
+		resolveWithFullResponse: true
+	};
+	return rs.get(getOptions);
+}
+
 function performRecipePOST(recipe, request) {
 	var postOptions = {
 		uri : serviceRoot + '/recipe',
@@ -241,6 +252,18 @@ app.get('/api/recipe', function(request, response) {
 	})
 	.catch(function(error) {
 		console.log('Error getting recipes: ', error);
+	});
+});
+
+// NOTE: must be registered BEFORE '/api/recipe/:recipeId' so "tag-suggestions"
+// isn't captured as a recipe id (and the category query param is forwarded).
+app.get('/api/recipe/tag-suggestions', function(request, response) {
+	performTagSuggestionsGET(request.query.category, request).then(function(data) {
+		response.statusCode = data.statusCode;
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Error getting tag suggestions: ', error);
 	});
 });
 
