@@ -1,3 +1,23 @@
+/* Category-scoped suggestion row (above the chosen-tags box). */
+.suggest-row { margin-bottom: 11px; }
+.suggest-label { font-size: 11.5px; color: var(--text-muted); margin-bottom: 6px; }
+.suggest-label b { color: var(--text-secondary); }
+.suggest-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.suggest-pill {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1.5px dashed var(--border-light);
+  background: #fff;
+  color: var(--text-secondary);
+  font-family: inherit;
+}
+.suggest-pill:hover { border-color: var(--navy); color: var(--navy); }
+.suggest-pill::before { content: "+ "; color: var(--text-muted); }
+.suggest-empty { font-size: 11.5px; color: var(--text-muted); font-style: italic; }
+
 .tag-chips {
   display: flex;
   flex-wrap: wrap;

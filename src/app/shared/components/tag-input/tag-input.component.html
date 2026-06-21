@@ -1,3 +1,15 @@
+<div class="suggest-row" *ngIf="suggestionCategory">
+  <div class="suggest-label">Common in <b>{{ suggestionCategory }}</b>:</div>
+  <div class="suggest-pills">
+    <button
+      *ngFor="let s of availableSuggestions()"
+      type="button"
+      class="suggest-pill"
+      (click)="addTag(s)">{{ s }}</button>
+    <span class="suggest-empty" *ngIf="availableSuggestions().length === 0">No suggestions yet — add your own below.</span>
+  </div>
+</div>
+
 <div class="tag-chips">
   <span class="chip" *ngFor="let tag of tags">
     {{ tag }}

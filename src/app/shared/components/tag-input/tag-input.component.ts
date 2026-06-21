@@ -14,6 +14,10 @@ export class TagInputComponent {
   @Input() tags: string[] = [];
   @Output() tagsChange = new EventEmitter<string[]>();
 
+  /** Category-scoped suggestions (most-used first) + the category for the label. */
+  @Input() suggestions: string[] = [];
+  @Input() suggestionCategory: string | null = null;
+
   @ViewChild('tagInput') tagInput?: ElementRef<HTMLInputElement>;
   adding = false;
 
@@ -52,6 +56,12 @@ export class TagInputComponent {
   removeChip(tag: string): void {
     this.tags = this.tags.filter(t => t !== tag);
     this.tagsChange.emit(this.tags);
+  }
+
+  /** Suggestions not already chosen (case-insensitive). */
+  availableSuggestions(): string[] {
+    const have = this.tags.map(t => t.toLowerCase());
+    return this.suggestions.filter(s => !have.includes(s.toLowerCase()));
   }
 
   private titleCase(value: string): string {

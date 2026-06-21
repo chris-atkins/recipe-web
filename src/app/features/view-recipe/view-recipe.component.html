@@ -27,12 +27,12 @@
 
   <div class="form-group" #categorySection>
     <label class="field-label">Category <span class="required-badge">required</span></label>
-    <app-category-picker [(category)]="categoryBeingEdited" [(invalid)]="categoryInvalid"></app-category-picker>
+    <app-category-picker [category]="categoryBeingEdited" (categoryChange)="onCategoryChange($event)" [(invalid)]="categoryInvalid"></app-category-picker>
   </div>
 
   <div class="form-group">
     <label class="field-label">Tags <span class="optional-badge">optional</span></label>
-    <app-tag-input [(tags)]="tagsBeingEdited"></app-tag-input>
+    <app-tag-input [(tags)]="tagsBeingEdited" [suggestions]="tagSuggestions" [suggestionCategory]="categoryBeingEdited"></app-tag-input>
   </div>
 
   <div class="form-group recipe-content-editor-group">

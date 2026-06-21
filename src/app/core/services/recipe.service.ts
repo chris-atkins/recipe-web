@@ -56,6 +56,13 @@ export class RecipeService {
     return firstValueFrom(this.http.post<Recipe>(this.apiUrl, recipe));
   }
 
+  /** Tags most commonly used on recipes in the given category, most-used first. */
+  getTagSuggestions(category: string): Promise<string[]> {
+    return firstValueFrom(this.http.get<string[]>(`${this.apiUrl}/tag-suggestions`, {
+      params: { category }
+    }));
+  }
+
   searchRecipes(searchString?: string): Promise<RecipeCardView[]> {
     const params: any = {};
     if (searchString) {

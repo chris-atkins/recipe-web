@@ -72,6 +72,8 @@ class MockCategoryPickerComponent {
 class MockTagInputComponent {
   @Input() tags: string[] = [];
   @Output() tagsChange = new EventEmitter<string[]>();
+  @Input() suggestions: string[] = [];
+  @Input() suggestionCategory: string | null = null;
 }
 
 describe('ViewRecipeComponent', () => {
@@ -96,7 +98,8 @@ describe('ViewRecipeComponent', () => {
   const testRecipeBook = [{ recipeId: 'recipe123' }, { recipeId: 'recipe456' }];
 
   beforeEach(async () => {
-    mockRecipeService = jasmine.createSpyObj('RecipeService', ['findRecipe', 'saveRecipe']);
+    mockRecipeService = jasmine.createSpyObj('RecipeService', ['findRecipe', 'saveRecipe', 'getTagSuggestions']);
+    mockRecipeService.getTagSuggestions.and.returnValue(Promise.resolve([]));
     mockRecipeBookService = jasmine.createSpyObj('RecipeBookService', ['getRecipeBook', 'addToRecipeBook', 'removeRecipeFromBook']);
     mockUserService = jasmine.createSpyObj('UserService', ['isLoggedIn', 'getLoggedInUser']);
 
@@ -220,6 +223,40 @@ describe('ViewRecipeComponent', () => {
       expect(component.contentBeingEdited).toBe('<p>Test content</p>');
       expect(component.categoryBeingEdited).toBe('Main Dish');
       expect(component.tagsBeingEdited).toEqual(['Vegan']);
+    });
+
+    it('fetches tag suggestions for the recipe category on entering edit mode', () => {
+      component.editClicked();
+      expect(mockRecipeService.getTagSuggestions).toHaveBeenCalledWith('Main Dish');
+    });
+
+    it('fetches suggestions when the category changes', (done) => {
+      mockRecipeService.getTagSuggestions.and.returnValue(Promise.resolve(['Spicy']));
+      component.onCategoryChange('Dessert');
+
+      expect(component.categoryBeingEdited).toBe('Dessert');
+      expect(mockRecipeService.getTagSuggestions).toHaveBeenCalledWith('Dessert');
+      setTimeout(() => {
+        expect(component.tagSuggestions).toEqual(['Spicy']);
+        done();
+      }, 10);
+    });
+
+    it('clears suggestions when the category is cleared', () => {
+      component.tagSuggestions = ['x'];
+      component.onCategoryChange(null);
+      expect(component.categoryBeingEdited).toBeNull();
+      expect(component.tagSuggestions).toEqual([]);
+    });
+
+    it('clears suggestions if the fetch fails', (done) => {
+      mockRecipeService.getTagSuggestions.and.returnValue(Promise.reject('boom'));
+      component.tagSuggestions = ['old'];
+      component.onCategoryChange('Dessert');
+      setTimeout(() => {
+        expect(component.tagSuggestions).toEqual([]);
+        done();
+      }, 10);
     });
 
     it('should exit edit mode when cancelEdit is called', () => {

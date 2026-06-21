@@ -36,6 +36,8 @@ class MockCategoryPickerComponent {
 class MockTagInputComponent {
   @Input() tags: string[] = [];
   @Output() tagsChange = new EventEmitter<string[]>();
+  @Input() suggestions: string[] = [];
+  @Input() suggestionCategory: string | null = null;
 }
 
 describe('NewRecipeComponent', () => {
@@ -46,7 +48,8 @@ describe('NewRecipeComponent', () => {
   let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    mockRecipeService = jasmine.createSpyObj('RecipeService', ['saveRecipe']);
+    mockRecipeService = jasmine.createSpyObj('RecipeService', ['saveRecipe', 'getTagSuggestions']);
+    mockRecipeService.getTagSuggestions.and.returnValue(Promise.resolve([]));
     mockUserService = jasmine.createSpyObj('UserService', ['isLoggedIn']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
@@ -262,6 +265,39 @@ describe('NewRecipeComponent', () => {
 
       setTimeout(() => {
         expect(consoleSpy).toHaveBeenCalledWith('Error saving recipe:', 'Save failed');
+        done();
+      }, 10);
+    });
+  });
+
+  describe('tag suggestions', () => {
+    it('fetches suggestions when the category changes', (done) => {
+      mockRecipeService.getTagSuggestions.and.returnValue(Promise.resolve(['Vegetarian', 'Quick']));
+
+      component.onCategoryChange('Main Dish');
+
+      expect(component.newRecipeCategory).toBe('Main Dish');
+      expect(mockRecipeService.getTagSuggestions).toHaveBeenCalledWith('Main Dish');
+      setTimeout(() => {
+        expect(component.tagSuggestions).toEqual(['Vegetarian', 'Quick']);
+        done();
+      }, 10);
+    });
+
+    it('clears suggestions when the category is cleared', () => {
+      component.tagSuggestions = ['x'];
+      component.onCategoryChange(null);
+      expect(component.newRecipeCategory).toBeNull();
+      expect(component.tagSuggestions).toEqual([]);
+      expect(mockRecipeService.getTagSuggestions).not.toHaveBeenCalled();
+    });
+
+    it('clears suggestions if the fetch fails', (done) => {
+      mockRecipeService.getTagSuggestions.and.returnValue(Promise.reject('boom'));
+      component.tagSuggestions = ['old'];
+      component.onCategoryChange('Main Dish');
+      setTimeout(() => {
+        expect(component.tagSuggestions).toEqual([]);
         done();
       }, 10);
     });

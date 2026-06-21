@@ -15,6 +15,7 @@ export class NewRecipeComponent {
   newRecipeTags: string[] = [];
   newImage: RecipeImage | null = null;
   categoryInvalid: boolean = false;
+  tagSuggestions: string[] = [];
   private attemptedToSaveWithNoLogin: boolean = false;
 
   @ViewChild('categorySection') categorySection?: ElementRef<HTMLElement>;
@@ -55,6 +56,24 @@ export class NewRecipeComponent {
       .catch((error: any) => {
         console.error('Error saving recipe:', error);
       });
+  }
+
+  onCategoryChange(category: string | null): void {
+    this.newRecipeCategory = category;
+    this.fetchTagSuggestions(category);
+  }
+
+  private fetchTagSuggestions(category: string | null): void {
+    if (!category) {
+      this.tagSuggestions = [];
+      return;
+    }
+    this.recipeService.getTagSuggestions(category)
+      .then(suggestions => {
+        this.tagSuggestions = suggestions;
+        this.cdr.detectChanges();
+      })
+      .catch(() => { this.tagSuggestions = []; });
   }
 
   shouldShowErrorMessage(): boolean {

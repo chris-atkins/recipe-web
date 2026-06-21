@@ -343,6 +343,20 @@ describe('RecipeService', () => {
     });
   });
 
+  describe('getTagSuggestions', () => {
+    it('GETs the tag-suggestions endpoint with the category as a query param', (done) => {
+      const promise = service.getTagSuggestions('Main Dish');
+      const req = httpMock.expectOne(r => r.url === '/api/recipe/tag-suggestions' && r.params.get('category') === 'Main Dish');
+      expect(req.request.method).toBe('GET');
+      req.flush(['Vegetarian', 'Quick']);
+
+      promise.then(tags => {
+        expect(tags).toEqual(['Vegetarian', 'Quick']);
+        done();
+      });
+    });
+  });
+
   describe('saveRecipe (write path — must never carry synthetic fields)', () => {
     const recipe: Recipe = { recipeName: 'name', recipeContent: 'content' };
 

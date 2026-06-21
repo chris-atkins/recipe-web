@@ -18,6 +18,7 @@ export class ViewRecipeComponent implements OnInit {
   contentBeingEdited: string = '';
   categoryBeingEdited: string | null = null;
   tagsBeingEdited: string[] = [];
+  tagSuggestions: string[] = [];
   inEditMode: boolean = false;
   categoryInvalid: boolean = false;
 
@@ -99,12 +100,31 @@ export class ViewRecipeComponent implements OnInit {
     this.tagsBeingEdited = [...(this.recipe.tags ?? [])];
     this.categoryInvalid = false;
     this.inEditMode = true;
+    this.fetchTagSuggestions(this.categoryBeingEdited);
     this.cdr.detectChanges();
   }
 
   cancelEdit(): void {
     this.inEditMode = false;
     this.cdr.detectChanges();
+  }
+
+  onCategoryChange(category: string | null): void {
+    this.categoryBeingEdited = category;
+    this.fetchTagSuggestions(category);
+  }
+
+  private fetchTagSuggestions(category: string | null): void {
+    if (!category) {
+      this.tagSuggestions = [];
+      return;
+    }
+    this.recipeService.getTagSuggestions(category)
+      .then(suggestions => {
+        this.tagSuggestions = suggestions;
+        this.cdr.detectChanges();
+      })
+      .catch(() => { this.tagSuggestions = []; });
   }
 
   saveClicked(): void {

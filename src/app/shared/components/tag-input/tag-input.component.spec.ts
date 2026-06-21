@@ -98,4 +98,37 @@ describe('TagInputComponent', () => {
     component.commitAdd();
     expect(component.tagsChange.emit).not.toHaveBeenCalled();
   });
+
+  it('shows the suggestion row only when a category is set, labeled with it', () => {
+    expect(fixture.nativeElement.querySelector('.suggest-row')).toBeFalsy();
+
+    component.suggestionCategory = 'Main Dish';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.suggest-row')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.suggest-label').textContent).toContain('Main Dish');
+  });
+
+  it('renders available suggestions, excluding already-added tags', () => {
+    component.tags = ['Vegan'];
+    component.suggestionCategory = 'Main Dish';
+    component.suggestions = ['Vegan', 'Quick', 'Spicy'];
+    fixture.detectChanges();
+
+    const labels = Array.from(fixture.nativeElement.querySelectorAll('.suggest-pill'))
+      .map((p: any) => p.textContent.trim());
+    expect(labels).toEqual(['Quick', 'Spicy']);
+  });
+
+  it('adds a suggestion as a chip when its pill is clicked', () => {
+    component.suggestionCategory = 'Main Dish';
+    component.suggestions = ['Quick'];
+    fixture.detectChanges();
+    spyOn(component.tagsChange, 'emit');
+
+    fixture.nativeElement.querySelector('.suggest-pill').click();
+
+    expect(component.tags).toEqual(['Quick']);
+    expect(component.tagsChange.emit).toHaveBeenCalledWith(['Quick']);
+  });
 });
