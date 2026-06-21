@@ -98,3 +98,26 @@
   padding-left: 1.5em;
   margin: 0 !important;
 }
+
+/* Field labels + required/optional badges (save-page glow-up). */
+.field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text, #1a1a1a);
+  margin-bottom: 9px;
+}
+.required-badge,
+.optional-badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: none;
+  border-radius: 999px;
+  padding: 1px 7px;
+  margin-left: 4px;
+}
+.required-badge { color: #d23b2e; border: 1px solid #d23b2e; }
+.optional-badge { color: var(--text-muted, #8a8a8a); border: 1px solid var(--border-light, #e2e0dc); }

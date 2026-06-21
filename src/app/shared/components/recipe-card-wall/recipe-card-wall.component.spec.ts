@@ -12,9 +12,9 @@ describe('RecipeCardWallComponent', () => {
   let fixture: ComponentFixture<RecipeCardWallComponent>;
 
   const mockRecipes: RecipeCardView[] = [
-    { recipeId: 'recipe1', recipeName: 'Recipe 1', recipeContent: 'Content 1', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4, ingredients: ['1 cup flour'] },
-    { recipeId: 'recipe2', recipeName: 'Recipe 2', recipeContent: 'Content 2', rating: { average: 4.0, count: 8 }, category: 'Dessert', tags: ['Quick & Easy'], calories: 250, activeTimeMinutes: 15, totalTimeMinutes: 30, servings: 6, ingredients: ['2 eggs'] },
-    { recipeId: 'recipe3', recipeName: 'Recipe 3', recipeContent: 'Content 3', rating: { average: 3.8, count: 5 }, category: 'Side Dish', tags: ['High Protein'], calories: 400, activeTimeMinutes: 25, totalTimeMinutes: 45, servings: 2, ingredients: ['1 tsp salt'] }
+    { recipeId: 'recipe1', recipeName: 'Recipe 1', recipeContent: 'Content 1', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4 },
+    { recipeId: 'recipe2', recipeName: 'Recipe 2', recipeContent: 'Content 2', rating: { average: 4.0, count: 8 }, category: 'Dessert', tags: ['Quick & Easy'], calories: 250, activeTimeMinutes: 15, totalTimeMinutes: 30, servings: 6 },
+    { recipeId: 'recipe3', recipeName: 'Recipe 3', recipeContent: 'Content 3', rating: { average: 3.8, count: 5 }, category: 'Side Dish', tags: ['High Protein'], calories: 400, activeTimeMinutes: 25, totalTimeMinutes: 45, servings: 2 }
   ];
 
   const mockRecipeBook: RecipeBook = [{ recipeId: 'recipe1' }];

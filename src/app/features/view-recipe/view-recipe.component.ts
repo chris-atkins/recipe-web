@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RecipeService, Recipe, RecipeImage } from '../../core/services/recipe.service';
@@ -16,7 +16,12 @@ export class ViewRecipeComponent implements OnInit {
   initialContent: string = '';
   nameBeingEdited: string = '';
   contentBeingEdited: string = '';
+  categoryBeingEdited: string | null = null;
+  tagsBeingEdited: string[] = [];
   inEditMode: boolean = false;
+  categoryInvalid: boolean = false;
+
+  @ViewChild('categorySection') categorySection?: ElementRef<HTMLElement>;
 
   private userRecipeBook: RecipeBookItem[] = [];
   private recipeId: string = '';
@@ -90,6 +95,9 @@ export class ViewRecipeComponent implements OnInit {
   editClicked(): void {
     this.nameBeingEdited = this.recipe.recipeName;
     this.contentBeingEdited = this.initialContent;
+    this.categoryBeingEdited = this.recipe.category ?? null;
+    this.tagsBeingEdited = [...(this.recipe.tags ?? [])];
+    this.categoryInvalid = false;
     this.inEditMode = true;
     this.cdr.detectChanges();
   }
@@ -100,10 +108,19 @@ export class ViewRecipeComponent implements OnInit {
   }
 
   saveClicked(): void {
+    if (!this.categoryBeingEdited) {
+      this.categoryInvalid = true;
+      this.cdr.detectChanges();
+      this.categorySection?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
     const recipeToPut: Recipe = {
       recipeId: this.recipe.recipeId,
       recipeName: this.nameBeingEdited,
       recipeContent: this.contentBeingEdited,
+      category: this.categoryBeingEdited,
+      tags: this.tagsBeingEdited,
       image: this.recipe.image
     };
 

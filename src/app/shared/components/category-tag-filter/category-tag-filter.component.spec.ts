@@ -14,8 +14,7 @@ function makeRecipe(id: string, category: string, tags: string[]): RecipeCardVie
     calories: 200,
     activeTimeMinutes: 10,
     totalTimeMinutes: 20,
-    servings: 2,
-    ingredients: ['x']
+    servings: 2
   };
 }
 
@@ -61,6 +60,11 @@ describe('CategoryTagFilterComponent', () => {
   it('renders no category pills when there are no recipes', () => {
     loadRecipes([]);
     expect(fixture.nativeElement.querySelectorAll('.cat-pill').length).toBe(0);
+  });
+
+  it('excludes recipes with no category from the category pills', () => {
+    loadRecipes([r1, makeRecipe('9', '', [])]);
+    expect(component.categories).toEqual(['Main Dish']);
   });
 
   it('does not show sub-tags until a category is selected', () => {

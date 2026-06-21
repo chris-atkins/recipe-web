@@ -1,0 +1,36 @@
+<div class="category-picker" [class.invalid]="invalid">
+  <div class="cat-row">
+    <button
+      *ngFor="let cat of presets"
+      type="button"
+      class="cat-pill"
+      [class.selected]="category === cat"
+      [class.dimmed]="category && category !== cat"
+      [style.background-color]="colorFor(cat)"
+      (click)="selectPreset(cat)"><span class="emoji">{{ emojiFor(cat) }}</span>{{ cat }}</button>
+
+    <button
+      *ngIf="isCustomSelected()"
+      type="button"
+      class="cat-pill cat-custom selected"
+      (click)="selectPreset(category!)"><span class="emoji">🍽️</span>{{ category }}</button>
+
+    <button
+      *ngIf="!adding"
+      type="button"
+      class="cat-pill cat-add"
+      (click)="startAdd()">+ Add your own</button>
+
+    <span *ngIf="adding" class="cat-pill cat-add editing">
+      <input
+        #customInput
+        type="text"
+        class="pill-input"
+        placeholder="Your category…"
+        (keydown)="onCustomKey($event)"
+        (blur)="commitAdd()"/>
+    </span>
+  </div>
+
+  <div class="cat-error" *ngIf="invalid">⚠️ Please choose a category before saving.</div>
+</div>

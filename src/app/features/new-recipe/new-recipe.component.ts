@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { RecipeService, Recipe, RecipeImage } from '../../core/services/recipe.service';
 import { UserService } from '../../core/services/user.service';
@@ -11,8 +11,13 @@ import { UserService } from '../../core/services/user.service';
 export class NewRecipeComponent {
   newRecipeName: string = '';
   newRecipeContent: string = '';
+  newRecipeCategory: string | null = null;
+  newRecipeTags: string[] = [];
   newImage: RecipeImage | null = null;
+  categoryInvalid: boolean = false;
   private attemptedToSaveWithNoLogin: boolean = false;
+
+  @ViewChild('categorySection') categorySection?: ElementRef<HTMLElement>;
 
   constructor(
     private router: Router,
@@ -28,9 +33,18 @@ export class NewRecipeComponent {
       return;
     }
 
+    if (!this.newRecipeCategory) {
+      this.categoryInvalid = true;
+      this.cdr.detectChanges();
+      this.categorySection?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
     const recipeToSave: Recipe = {
       recipeName: this.newRecipeName,
       recipeContent: this.newRecipeContent,
+      category: this.newRecipeCategory,
+      tags: this.newRecipeTags,
       image: this.newImage
     };
 

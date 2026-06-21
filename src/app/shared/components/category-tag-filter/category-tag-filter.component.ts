@@ -18,7 +18,9 @@ export class CategoryTagFilterComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipes']) {
-      this.categories = this.distinctSorted(this.recipes.map(r => r.category));
+      this.categories = this.distinctSorted(
+        this.recipes.map(r => r.category).filter((c): c is string => !!c)
+      );
       this.clearSelection();
       this.emitFiltered();
     }
@@ -31,7 +33,7 @@ export class CategoryTagFilterComponent implements OnChanges {
       this.selectedCategory = category;
       this.selectedTags.clear();
       this.subTags = this.distinctSorted(
-        this.recipes.filter(r => r.category === category).flatMap(r => r.tags)
+        this.recipes.filter(r => r.category === category).flatMap(r => r.tags ?? [])
       );
     }
     this.emitFiltered();
@@ -68,7 +70,7 @@ export class CategoryTagFilterComponent implements OnChanges {
     const selectedTags = Array.from(this.selectedTags);
     const filtered = this.recipes.filter(recipe =>
       (!this.selectedCategory || recipe.category === this.selectedCategory) &&
-      selectedTags.every(tag => recipe.tags.includes(tag))
+      selectedTags.every(tag => (recipe.tags ?? []).includes(tag))
     );
     this.filteredChange.emit(filtered);
   }

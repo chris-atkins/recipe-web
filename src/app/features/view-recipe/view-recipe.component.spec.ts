@@ -59,6 +59,21 @@ class MockQuillEditorComponent implements ControlValueAccessor {
   }
 }
 
+// Mock the shared form pickers
+@Component({ selector: 'app-category-picker', template: '' })
+class MockCategoryPickerComponent {
+  @Input() category: string | null = null;
+  @Output() categoryChange = new EventEmitter<string | null>();
+  @Input() invalid = false;
+  @Output() invalidChange = new EventEmitter<boolean>();
+}
+
+@Component({ selector: 'app-tag-input', template: '' })
+class MockTagInputComponent {
+  @Input() tags: string[] = [];
+  @Output() tagsChange = new EventEmitter<string[]>();
+}
+
 describe('ViewRecipeComponent', () => {
   let component: ViewRecipeComponent;
   let fixture: ComponentFixture<ViewRecipeComponent>;
@@ -72,6 +87,8 @@ describe('ViewRecipeComponent', () => {
     recipeName: 'Test Recipe',
     recipeContent: '<p>Test content</p>',
     editable: true,
+    category: 'Main Dish',
+    tags: ['Vegan'],
     image: { imageUrl: 'http://example.com/image.jpg' }
   };
 
@@ -95,7 +112,9 @@ describe('ViewRecipeComponent', () => {
         ViewRecipeComponent,
         MockNavbarComponent,
         MockImageUploadModalComponent,
-        MockQuillEditorComponent
+        MockQuillEditorComponent,
+        MockCategoryPickerComponent,
+        MockTagInputComponent
       ],
       imports: [FormsModule],
       providers: [
@@ -199,6 +218,8 @@ describe('ViewRecipeComponent', () => {
       expect(component.inEditMode).toBe(true);
       expect(component.nameBeingEdited).toBe('Test Recipe');
       expect(component.contentBeingEdited).toBe('<p>Test content</p>');
+      expect(component.categoryBeingEdited).toBe('Main Dish');
+      expect(component.tagsBeingEdited).toEqual(['Vegan']);
     });
 
     it('should exit edit mode when cancelEdit is called', () => {
@@ -218,8 +239,24 @@ describe('ViewRecipeComponent', () => {
 
       setTimeout(() => {
         expect(mockRecipeService.saveRecipe).toHaveBeenCalled();
+        const saved = mockRecipeService.saveRecipe.calls.mostRecent().args[0];
+        expect(saved.category).toBe('Main Dish');
+        expect(saved.tags).toEqual(['Vegan']);
         expect(component.inEditMode).toBe(false);
         expect(component.recipe.recipeName).toBe('Updated Name');
+        done();
+      }, 10);
+    });
+
+    it('should not save and flags the category invalid when the category is cleared', (done) => {
+      component.editClicked();
+      component.categoryBeingEdited = null;
+      component.saveClicked();
+
+      setTimeout(() => {
+        expect(mockRecipeService.saveRecipe).not.toHaveBeenCalled();
+        expect(component.categoryInvalid).toBe(true);
+        expect(component.inEditMode).toBe(true);
         done();
       }, 10);
     });

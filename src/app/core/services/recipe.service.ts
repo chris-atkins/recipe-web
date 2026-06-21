@@ -13,6 +13,8 @@ export interface Recipe {
   imageUrl?: string;
   image?: RecipeImage | null;
   editable?: boolean;
+  category?: string | null;   // real + writable (set on the save form)
+  tags?: string[];            // real + writable
 }
 
 export interface RecipeRating {
@@ -21,21 +23,18 @@ export interface RecipeRating {
 }
 
 /**
- * Read-only display model: a real Recipe decorated with synthetic fields the
- * backend does not provide yet (rating/category/tags). Built only on the READ
- * path; never written back to the server. See the design-decisions memory.
- * TODO: consider collapsing into Recipe once the backend grows these fields.
+ * Read-only display model: a real Recipe decorated with the synthetic fields the
+ * backend does not provide yet (rating + nutrition). Category/tags are now REAL
+ * and inherited from Recipe. Built only on the READ path; never written back.
+ * See the design-decisions memory.
  */
 export interface RecipeCardView extends Recipe {
   rating: RecipeRating;
-  category: string;
-  tags: string[];
   // Slice 3 — preview fields (faked, deterministic per recipe)
   calories: number;
   activeTimeMinutes: number;
   totalTimeMinutes: number;
   servings: number;
-  ingredients: string[];
 }
 
 @Injectable({
@@ -43,20 +42,6 @@ export interface RecipeCardView extends Recipe {
 })
 export class RecipeService {
   private apiUrl = '/api/recipe';
-
-  // Generic placeholder pools — swapped for real backend values in a later slice.
-  private static readonly FAKE_CATEGORIES = ['Main Dish', 'Side Dish', 'Dessert'];
-  private static readonly FAKE_TAGS = ['Vegetarian', 'Quick & Easy', 'High Protein'];
-  private static readonly FAKE_INGREDIENTS = [
-    '2 tbsp olive oil',
-    '1 onion, diced',
-    '2 cloves garlic, minced',
-    '1 tsp salt',
-    '1/2 tsp black pepper',
-    '1 cup vegetable broth',
-    '2 cups mixed vegetables',
-    '1 tbsp fresh herbs'
-  ];
 
   constructor(private http: HttpClient) {}
 
@@ -92,10 +77,9 @@ export class RecipeService {
   }
 
   // --- Synthetic fake-data decoration (READ path only) -----------------------
-  // TEMPORARY: the backend has no ratings/category/tags yet. We decorate real
-  // read responses so the redesigned UI can be built against the eventual
-  // contract. Real recipe fields pass through verbatim; nothing here is ever
-  // written back to the server. Remove/replace when the backend provides these.
+  // Category + tags are now REAL (passed through verbatim from the backend).
+  // Rating + nutrition are still faked here so the redesigned UI has values to
+  // show; nothing here is ever written back. Remove as the backend grows them.
 
   private decorateList(list: Recipe[] | null): RecipeCardView[] {
     return (list ?? []).map(recipe => this.decorate(recipe));
@@ -105,14 +89,12 @@ export class RecipeService {
     const activeTimeMinutes = 10 + this.stableIndex(recipe, 6) * 5; // 10–35
     return {
       ...recipe,
+      tags: recipe.tags ?? [],
       rating: this.fakeRating(),
-      category: this.fakeCategory(recipe),
-      tags: this.fakeTags(recipe),
       calories: 150 + this.stableIndex(recipe, 38) * 10,             // 150–520
       activeTimeMinutes,
       totalTimeMinutes: activeTimeMinutes + 10 + this.stableIndex(recipe, 5) * 5, // active + 10–30
-      servings: 2 + this.stableIndex(recipe, 7),                     // 2–8
-      ingredients: this.fakeIngredients(recipe)
+      servings: 2 + this.stableIndex(recipe, 7)                      // 2–8
     };
   }
 
@@ -122,35 +104,6 @@ export class RecipeService {
     const average = Math.round((3.5 + this.nextRandom() * 1.5) * 10) / 10; // 3.5–5.0, one decimal
     const count = Math.floor(this.nextRandom() * 296) + 5;                 // 5–300
     return { average, count };
-  }
-
-  // Deterministic per recipe so a given card's category/tags stay stable.
-  private fakeCategory(recipe: Recipe): string {
-    const pool = RecipeService.FAKE_CATEGORIES;
-    return pool[this.stableIndex(recipe, pool.length)];
-  }
-
-  private fakeTags(recipe: Recipe): string[] {
-    const pool = RecipeService.FAKE_TAGS;
-    const start = this.stableIndex(recipe, pool.length);
-    const howMany = this.stableIndex(recipe, 2) + 1; // 1 or 2 tags, deterministic
-    const tags: string[] = [];
-    for (let i = 0; i < howMany; i++) {
-      tags.push(pool[(start + i) % pool.length]);
-    }
-    return tags;
-  }
-
-  // Deterministic generic ingredient list (placeholder until the backend has real data).
-  private fakeIngredients(recipe: Recipe): string[] {
-    const pool = RecipeService.FAKE_INGREDIENTS;
-    const howMany = 4 + this.stableIndex(recipe, 3); // 4–6 lines
-    const start = this.stableIndex(recipe, pool.length);
-    const ingredients: string[] = [];
-    for (let i = 0; i < howMany; i++) {
-      ingredients.push(pool[(start + i) % pool.length]);
-    }
-    return ingredients;
   }
 
   // Stable hash of the recipe identity (recipeId, falling back to recipeName).

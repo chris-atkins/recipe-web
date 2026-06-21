@@ -23,6 +23,21 @@ class MockImageUploadModalComponent {
   @Output() imageSaved = new EventEmitter<RecipeImage>();
 }
 
+// Mock the shared form pickers
+@Component({ selector: 'app-category-picker', template: '' })
+class MockCategoryPickerComponent {
+  @Input() category: string | null = null;
+  @Output() categoryChange = new EventEmitter<string | null>();
+  @Input() invalid = false;
+  @Output() invalidChange = new EventEmitter<boolean>();
+}
+
+@Component({ selector: 'app-tag-input', template: '' })
+class MockTagInputComponent {
+  @Input() tags: string[] = [];
+  @Output() tagsChange = new EventEmitter<string[]>();
+}
+
 describe('NewRecipeComponent', () => {
   let component: NewRecipeComponent;
   let fixture: ComponentFixture<NewRecipeComponent>;
@@ -39,7 +54,9 @@ describe('NewRecipeComponent', () => {
       declarations: [
         NewRecipeComponent,
         MockNavbarComponent,
-        MockImageUploadModalComponent
+        MockImageUploadModalComponent,
+        MockCategoryPickerComponent,
+        MockTagInputComponent
       ],
       imports: [FormsModule, QuillModule.forRoot()],
       providers: [
@@ -151,6 +168,8 @@ describe('NewRecipeComponent', () => {
 
       component.newRecipeName = 'Test Recipe';
       component.newRecipeContent = 'Test Content';
+      component.newRecipeCategory = 'Main Dish';
+      component.newRecipeTags = ['Spicy'];
 
       component.saveRecipeAndNavigate();
 
@@ -158,10 +177,25 @@ describe('NewRecipeComponent', () => {
         expect(mockRecipeService.saveRecipe).toHaveBeenCalledWith({
           recipeName: 'Test Recipe',
           recipeContent: 'Test Content',
+          category: 'Main Dish',
+          tags: ['Spicy'],
           image: null
         });
         done();
       }, 10);
+    });
+
+    it('should not save and flags the category invalid when no category is chosen', () => {
+      mockUserService.isLoggedIn.and.returnValue(true);
+      fixture.detectChanges();
+      component.newRecipeName = 'Test Recipe';
+      component.newRecipeContent = 'Test Content';
+      component.newRecipeCategory = null;
+
+      component.saveRecipeAndNavigate();
+
+      expect(mockRecipeService.saveRecipe).not.toHaveBeenCalled();
+      expect(component.categoryInvalid).toBe(true);
     });
 
     it('should save recipe with image when image is set', (done) => {
@@ -177,6 +211,7 @@ describe('NewRecipeComponent', () => {
 
       component.newRecipeName = 'Test Recipe';
       component.newRecipeContent = 'Test Content';
+      component.newRecipeCategory = 'Dessert';
       component.newImage = testImage;
 
       component.saveRecipeAndNavigate();
@@ -185,6 +220,8 @@ describe('NewRecipeComponent', () => {
         expect(mockRecipeService.saveRecipe).toHaveBeenCalledWith({
           recipeName: 'Test Recipe',
           recipeContent: 'Test Content',
+          category: 'Dessert',
+          tags: [],
           image: testImage
         });
         done();
@@ -202,6 +239,7 @@ describe('NewRecipeComponent', () => {
 
       component.newRecipeName = 'Test Recipe';
       component.newRecipeContent = 'Test Content';
+      component.newRecipeCategory = 'Main Dish';
 
       component.saveRecipeAndNavigate();
 
@@ -218,6 +256,7 @@ describe('NewRecipeComponent', () => {
 
       component.newRecipeName = 'Test Recipe';
       component.newRecipeContent = 'Test Content';
+      component.newRecipeCategory = 'Main Dish';
 
       component.saveRecipeAndNavigate();
 

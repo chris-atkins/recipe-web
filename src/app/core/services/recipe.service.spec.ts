@@ -19,7 +19,8 @@ describe('RecipeService', () => {
     httpMock.verify();
   });
 
-  // Shared assertion: the synthetic fake-data fields are present and well-shaped.
+  // Shared assertion: the synthetic rating is present and well-shaped.
+  // (category/tags are real now — asserted per-test where flushed.)
   function expectDecorated(view: RecipeCardView): void {
     expect(view.rating).toBeTruthy();
     expect(view.rating.average).toBeGreaterThanOrEqual(3.5);
@@ -27,14 +28,7 @@ describe('RecipeService', () => {
     expect(Math.round(view.rating.average * 10) / 10).toBe(view.rating.average); // one decimal
     expect(Number.isInteger(view.rating.count)).toBe(true);
     expect(view.rating.count).toBeGreaterThanOrEqual(1);
-    expect(typeof view.category).toBe('string');
-    expect(view.category.length).toBeGreaterThan(0);
     expect(Array.isArray(view.tags)).toBe(true);
-    expect(view.tags.length).toBeGreaterThanOrEqual(1);
-    view.tags.forEach(tag => {
-      expect(typeof tag).toBe('string');
-      expect(tag.length).toBeGreaterThan(0);
-    });
   }
 
   describe('searchRecipes', () => {
@@ -59,7 +53,7 @@ describe('RecipeService', () => {
     it('passes the real recipe fields through verbatim and adds the synthetic display fields', (done) => {
       const realRecipe: Recipe = {
         recipeId: 'abc123', recipeName: 'Real Recipe', recipeContent: 'Real Content',
-        imageUrl: 'http://img/1.png', editable: true
+        imageUrl: 'http://img/1.png', editable: true, category: 'Dessert', tags: ['Vegan']
       };
 
       const promise = service.searchRecipes(searchString);
@@ -74,6 +68,9 @@ describe('RecipeService', () => {
         expect(data[0].recipeContent).toBe('Real Content');
         expect(data[0].imageUrl).toBe('http://img/1.png');
         expect(data[0].editable).toBe(true);
+        // real category + tags pass through (no longer synthesized)
+        expect(data[0].category).toBe('Dessert');
+        expect(data[0].tags).toEqual(['Vegan']);
         // synthetic fields added
         expectDecorated(data[0]);
         done();
@@ -196,21 +193,28 @@ describe('RecipeService', () => {
       });
     });
 
-    it('assigns category and tags deterministically for the same recipeId', (done) => {
-      const recipe: Recipe = { recipeId: 'stable-id', recipeName: 'X', recipeContent: 'Y' };
+    it('passes real category and tags through unchanged', (done) => {
+      const recipe: Recipe = { recipeId: 'c1', recipeName: 'X', recipeContent: 'Y', category: 'Soup', tags: ['Comfort Food', 'Vegan'] };
 
-      const firstPromise = service.getRecipeList();
+      const promise = service.getRecipeList();
       httpMock.expectOne('/api/recipe').flush([recipe]);
 
-      firstPromise.then(first => {
-        const secondPromise = service.getRecipeList();
-        httpMock.expectOne('/api/recipe').flush([recipe]);
+      promise.then(response => {
+        expect(response[0].category).toBe('Soup');
+        expect(response[0].tags).toEqual(['Comfort Food', 'Vegan']);
+        done();
+      });
+    });
 
-        secondPromise.then(second => {
-          expect(second[0].category).toBe(first[0].category);
-          expect(second[0].tags).toEqual(first[0].tags);
-          done();
-        });
+    it('defaults missing tags to an empty array', (done) => {
+      const recipe: Recipe = { recipeId: 'c2', recipeName: 'X', recipeContent: 'Y' };
+
+      const promise = service.getRecipeList();
+      httpMock.expectOne('/api/recipe').flush([recipe]);
+
+      promise.then(response => {
+        expect(response[0].tags).toEqual([]);
+        done();
       });
     });
 
@@ -262,7 +266,7 @@ describe('RecipeService', () => {
       });
     });
 
-    it('adds faked preview stats and ingredients with valid shapes', (done) => {
+    it('adds faked preview stats with valid shapes', (done) => {
       const promise = service.getRecipeList();
       httpMock.expectOne('/api/recipe').flush([{ recipeId: 'stats1', recipeName: 'R', recipeContent: 'C' }]);
 
@@ -273,14 +277,11 @@ describe('RecipeService', () => {
         expect(r.activeTimeMinutes).toBeGreaterThan(0);
         expect(r.totalTimeMinutes).toBeGreaterThanOrEqual(r.activeTimeMinutes);
         expect(r.servings).toBeGreaterThan(0);
-        expect(Array.isArray(r.ingredients)).toBe(true);
-        expect(r.ingredients.length).toBeGreaterThan(0);
-        r.ingredients.forEach(i => expect(typeof i).toBe('string'));
         done();
       });
     });
 
-    it('assigns preview stats and ingredients deterministically for the same recipeId', (done) => {
+    it('assigns preview stats deterministically for the same recipeId', (done) => {
       const recipe = { recipeId: 'det-stats', recipeName: 'X', recipeContent: 'Y' };
 
       const firstPromise = service.getRecipeList();
@@ -295,7 +296,6 @@ describe('RecipeService', () => {
           expect(second[0].activeTimeMinutes).toBe(first[0].activeTimeMinutes);
           expect(second[0].totalTimeMinutes).toBe(first[0].totalTimeMinutes);
           expect(second[0].servings).toBe(first[0].servings);
-          expect(second[0].ingredients).toEqual(first[0].ingredients);
           done();
         });
       });
@@ -323,8 +323,6 @@ describe('RecipeService', () => {
       promise.then(response => {
         expect(response).toEqual(expectedResponse);
         expect((response as any).rating).toBeUndefined();
-        expect((response as any).category).toBeUndefined();
-        expect((response as any).tags).toBeUndefined();
         done();
       });
     });
@@ -348,16 +346,24 @@ describe('RecipeService', () => {
   describe('saveRecipe (write path — must never carry synthetic fields)', () => {
     const recipe: Recipe = { recipeName: 'name', recipeContent: 'content' };
 
-    it('calls the correct endpoint for new recipe (POST) and sends no synthetic fields', () => {
+    it('calls the correct endpoint for new recipe (POST) and sends no synthetic rating', () => {
       service.saveRecipe(recipe);
 
       const req = httpMock.expectOne('/api/recipe');
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(recipe);
       expect((req.request.body as any).rating).toBeUndefined();
-      expect((req.request.body as any).category).toBeUndefined();
-      expect((req.request.body as any).tags).toBeUndefined();
       req.flush(recipe);
+    });
+
+    it('sends real category and tags in the save payload when present', () => {
+      const withAttrs: Recipe = { recipeName: 'n', recipeContent: 'c', category: 'Main Dish', tags: ['Spicy'] };
+      service.saveRecipe(withAttrs);
+
+      const req = httpMock.expectOne('/api/recipe');
+      expect(req.request.body.category).toBe('Main Dish');
+      expect(req.request.body.tags).toEqual(['Spicy']);
+      req.flush(withAttrs);
     });
 
     it('calls the correct endpoint for existing recipe (PUT)', () => {

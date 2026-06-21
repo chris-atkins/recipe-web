@@ -72,7 +72,7 @@ describe('SearchRecipesComponent', () => {
 
   it('should set resultInfoMessage to show all recipes when no search string', async () => {
     mockRecipeService.searchRecipes.and.returnValue(Promise.resolve([
-      { recipeId: '1', recipeName: 'Test', recipeContent: 'Content', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4, ingredients: ['1 cup flour'] }
+      { recipeId: '1', recipeName: 'Test', recipeContent: 'Content', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4 }
     ]));
     fixture.detectChanges();
     await fixture.whenStable();
@@ -118,7 +118,7 @@ describe('SearchRecipesComponent', () => {
 
   it('should hide no results message when recipes exist', async () => {
     mockRecipeService.searchRecipes.and.returnValue(Promise.resolve([
-      { recipeId: '1', recipeName: 'Test', recipeContent: 'Content', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4, ingredients: ['1 cup flour'] }
+      { recipeId: '1', recipeName: 'Test', recipeContent: 'Content', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4 }
     ]));
     fixture.detectChanges();
     await fixture.whenStable();
@@ -130,7 +130,7 @@ describe('SearchRecipesComponent', () => {
 
   it('shows the sample-data note when recipes are present', async () => {
     mockRecipeService.searchRecipes.and.returnValue(Promise.resolve([
-      { recipeId: '1', recipeName: 'Test', recipeContent: 'Content', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4, ingredients: ['1 cup flour'] }
+      { recipeId: '1', recipeName: 'Test', recipeContent: 'Content', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4 }
     ]));
     fixture.detectChanges();
     await fixture.whenStable();

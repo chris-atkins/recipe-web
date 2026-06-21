@@ -1,0 +1,63 @@
+.cat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.cat-pill {
+  padding: 6px 15px;
+  border-radius: var(--radius-pill);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: transform 0.12s, opacity 0.15s;
+}
+.cat-pill:hover { transform: scale(1.03); }
+.cat-pill.selected { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--navy); }
+.cat-pill.dimmed { opacity: 0.38; }
+.cat-pill .emoji { margin-right: 5px; }
+
+/* "+ Add your own" and a created custom category use a neutral grey. */
+.cat-add,
+.cat-custom { background: #6f6f6f; }
+
+.cat-pill.editing {
+  background: #fff;
+  color: var(--text);
+  border: 1.5px dashed var(--navy);
+  padding: 5px 11px;
+}
+.pill-input {
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  width: 132px;
+  background: transparent;
+  color: var(--text);
+}
+
+/* Required miss-state — red ring + message + shake. */
+.category-picker.invalid .cat-row {
+  outline: 2px solid #d23b2e;
+  outline-offset: 7px;
+  border-radius: 12px;
+}
+.category-picker.invalid { animation: cp-shake 0.35s; }
+@keyframes cp-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.cat-error {
+  color: #d23b2e;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 14px;
+}

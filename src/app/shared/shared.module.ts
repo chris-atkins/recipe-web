@@ -11,6 +11,8 @@ import { RecipeElementComponent } from './components/recipe-element/recipe-eleme
 import { RecipeCardWallComponent } from './components/recipe-card-wall/recipe-card-wall.component';
 import { RecipePreviewComponent } from './components/recipe-preview/recipe-preview.component';
 import { CategoryTagFilterComponent } from './components/category-tag-filter/category-tag-filter.component';
+import { CategoryPickerComponent } from './components/category-picker/category-picker.component';
+import { TagInputComponent } from './components/tag-input/tag-input.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { CategoryTagFilterComponent } from './components/category-tag-filter/cat
     RecipeElementComponent,
     RecipeCardWallComponent,
     RecipePreviewComponent,
-    CategoryTagFilterComponent
+    CategoryTagFilterComponent,
+    CategoryPickerComponent,
+    TagInputComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +41,9 @@ import { CategoryTagFilterComponent } from './components/category-tag-filter/cat
     RecipeElementComponent,
     RecipeCardWallComponent,
     RecipePreviewComponent,
-    CategoryTagFilterComponent
+    CategoryTagFilterComponent,
+    CategoryPickerComponent,
+    TagInputComponent
   ]
 })
 export class SharedModule { }

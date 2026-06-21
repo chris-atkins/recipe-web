@@ -1,0 +1,22 @@
+<div class="tag-chips">
+  <span class="chip" *ngFor="let tag of tags">
+    {{ tag }}
+    <button type="button" class="chip-remove" (click)="removeChip(tag)" title="remove">×</button>
+  </span>
+
+  <button
+    *ngIf="!adding"
+    type="button"
+    class="tag-add"
+    (click)="startAdd()">+ Create your own</button>
+
+  <span *ngIf="adding" class="tag-add editing">
+    <input
+      #tagInput
+      type="text"
+      class="pill-input"
+      placeholder="New tag…"
+      (keydown)="onKey($event)"
+      (blur)="commitAdd()"/>
+  </span>
+</div>

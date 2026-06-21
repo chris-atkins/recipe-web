@@ -26,6 +26,10 @@ const CATEGORY_EMOJI: Record<string, string> = {
   'Soup': '🍜'
 };
 
+// The preset categories offered in the save-page picker (order = display order).
+// Custom categories typed by users fall back to the neutral colour/emoji above.
+export const CATEGORY_NAMES: string[] = Object.keys(CATEGORY_COLORS);
+
 // Splits the 5 star slots into full / half / empty for a rating average.
 // Rounds the fractional part first — averages are 1-decimal by contract, and raw
 // subtraction (e.g. 4.3 - 4 = 0.299999…) would lose the half-star threshold.

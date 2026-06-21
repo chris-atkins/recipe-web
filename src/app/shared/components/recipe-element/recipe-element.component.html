@@ -21,8 +21,8 @@
     </div>
 
     <div class="recipe-tags">
-      <span class="card-cat-pill" [style.background-color]="getCategoryColor()">{{ recipe?.category }}</span>
-      <span class="card-tag-pill" *ngFor="let tag of recipe?.tags">{{ tag }}</span>
+      <span class="card-cat-pill" *ngIf="recipe?.category" [style.background-color]="getCategoryColor()">{{ recipe?.category }}</span>
+      <span class="card-tag-pill" *ngFor="let tag of recipe?.tags || []">{{ tag }}</span>
     </div>
   </div>
 

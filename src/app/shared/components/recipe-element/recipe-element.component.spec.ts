@@ -24,8 +24,7 @@ describe('RecipeElementComponent', () => {
     calories: 320,
     activeTimeMinutes: 20,
     totalTimeMinutes: 35,
-    servings: 4,
-    ingredients: ['1 onion, diced', '2 cloves garlic']
+    servings: 4
   };
 
   const mockUser: User = {
@@ -323,6 +322,13 @@ describe('RecipeElementComponent', () => {
       expect(tags.length).toBe(2);
       expect(tags[0].textContent).toContain('Vegetarian');
       expect(tags[1].textContent).toContain('Quick & Easy');
+    });
+
+    it('renders no category pill or tags for an uncategorized recipe', () => {
+      component.recipe = { ...mockRecipe, category: null, tags: [] };
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.card-cat-pill')).toBeFalsy();
+      expect(fixture.nativeElement.querySelectorAll('.card-tag-pill').length).toBe(0);
     });
 
     it('should render the category emoji placeholder when there is no photo', () => {

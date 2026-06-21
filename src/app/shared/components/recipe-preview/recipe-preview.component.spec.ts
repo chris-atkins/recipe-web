@@ -21,8 +21,7 @@ describe('RecipePreviewComponent', () => {
     calories: 320,
     activeTimeMinutes: 20,
     totalTimeMinutes: 35,
-    servings: 4,
-    ingredients: ['1 onion, diced', '2 cloves garlic', '1 tsp salt']
+    servings: 4
   };
 
   beforeEach(() => {
@@ -73,6 +72,13 @@ describe('RecipePreviewComponent', () => {
       expect(cat.textContent).toContain('Main Dish');
       const tags = fixture.nativeElement.querySelectorAll('.card-tag-pill');
       expect(tags.length).toBe(2);
+    });
+
+    it('renders no category pill for an uncategorized recipe', () => {
+      component.recipe = { ...mockRecipe, category: null, tags: [] };
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.card-cat-pill')).toBeFalsy();
+      expect(fixture.nativeElement.querySelectorAll('.card-tag-pill').length).toBe(0);
     });
 
     it('renders the 4-cell stats bar with values', () => {

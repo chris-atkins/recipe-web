@@ -21,9 +21,22 @@
   <img class="recipe-image" *ngIf="imageExists()" [src]="recipe.image?.imageUrl"/>
 
   <div class="form-group">
+    <label class="field-label" for="recipe-name-input">Recipe Name</label>
     <input id="recipe-name-input" class="form-control" placeholder="Recipe Name" type="text" [(ngModel)]="nameBeingEdited"/>
   </div>
+
+  <div class="form-group" #categorySection>
+    <label class="field-label">Category <span class="required-badge">required</span></label>
+    <app-category-picker [(category)]="categoryBeingEdited" [(invalid)]="categoryInvalid"></app-category-picker>
+  </div>
+
+  <div class="form-group">
+    <label class="field-label">Tags <span class="optional-badge">optional</span></label>
+    <app-tag-input [(tags)]="tagsBeingEdited"></app-tag-input>
+  </div>
+
   <div class="form-group recipe-content-editor-group">
+    <label class="field-label">Recipe</label>
     <quill-editor
       class="recipe-content-editor"
       [(ngModel)]="contentBeingEdited"

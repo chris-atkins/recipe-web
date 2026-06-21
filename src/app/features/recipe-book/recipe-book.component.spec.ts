@@ -36,8 +36,8 @@ describe('RecipeBookComponent', () => {
 
   const testUser: User = { userId: '123', userName: 'Test User', userEmail: 'test@test.com' };
   const testRecipes: RecipeCardView[] = [
-    { recipeId: 'r1', recipeName: 'Recipe 1', recipeContent: 'Content 1', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4, ingredients: ['1 cup flour'] },
-    { recipeId: 'r2', recipeName: 'Recipe 2', recipeContent: 'Content 2', rating: { average: 4.2, count: 8 }, category: 'Dessert', tags: ['Quick & Easy'], calories: 250, activeTimeMinutes: 15, totalTimeMinutes: 30, servings: 6, ingredients: ['2 eggs'] }
+    { recipeId: 'r1', recipeName: 'Recipe 1', recipeContent: 'Content 1', rating: { average: 4.5, count: 10 }, category: 'Main Dish', tags: ['Vegetarian'], calories: 300, activeTimeMinutes: 20, totalTimeMinutes: 35, servings: 4 },
+    { recipeId: 'r2', recipeName: 'Recipe 2', recipeContent: 'Content 2', rating: { average: 4.2, count: 8 }, category: 'Dessert', tags: ['Quick & Easy'], calories: 250, activeTimeMinutes: 15, totalTimeMinutes: 30, servings: 6 }
   ];
 
   beforeEach(async () => {
