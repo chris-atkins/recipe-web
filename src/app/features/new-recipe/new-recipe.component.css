@@ -1,27 +1,10 @@
 /* New Recipe page specific styles */
 
 :host {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 60px); /* Account for navbar */
-}
-
-.new-recipe-page {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-}
-
-.recipe-content-editor-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 200px;
+  display: block;
 }
 
 .recipe-content-editor {
-  flex: 1;
   display: flex;
   flex-direction: column;
 }
@@ -33,11 +16,11 @@
 }
 
 .recipe-content-editor ::ng-deep .ql-container {
-  flex: 1;
+  min-height: 300px;
+  max-height: 60vh;
   overflow-y: auto;
   border: 1px solid #ccc !important;
   font-size: 16px;
-  max-height: calc(100vh - 385px);
 }
 
 .recipe-content-editor ::ng-deep .ql-editor.ql-blank::before {
