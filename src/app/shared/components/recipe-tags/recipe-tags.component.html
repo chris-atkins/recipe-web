@@ -1,0 +1,25 @@
+<div class="recipe-tags">
+  <span class="tag-pill" *ngFor="let tag of tags" [class.own]="canRemove(tag)">
+    {{ tag }}
+    <button
+      *ngIf="canRemove(tag)"
+      type="button"
+      class="tag-remove"
+      (click)="removeTag(tag)"
+      [attr.aria-label]="'Remove ' + tag"
+      title="Remove tag">×</button>
+  </span>
+
+  <form class="tag-add-form" *ngIf="canEdit" (ngSubmit)="addTag()">
+    <input
+      type="text"
+      class="tag-add-input"
+      name="newTag"
+      placeholder="Add a tag…"
+      maxlength="40"
+      [(ngModel)]="newTag"/>
+    <button type="submit" class="tag-add-btn">Add</button>
+  </form>
+
+  <span class="login-cue" *ngIf="!canEdit">Log in to add tags</span>
+</div>

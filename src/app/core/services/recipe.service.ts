@@ -15,6 +15,7 @@ export interface Recipe {
   editable?: boolean;
   category?: string | null;   // real + writable (set on the save form)
   tags?: string[];            // real + writable
+  ownTags?: string[];         // subset of tags the current user added (single-recipe read + tag POST/DELETE; [] elsewhere)
   rating?: RecipeRating;      // real, read-only aggregate (set by the backend on reads)
 }
 
@@ -69,6 +70,16 @@ export class RecipeService {
     return firstValueFrom(this.http.put<Recipe>(`${this.apiUrl}/${recipeId}/rating`, { value }));
   }
 
+  /** Add a crowd-sourced tag (logged-in only); resolves with the updated recipe (fresh tags + ownTags). */
+  addTag(recipeId: string, tag: string): Promise<Recipe> {
+    return firstValueFrom(this.http.post<Recipe>(`${this.apiUrl}/${recipeId}/tag`, { tag }));
+  }
+
+  /** Remove a tag the current user added (the tag is a URL-encoded query param, not a body). */
+  removeTag(recipeId: string, tag: string): Promise<Recipe> {
+    return firstValueFrom(this.http.delete<Recipe>(`${this.apiUrl}/${recipeId}/tag?tag=${encodeURIComponent(tag)}`));
+  }
+
   searchRecipes(searchString?: string): Promise<RecipeCardView[]> {
     const params: any = {};
     if (searchString) {
@@ -102,6 +113,7 @@ export class RecipeService {
     return {
       ...recipe,
       tags: recipe.tags ?? [],
+      ownTags: recipe.ownTags ?? [],
       rating: recipe.rating ?? { average: 0, count: 0 },
       calories: 150 + this.stableIndex(recipe, 38) * 10,             // 150–520
       activeTimeMinutes,

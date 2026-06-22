@@ -149,16 +149,8 @@
 
 .recipe-rating-holder { margin: 6px 0 12px; }
 
-.recipe-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.recipe-tags .tag-pill {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary, #555);
-  background: #f3f1ee;
-  border: 1px solid var(--border-light, #e2e0dc);
-  border-radius: var(--radius-pill, 999px);
-  padding: 3px 11px;
-}
+/* app-recipe-tags renders its own pills + add control; give it the same vertical rhythm. */
+app-recipe-tags { display: block; margin: 0 0 4px; }
 
 .recipe-photo {
   display: block;

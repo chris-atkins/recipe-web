@@ -85,6 +85,12 @@ class MockRatingStarsComponent {
   @Output() ratingChange = new EventEmitter<any>();
 }
 
+@Component({ selector: 'app-recipe-tags', template: '' })
+class MockRecipeTagsComponent {
+  @Input() recipe: any;
+  @Output() recipeChange = new EventEmitter<any>();
+}
+
 describe('ViewRecipeComponent', () => {
   let component: ViewRecipeComponent;
   let fixture: ComponentFixture<ViewRecipeComponent>;
@@ -128,7 +134,8 @@ describe('ViewRecipeComponent', () => {
         MockQuillEditorComponent,
         MockCategoryPickerComponent,
         MockTagInputComponent,
-        MockRatingStarsComponent
+        MockRatingStarsComponent,
+        MockRecipeTagsComponent
       ],
       imports: [FormsModule],
       providers: [
@@ -524,10 +531,10 @@ describe('ViewRecipeComponent', () => {
       expect(pill.textContent).toContain('Main Dish');
     });
 
-    it('shows a tag pill for each tag', () => {
-      const tags = fixture.nativeElement.querySelectorAll('.recipe-tags .tag-pill');
-      expect(tags.length).toBe(1);
-      expect(tags[0].textContent).toContain('Vegan');
+    it('renders the recipe-tags component bound to the recipe', () => {
+      const tagsEl = fixture.debugElement.query(By.css('app-recipe-tags'));
+      expect(tagsEl).toBeTruthy();
+      expect(tagsEl.componentInstance.recipe).toBe(component.recipe);
     });
 
     it('renders the 4:3 recipe photo when an image exists', () => {
@@ -536,11 +543,10 @@ describe('ViewRecipeComponent', () => {
       expect(photo.getAttribute('src')).toBe('http://example.com/image.jpg');
     });
 
-    it('omits the category pill, tags, and photo when the recipe has none', () => {
+    it('omits the category pill and photo when the recipe has none', () => {
       component.recipe = { ...testRecipe, category: null, tags: [], image: null };
       fixture.detectChanges();
       expect(fixture.nativeElement.querySelector('.cat-pill')).toBeFalsy();
-      expect(fixture.nativeElement.querySelectorAll('.recipe-tags .tag-pill').length).toBe(0);
       expect(fixture.nativeElement.querySelector('.recipe-photo')).toBeFalsy();
     });
 

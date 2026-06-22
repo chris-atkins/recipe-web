@@ -1,0 +1,63 @@
+:host { display: block; }
+
+.recipe-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+
+/* Read-view tag pill (matches the view-recipe read-card pill styling). */
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, #555);
+  background: #f3f1ee;
+  border: 1px solid var(--border-light, #e2e0dc);
+  border-radius: var(--radius-pill, 999px);
+  padding: 3px 11px;
+}
+/* Tags the current user added read slightly stronger and pad for the ✕. */
+.tag-pill.own { padding-right: 5px; }
+
+.tag-remove {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--text-secondary, #555);
+  border: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tag-remove:hover { background: var(--navy, #001f3f); color: #fff; }
+
+/* Inline add control */
+.tag-add-form { display: inline-flex; align-items: center; gap: 6px; }
+.tag-add-input {
+  border: 1.5px solid var(--border-light, #e2e0dc);
+  border-radius: var(--radius-pill, 999px);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 3px 11px;
+  width: 130px;
+  background: #fff;
+  color: var(--text, #1a1a1a);
+}
+.tag-add-input:focus { outline: none; border-color: var(--navy, #001f3f); }
+.tag-add-btn {
+  background: var(--navy, #001f3f);
+  color: #fff;
+  border: 1.5px solid var(--navy, #001f3f);
+  border-radius: var(--radius-pill, 999px);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 13px;
+  cursor: pointer;
+}
+.tag-add-btn:hover { background: var(--navy-light, #0a3060); border-color: var(--navy-light, #0a3060); }
+
+.login-cue { font-size: 12.5px; color: var(--text-muted, #8a8a8a); font-style: italic; }

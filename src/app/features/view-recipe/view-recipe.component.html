@@ -12,9 +12,7 @@
       <app-rating-stars [rating]="recipe.rating" [recipeId]="recipe.recipeId" [interactive]="true"></app-rating-stars>
     </div>
 
-    <div class="recipe-tags" *ngIf="recipe.tags?.length">
-      <span class="tag-pill" *ngFor="let tag of recipe.tags">{{ tag }}</span>
-    </div>
+    <app-recipe-tags [recipe]="recipe"></app-recipe-tags>
 
     <img class="recipe-photo" *ngIf="imageExists()" [src]="recipe.image?.imageUrl" [alt]="'Photo of ' + recipe.recipeName"/>
 

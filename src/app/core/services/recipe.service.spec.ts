@@ -204,6 +204,18 @@ describe('RecipeService', () => {
       });
     });
 
+    it('defaults ownTags to an empty array on list reads (backend omits it there)', (done) => {
+      const recipe: Recipe = { recipeId: 'c3', recipeName: 'X', recipeContent: 'Y' };
+
+      const promise = service.getRecipeList();
+      httpMock.expectOne('/api/recipe').flush([recipe]);
+
+      promise.then(response => {
+        expect(response[0].ownTags).toEqual([]);
+        done();
+      });
+    });
+
     it('defaults missing tags to an empty array', (done) => {
       const recipe: Recipe = { recipeId: 'c2', recipeName: 'X', recipeContent: 'Y' };
 
@@ -353,6 +365,67 @@ describe('RecipeService', () => {
         expect(recipe.rating).toEqual({ average: 4.5, count: 6 });
         done();
       });
+    });
+  });
+
+  describe('addTag', () => {
+    it('POSTs the tag and resolves with the updated recipe', (done) => {
+      const updated: Recipe = { recipeId: 'r1', recipeName: 'R', recipeContent: 'C', tags: ['Spicy'], ownTags: ['Spicy'] };
+      const promise = service.addTag('r1', 'Spicy');
+
+      const req = httpMock.expectOne('/api/recipe/r1/tag');
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual({ tag: 'Spicy' });
+      req.flush(updated);
+
+      promise.then(recipe => {
+        expect(recipe.tags).toEqual(['Spicy']);
+        expect(recipe.ownTags).toEqual(['Spicy']);
+        done();
+      });
+    });
+
+    it('returns a catchable error if the POST fails', (done) => {
+      const promise = service.addTag('r1', 'Spicy');
+      const req = httpMock.expectOne('/api/recipe/r1/tag');
+      req.flush({ message: 'uh-oh' }, { status: 400, statusText: 'Bad Request' });
+
+      promise
+        .then(() => fail('expected error'))
+        .catch((error) => {
+          expect(error.error.message).toBe('uh-oh');
+          done();
+        });
+    });
+  });
+
+  describe('removeTag', () => {
+    it('DELETEs with the URL-encoded tag as a query param and resolves with the updated recipe', (done) => {
+      const updated: Recipe = { recipeId: 'r1', recipeName: 'R', recipeContent: 'C', tags: [], ownTags: [] };
+      const promise = service.removeTag('r1', 'Comfort Food');
+
+      const req = httpMock.expectOne('/api/recipe/r1/tag?tag=Comfort%20Food');
+      expect(req.request.method).toBe('DELETE');
+      req.flush(updated);
+
+      promise.then(recipe => {
+        expect(recipe.tags).toEqual([]);
+        expect(recipe.ownTags).toEqual([]);
+        done();
+      });
+    });
+
+    it('returns a catchable error if the DELETE fails', (done) => {
+      const promise = service.removeTag('r1', 'Spicy');
+      const req = httpMock.expectOne('/api/recipe/r1/tag?tag=Spicy');
+      req.flush({ message: 'forbidden' }, { status: 403, statusText: 'Forbidden' });
+
+      promise
+        .then(() => fail('expected error'))
+        .catch((error) => {
+          expect(error.error.message).toBe('forbidden');
+          done();
+        });
     });
   });
 

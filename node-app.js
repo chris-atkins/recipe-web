@@ -136,6 +136,29 @@ function performRatingPUT(recipeId, body, request) {
 	return rs.put(putOptions);
 }
 
+function performTagPOST(recipeId, body, request) {
+	var postOptions = {
+		uri : serviceRoot + '/recipe/' + recipeId + '/tag',
+		headers : headersFromRequest(request),  // forwards RequestingUser (the tag adder)
+		json : true,
+		body : body,
+		simple: false,
+		resolveWithFullResponse: true
+	};
+	return rs.post(postOptions);
+}
+
+function performTagDELETE(recipeId, tag, request) {
+	var deleteOptions = {
+		uri : serviceRoot + '/recipe/' + recipeId + '/tag?tag=' + encodeURIComponent(tag || ''),
+		headers : headersFromRequest(request),  // forwards RequestingUser (must match the adder)
+		json : true,
+		simple: false,
+		resolveWithFullResponse: true
+	};
+	return rs.del(deleteOptions);
+}
+
 function performRecipePOST(recipe, request) {
 	var postOptions = {
 		uri : serviceRoot + '/recipe',
@@ -297,6 +320,26 @@ app.put('/api/recipe/:recipeId/rating', function(request, response) {
 	})
 	.catch(function(error) {
 		console.log('Error rating recipe with id ' + request.params.recipeId + ': ', error);
+	});
+});
+
+app.post('/api/recipe/:recipeId/tag', function(request, response) {
+	performTagPOST(request.params.recipeId, request.body, request).then(function(data) {
+		response.statusCode = data.statusCode;
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Error adding tag to recipe with id ' + request.params.recipeId + ': ', error);
+	});
+});
+
+app.delete('/api/recipe/:recipeId/tag', function(request, response) {
+	performTagDELETE(request.params.recipeId, request.query.tag, request).then(function(data) {
+		response.statusCode = data.statusCode;
+		response.json(data.body);
+	})
+	.catch(function(error) {
+		console.log('Error removing tag from recipe with id ' + request.params.recipeId + ': ', error);
 	});
 });
 
