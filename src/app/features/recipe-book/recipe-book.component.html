@@ -5,6 +5,7 @@
   <app-recipe-card-wall
     [recipeList]="recipeList"
     [recipeBookMode]="true"
+    [enablePreview]="true"
     [owningUserId]="user?.userId || ''"
     (recipeRemoved)="removeRecipeFromBook($event)">
   </app-recipe-card-wall>

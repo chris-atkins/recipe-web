@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { RecipeBookComponent } from './recipe-book.component';
 import { UserService, User } from '../../core/services/user.service';
 import { RecipeService, Recipe, RecipeCardView } from '../../core/services/recipe.service';
@@ -22,6 +23,7 @@ class MockRecipeCardWallComponent {
   @Input() recipeList: Recipe[] = [];
   @Input() recipeBook: any = null;
   @Input() recipeBookMode: boolean = false;
+  @Input() enablePreview: boolean = false;
   @Input() owningUserId: string = '';
   @Output() recipeRemoved = new EventEmitter<Recipe>();
 }
@@ -208,6 +210,12 @@ describe('RecipeBookComponent', () => {
       fixture.detectChanges();
       const cardWall = fixture.nativeElement.querySelector('app-recipe-card-wall');
       expect(cardWall).toBeTruthy();
+    });
+
+    it('enables the quick-preview on the card wall (matches the search page)', () => {
+      fixture.detectChanges();
+      const wall = fixture.debugElement.query(By.css('app-recipe-card-wall')).componentInstance;
+      expect(wall.enablePreview).toBe(true);
     });
   });
 });

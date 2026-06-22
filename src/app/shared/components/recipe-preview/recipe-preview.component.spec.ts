@@ -106,12 +106,12 @@ describe('RecipePreviewComponent', () => {
       expect(content.innerHTML).toContain('<br>');
     });
 
-    it('shows a disclaimer that ratings and stat values are sample data', () => {
+    it('shows a disclaimer that the stat values are sample data (ratings are real now)', () => {
       const disclaimer = fixture.nativeElement.querySelector('.stats-disclaimer');
       expect(disclaimer).toBeTruthy();
       const text = disclaimer.textContent.toLowerCase();
-      expect(text).toContain('ratings');
       expect(text).toContain('sample data');
+      expect(text).not.toContain('rating');
     });
 
     it('renders the action buttons', () => {
