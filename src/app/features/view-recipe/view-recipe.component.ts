@@ -4,6 +4,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RecipeService, Recipe, RecipeImage } from '../../core/services/recipe.service';
 import { RecipeBookService, RecipeBookItem } from '../../core/services/recipe-book.service';
 import { UserService } from '../../core/services/user.service';
+import { categoryColor, categoryEmoji } from '../../shared/recipe-display';
 
 @Component({
   selector: 'app-view-recipe',
@@ -91,6 +92,14 @@ export class ViewRecipeComponent implements OnInit {
 
   imageExists(): boolean {
     return !!(this.recipe.image && this.recipe.image.imageUrl);
+  }
+
+  getCategoryColor(): string {
+    return categoryColor(this.recipe.category);
+  }
+
+  getCategoryEmoji(): string {
+    return categoryEmoji(this.recipe.category);
   }
 
   editClicked(): void {

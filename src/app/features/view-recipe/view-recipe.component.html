@@ -1,15 +1,27 @@
 <app-navbar></app-navbar>
 
 <div class="container view-recipe-page" [hidden]="inEditMode">
-  <div class="recipe-title-holder"><h2><span id="recipe-name">{{recipe.recipeName}}</span></h2></div>
-  <div class="recipe-rating-holder">
-    <app-rating-stars [rating]="recipe.rating" [recipeId]="recipe.recipeId" [interactive]="true"></app-rating-stars>
-  </div>
-  <div class="alternate-url-holder"><button class="btn btn-secondary alternate-url-copy-button copy-button" title="Copy Import URL to Clipboard" (click)="copyAlternateUrlClicked()" role="button"><i class="fa fa-link" aria-hidden="true"></i><span>Copied</span></button></div>
+  <div class="recipe-view-card">
+    <button class="copy-link copy-button" title="Copy Import URL to Clipboard" (click)="copyAlternateUrlClicked()" role="button"><i class="fa fa-link" aria-hidden="true"></i><span>Copied</span></button>
 
-  <div class="serves-as-newline" *ngIf="imageExists()"></div>
-  <img class="recipe-image" *ngIf="imageExists()" [src]="recipe.image?.imageUrl"/>
-  <p><span id="recipe-content" class="recipe-ingredients show-line-breaks" [innerHTML]="recipeContentHtml"></span></p>
+    <span class="cat-pill" *ngIf="recipe.category" [style.background-color]="getCategoryColor()"><span class="cat-emoji">{{ getCategoryEmoji() }}</span>{{ recipe.category }}</span>
+
+    <h2 class="recipe-title"><span id="recipe-name">{{ recipe.recipeName }}</span></h2>
+
+    <div class="recipe-rating-holder">
+      <app-rating-stars [rating]="recipe.rating" [recipeId]="recipe.recipeId" [interactive]="true"></app-rating-stars>
+    </div>
+
+    <div class="recipe-tags" *ngIf="recipe.tags?.length">
+      <span class="tag-pill" *ngFor="let tag of recipe.tags">{{ tag }}</span>
+    </div>
+
+    <img class="recipe-photo" *ngIf="imageExists()" [src]="recipe.image?.imageUrl" [alt]="'Photo of ' + recipe.recipeName"/>
+
+    <div class="card-divider"></div>
+
+    <p><span id="recipe-content" class="recipe-ingredients show-line-breaks" [innerHTML]="recipeContentHtml"></span></p>
+  </div>
 </div>
 
 <div class="container edit-recipe-page" *ngIf="inEditMode">
@@ -48,13 +60,13 @@
   </div>
 </div>
 
-<div class="container hidden-print">
-  <a id="edit-recipe-button" class="btn btn-secondary" (click)="editClicked()" role="button" *ngIf="shouldShowEditButtons()" [hidden]="inEditMode">Edit Recipe</a>
-  <a id="cancel-edit-button" class="btn btn-secondary" (click)="cancelEdit()" role="button" *ngIf="shouldShowEditButtons()" [hidden]="!inEditMode">Cancel</a>
-  <a id="update-recipe-button" class="btn btn-secondary" (click)="saveClicked()" role="button" *ngIf="shouldShowEditButtons()" [hidden]="!inEditMode">Save Recipe</a>
+<div class="recipe-action-bar hidden-print">
+  <a id="edit-recipe-button" class="btn-navy-outline" (click)="editClicked()" role="button" *ngIf="shouldShowEditButtons()" [hidden]="inEditMode">Edit Recipe</a>
+  <a id="cancel-edit-button" class="btn-navy-outline" (click)="cancelEdit()" role="button" *ngIf="shouldShowEditButtons()" [hidden]="!inEditMode">Cancel</a>
+  <a id="update-recipe-button" class="btn-navy" (click)="saveClicked()" role="button" *ngIf="shouldShowEditButtons()" [hidden]="!inEditMode">Save Recipe</a>
   <div class="pull-right">
     <span id="in-recipe-book-marker" class="badge badge-secondary" [hidden]="!inRecipeBook()"><i class="fa fa-check" aria-hidden="true"></i> In Recipe Book</span>
-    <a class="remove-recipe-from-book-button btn btn-secondary btn-sm" [hidden]="!canRemoveFromRecipeBook()" (click)="removeRecipeFromBook()" role="button">Remove</a>
+    <a class="remove-recipe-from-book-button btn-navy-outline btn-sm" [hidden]="!canRemoveFromRecipeBook()" (click)="removeRecipeFromBook()" role="button">Remove</a>
   </div>
-  <a class="add-to-recipe-book-button btn btn-secondary pull-right floating-bottom-button" [hidden]="!canAddToRecipeBook()" (click)="addToRecipeBook()" role="button">Add to Recipe Book</a>
+  <a class="add-to-recipe-book-button btn-navy pull-right floating-bottom-button" [hidden]="!canAddToRecipeBook()" (click)="addToRecipeBook()" role="button">Add to Recipe Book</a>
 </div>

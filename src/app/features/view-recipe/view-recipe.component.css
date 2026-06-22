@@ -43,12 +43,14 @@
   margin-right: 5px;
 }
 
-.recipe-title-holder {
-  margin-bottom: 20px;
+.recipe-title {
+  font-size: 28px;
+  line-height: 1.15;
+  margin: 0 0 10px;
 }
 
 #recipe-content {
-  line-height: 1.5;
+  line-height: 1.6;
   word-wrap: normal;
   overflow-wrap: normal;
   word-break: normal;
@@ -104,3 +106,99 @@
 }
 .required-badge { color: #d23b2e; border: 1px solid #d23b2e; }
 .optional-badge { color: var(--text-muted, #8a8a8a); border: 1px solid var(--border-light, #e2e0dc); }
+
+/* ============ Read-view glow-up (card) ============ */
+.recipe-view-card {
+  position: relative;
+  max-width: 760px;
+  margin: 10px auto 0;
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border-light, #e2e0dc);
+  border-radius: 16px;
+  box-shadow: 0 3px 18px rgba(0, 0, 0, 0.06);
+  padding: 26px 32px 30px;
+}
+
+.copy-link {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light, #e2e0dc);
+  background: #fff;
+  color: var(--text-secondary, #555);
+  cursor: pointer;
+  font-size: 14px;
+}
+.copy-link:hover { color: var(--navy, #001f3f); border-color: var(--navy, #001f3f); }
+
+.cat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill, 999px);
+  margin-bottom: 12px;
+}
+.cat-pill .cat-emoji { font-size: 13px; }
+
+.recipe-rating-holder { margin: 6px 0 12px; }
+
+.recipe-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.recipe-tags .tag-pill {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary, #555);
+  background: #f3f1ee;
+  border: 1px solid var(--border-light, #e2e0dc);
+  border-radius: var(--radius-pill, 999px);
+  padding: 3px 11px;
+}
+
+.recipe-photo {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  margin: 18px 0 4px;
+}
+
+.card-divider { height: 1px; background: var(--border-light, #e2e0dc); margin: 20px 0; }
+
+/* Navy action buttons (read + edit), aligned to the card width */
+.recipe-action-bar {
+  max-width: 760px;
+  margin: 16px auto 28px;
+  padding: 0 4px;
+  overflow: auto; /* contain the floated recipe-book buttons */
+}
+.btn-navy, .btn-navy-outline {
+  display: inline-block;
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+}
+.btn-navy { background: var(--navy, #001f3f); color: #fff; border: 1.5px solid var(--navy, #001f3f); }
+.btn-navy:hover { background: var(--navy-light, #0a3060); border-color: var(--navy-light, #0a3060); color: #fff; }
+.btn-navy-outline { background: none; color: var(--navy, #001f3f); border: 1.5px solid var(--navy, #001f3f); }
+.btn-navy-outline:hover { background: var(--navy, #001f3f); color: #fff; }
+.btn-navy.btn-sm, .btn-navy-outline.btn-sm { padding: 6px 14px; font-size: 13px; }
+
+/* These are <a role="button"> with no href, which Bootstrap's reboot resets to
+   `color: inherit` (more specific than .btn-navy) — re-assert the button text colour. */
+.recipe-action-bar a.btn-navy,
+.recipe-action-bar a.btn-navy:hover { color: #fff; }
+.recipe-action-bar a.btn-navy-outline { color: var(--navy, #001f3f); }
+.recipe-action-bar a.btn-navy-outline:hover { color: #fff; }

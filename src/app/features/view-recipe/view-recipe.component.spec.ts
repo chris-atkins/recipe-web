@@ -440,6 +440,14 @@ describe('ViewRecipeComponent', () => {
       }, 10);
     });
 
+    it('skips recipe-book actions when the recipe has no id', () => {
+      component.recipe = { recipeName: 'x', recipeContent: 'y' };
+      component.addToRecipeBook();
+      component.removeRecipeFromBook();
+      expect(mockRecipeBookService.addToRecipeBook).not.toHaveBeenCalled();
+      expect(mockRecipeBookService.removeRecipeFromBook).not.toHaveBeenCalled();
+    });
+
     it('should remove recipe from book when removeRecipeFromBook is called', (done) => {
       const updatedBook: { recipeId: string }[] = [];
       mockRecipeBookService.removeRecipeFromBook.and.returnValue(Promise.resolve(updatedBook));
@@ -472,6 +480,18 @@ describe('ViewRecipeComponent', () => {
       const calledUrl = writeTextSpy.calls.first().args[0];
       expect(calledUrl).toContain('/recipe/recipe123');
     });
+
+    it('logs an error when copying the URL fails', (done) => {
+      spyOn(navigator.clipboard, 'writeText').and.returnValue(Promise.reject('nope'));
+      const consoleSpy = spyOn(console, 'error');
+
+      component.copyAlternateUrlClicked();
+
+      setTimeout(() => {
+        expect(consoleSpy).toHaveBeenCalledWith('Failed to copy URL:', 'nope');
+        done();
+      }, 10);
+    });
   });
 
   describe('template', () => {
@@ -496,6 +516,32 @@ describe('ViewRecipeComponent', () => {
       expect(stars.componentInstance.rating).toEqual({ average: 4.5, count: 10 });
       expect(stars.componentInstance.recipeId).toBe('recipe123');
       expect(stars.componentInstance.interactive).toBe(true);
+    });
+
+    it('shows the category pill with the recipe category', () => {
+      const pill = fixture.nativeElement.querySelector('.cat-pill');
+      expect(pill).toBeTruthy();
+      expect(pill.textContent).toContain('Main Dish');
+    });
+
+    it('shows a tag pill for each tag', () => {
+      const tags = fixture.nativeElement.querySelectorAll('.recipe-tags .tag-pill');
+      expect(tags.length).toBe(1);
+      expect(tags[0].textContent).toContain('Vegan');
+    });
+
+    it('renders the 4:3 recipe photo when an image exists', () => {
+      const photo = fixture.nativeElement.querySelector('.recipe-photo');
+      expect(photo).toBeTruthy();
+      expect(photo.getAttribute('src')).toBe('http://example.com/image.jpg');
+    });
+
+    it('omits the category pill, tags, and photo when the recipe has none', () => {
+      component.recipe = { ...testRecipe, category: null, tags: [], image: null };
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('.cat-pill')).toBeFalsy();
+      expect(fixture.nativeElement.querySelectorAll('.recipe-tags .tag-pill').length).toBe(0);
+      expect(fixture.nativeElement.querySelector('.recipe-photo')).toBeFalsy();
     });
 
     it('should display recipe content', () => {
