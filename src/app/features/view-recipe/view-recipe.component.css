@@ -35,6 +35,12 @@
   margin-bottom: 15px;
 }
 
+/* Match the read-view card width (760px) so the edit fields and the action bar
+   line up — was full-container width, which left the 760px action bar inset. */
+.edit-recipe-page {
+  max-width: 760px;
+}
+
 #cancel-edit-button {
   margin-right: 10px;
 }
